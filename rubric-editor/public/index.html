@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[DRAFT] Danielle's Technology Rubric - Editing Proof of Concept</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f8fc;
+      --sidebar-bg: #1e2235;
+      --sidebar-hover: #2c3150;
+      --sidebar-active: #3a4172;
+      --sidebar-text: #c8ccde;
+      --sidebar-muted: #6b7194;
+      --primary: #4f6af5;
+      --primary-hover: #3d58e0;
+      --success: #28a745;
+      --warning: #e8a020;
+      --danger: #dc3545;
+      --border: #e2e6f0;
+      --text: #1a1d2e;
+      --muted: #6b7194;
+      --card-bg: #ffffff;
+      --tag-dim: #eef0fb;
+      --tag-comp: #fef4e8;
+      --tag-cap: #edfaf2;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* React mounts into #root, which sits between body (the flex container)
+       and the actual content. Without this, #root has height: auto and
+       overflows the viewport silently — overflow-y: auto on .main never
+       gets a constrained box to scroll within. */
+    #root {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── Top bar ───────────────────────────── */
+    .topbar {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .topbar-logo { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; color: var(--text); }
+    .topbar-spacer { flex: 1; }
+
+    /* ── Track selector dropdown ───────────── */
+    .track-selector { position: relative; }
+    .track-selector-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: var(--text);
+      padding: 5px 10px 5px 12px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 20px; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .track-selector-btn:hover { border-color: var(--primary); background: #fff; }
+    .track-selector-btn.open { border-color: var(--primary); background: #fff; }
+    .track-chevron {
+      font-size: 10px; color: var(--muted);
+      transition: transform 0.15s;
+    }
+    .track-selector-btn.open .track-chevron { transform: rotate(180deg); }
+    .track-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0;
+      min-width: 240px; z-index: 200;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      overflow: hidden;
+    }
+    .track-dropdown-header {
+      padding: 8px 14px 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .track-option {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; font-size: 13px; gap: 8px;
+      transition: background 0.12s;
+    }
+    .track-option.active {
+      color: var(--primary); font-weight: 600;
+      background: #f4f6ff; cursor: default;
+    }
+    .track-option.available:not(.active) {
+      cursor: pointer; color: var(--text);
+    }
+    .track-option.available:not(.active):hover { background: var(--bg); }
+    .track-option.unavailable {
+      color: #bbb; cursor: not-allowed;
+    }
+    .track-check { font-size: 11px; color: var(--primary); flex-shrink: 0; }
+    .track-soon {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+      padding: 2px 7px; border-radius: 10px;
+      background: #f0f0f0; color: #aaa; flex-shrink: 0;
+    }
+    .save-status { font-size: 12px; color: var(--muted); }
+    .save-status.saved { color: var(--success); }
+    .save-status.unsaved { color: var(--warning); }
+    .save-status.saving { color: var(--primary); }
+    .save-status.error { color: var(--danger); }
+
+    /* ── Nav tabs ──────────────────────────── */
+    .navtabs {
+      display: flex; gap: 2px; background: var(--bg);
+      padding: 0 24px; border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .navtab {
+      padding: 10px 18px; font-size: 13px; font-weight: 500;
+      color: var(--muted); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .navtab:hover { color: var(--text); }
+    .navtab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .navtab.locked { opacity: 0.65; }
+    .tab-lock {
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-left: 6px;
+      width: 18px; height: 18px; border-radius: 4px;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+      color: var(--muted); flex-shrink: 0;
+    }
+    .tab-lock:hover { background: var(--border); color: var(--text); }
+    .navtab.active .tab-lock { color: var(--primary); }
+    .navtab.active .tab-lock:hover { background: #eef0fb; }
+    .readonly-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.4px;
+      color: var(--muted); background: var(--bg);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 3px 10px; margin-bottom: 18px;
+    }
+
+    /* ── Main layout ───────────────────────── */
+    .layout {
+      display: flex; flex: 1; overflow: hidden;
+      min-height: 0; /* prevents flex children from overflowing their container */
+    }
+
+    /* ── Sidebar ───────────────────────────── */
+    .sidebar {
+      width: 280px; flex-shrink: 0;
+      background: var(--sidebar-bg);
+      overflow-y: auto; padding: 12px 0;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: #3a4172; border-radius: 2px; }
+
+    .sidebar-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      color: var(--sidebar-muted); text-transform: uppercase;
+      padding: 16px 16px 6px;
+    }
+
+    .tree-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 16px; cursor: pointer;
+      color: var(--sidebar-text); font-size: 13px;
+      transition: background 0.12s;
+      border-left: 3px solid transparent;
+    }
+    .tree-item:hover { background: var(--sidebar-hover); }
+    .tree-item.active {
+      background: var(--sidebar-active);
+      border-left-color: var(--primary);
+      color: #fff;
+    }
+    .tree-item .indent { flex-shrink: 0; }
+    .tree-item .label { flex: 1; line-height: 1.3; }
+    .tree-item .chevron {
+      font-size: 10px; color: var(--sidebar-muted);
+      transition: transform 0.15s;
+    }
+    .tree-item.open .chevron { transform: rotate(90deg); }
+    .tree-badge {
+      font-size: 10px; font-weight: 600;
+      padding: 1px 5px; border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: var(--sidebar-text);
+    }
+
+    /* ── Main content ──────────────────────── */
+    .main {
+      flex: 1; min-height: 0; /* must be 0 to allow overflow-y to engage */
+      overflow-y: auto; overflow-x: hidden;
+      padding: 28px 32px;
+    }
+    .main::-webkit-scrollbar { width: 6px; }
+    .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Philosophy flip cards ─────────────── */
+    .phil-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .phil-scene {
+      perspective: 900px;
+      cursor: pointer;
+      height: 186px;
+      user-select: none;
+    }
+    .phil-flipper {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.52s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .phil-flipper.is-flipped { transform: rotateY(180deg); }
+    .phil-face {
+      position: absolute; inset: 0;
+      border-radius: 10px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .phil-back {
+      transform: rotateY(180deg);
+      overflow-y: auto;
+    }
+    .phil-front-header {
+      padding: 12px 16px 10px;
+      border-radius: 10px 10px 0 0;
+      flex-shrink: 0;
+    }
+    .phil-front-num {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.65); text-transform: uppercase;
+    }
+    .phil-front-title {
+      font-size: 14px; font-weight: 700; color: #fff;
+      margin-top: 2px; line-height: 1.3;
+    }
+    .phil-front-body {
+      padding: 12px 16px; flex: 1;
+      display: flex; flex-direction: column; justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border); border-top: none;
+      border-radius: 0 0 10px 10px;
+    }
+    .phil-front-punchy {
+      font-size: 12.5px; color: var(--text); line-height: 1.55;
+    }
+    .phil-front-hint {
+      font-size: 10px; color: var(--muted); margin-top: 8px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .phil-back-header {
+      padding: 10px 14px; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .phil-back-title {
+      font-size: 12px; font-weight: 700;
+    }
+    .phil-back-content {
+      padding: 10px 14px;
+      font-size: 11.5px; line-height: 1.6; color: var(--text);
+    }
+    .phil-back-content p { margin: 0 0 8px; }
+    .phil-back-content p:last-child { margin-bottom: 0; }
+    .phil-back-content ul { padding-left: 16px; margin: 4px 0 8px; }
+    .phil-back-content li { margin-bottom: 3px; }
+
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted); margin-bottom: 20px;
+    }
+    .breadcrumb-sep { color: var(--border); }
+    .breadcrumb-current { color: var(--text); font-weight: 600; }
+
+    .node-type-badge {
+      display: inline-flex; align-items: center;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+      padding: 3px 9px; border-radius: 12px; margin-bottom: 10px;
+    }
+    .badge-dimension { background: var(--tag-dim); color: #3a4172; }
+    .badge-competency { background: var(--tag-comp); color: #7a4f00; }
+    .badge-capability { background: var(--tag-cap); color: #0a5e2a; }
+
+    .node-title {
+      font-size: 22px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;
+    }
+    .node-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.7px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Level grid ────────────────────────── */
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 1100px) {
+      .level-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .level-cell { display: flex; flex-direction: column; gap: 6px; }
+    .level-cell label {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .level-cell label .level-name {
+      font-weight: 400; text-transform: none; letter-spacing: 0;
+      color: var(--muted); font-size: 11px;
+    }
+    .level-cell textarea {
+      width: 100%; min-height: 110px;
+      font-size: 13px; line-height: 1.55;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      resize: vertical;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .level-cell textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #fff;
+    }
+    .level-cell textarea.placeholder-text {
+      color: #aaa; font-style: italic;
+    }
+
+    /* ── Child summary cards ───────────────── */
+    .child-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .child-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px;
+      cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .child-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(79,106,245,0.12);
+    }
+    .child-card-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
+    }
+    .child-card-name { font-size: 14px; font-weight: 600; }
+    .child-card-count { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* ── Action bar ────────────────────────── */
+    .action-bar {
+      display: flex; align-items: center; gap: 12px; margin-top: 8px;
+    }
+    .btn {
+      padding: 9px 20px; border-radius: 7px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: background 0.15s, transform 0.05s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg); color: var(--text); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #228a3b; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Level View ────────────────────────── */
+    .level-view-toolbar {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .level-select-group {
+      display: flex; gap: 6px;
+    }
+    .level-pill {
+      padding: 7px 16px; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border);
+      background: var(--card-bg); color: var(--muted);
+      transition: all 0.12s;
+    }
+    .level-pill:hover { border-color: var(--primary); color: var(--primary); }
+    .level-pill.active {
+      background: var(--primary); border-color: var(--primary); color: #fff;
+    }
+
+    .rubric-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .rubric-table th {
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      font-weight: 600; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.7px;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .rubric-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .rubric-table tr:last-child td { border-bottom: none; }
+    .rubric-table tr:hover td { background: #f9faff; }
+    .td-dim { font-weight: 700; color: var(--text); white-space: nowrap; }
+    .td-comp { color: var(--text); white-space: nowrap; }
+    .td-cap { color: var(--muted); font-style: italic; }
+    .td-desc { color: var(--text); max-width: 480px; }
+
+    .dim-separator td {
+      background: var(--tag-dim) !important;
+      padding: 5px 16px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: #3a4172;
+    }
+
+    /* ── Empty / loading states ────────────── */
+    .empty-state {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 60px 20px; text-align: center;
+      color: var(--muted);
+    }
+    .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
+    .empty-state p { font-size: 13px; max-width: 340px; }
+
+    .spinner {
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      animation: spin 0.7s linear infinite;
+      margin: 60px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Inline edit (name) ────────────────── */
+    .name-display {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .name-input {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
+      border: none; border-bottom: 2px solid var(--primary);
+      background: transparent; color: var(--text);
+      outline: none; width: 100%; padding-bottom: 2px;
+      font-family: inherit;
+    }
+
+    /* ── Toast ─────────────────────────────── */
+    .toast-container {
+      position: fixed; bottom: 24px; right: 24px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 1000;
+    }
+    .toast {
+      padding: 12px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      animation: slideIn 0.2s ease;
+    }
+    .toast-success { background: #1a3d25; color: #6dd98a; }
+    .toast-error { background: #3d1a1a; color: #f08080; }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+    /* ── Meta panel ────────────────────────── */
+    .meta-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .meta-field { display: flex; flex-direction: column; gap: 4px; }
+    .meta-field label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-field .meta-value { font-size: 14px; color: var(--text); }
+    .meta-field .meta-status {
+      display: inline-flex; align-items: center;
+      font-size: 12px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+      background: var(--tag-comp); color: var(--warning);
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+// ──────────────────────────────────────────────────────────
+// Utility helpers
+// ──────────────────────────────────────────────────────────
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function findNode(rubric, dimId, compId, capId) {
+  const dim = rubric.dimensions.find(d => d.id === dimId);
+  if (!dim) return null;
+  if (!compId) return { type: 'dimension', node: dim, dim };
+  const comp = dim.competencies.find(c => c.id === compId);
+  if (!comp) return null;
+  if (!capId) return { type: 'competency', node: comp, dim, comp };
+  const cap = comp.capabilities.find(c => c.id === capId);
+  if (!cap) return null;
+  return { type: 'capability', node: cap, dim, comp, cap };
+}
+
+// ──────────────────────────────────────────────────────────
+// Toast
+// ──────────────────────────────────────────────────────────
+function ToastContainer({ toasts }) {
+  return (
+    <div className="toast-container">
+      {toasts.map(t => (
+        <div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>
+      ))}
+    </div>
+  );
+}
+
+function useToast() {
+  const [toasts, setToasts] = useState([]);
+  const show = useCallback((message, type = 'success') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3000);
+  }, []);
+  return { toasts, show };
+}
+
+// ──────────────────────────────────────────────────────────
+// Sidebar Tree
+// ──────────────────────────────────────────────────────────
+function SidebarTree({ rubric, selection, onSelect }) {
+  const [openDims, setOpenDims] = useState(() => {
+    const s = {};
+    (rubric?.dimensions || []).forEach(d => { s[d.id] = true; });
+    return s;
+  });
+  const [openComps, setOpenComps] = useState({});
+
+  const toggleDim = (id) => setOpenDims(p => ({ ...p, [id]: !p[id] }));
+  const toggleComp = (dimId, compId) =>
+    setOpenComps(p => ({ ...p, [`${dimId}:${compId}`]: !p[`${dimId}:${compId}`] }));
+
+  if (!rubric) return null;
+
+  return (
+    <div className="sidebar">
+      <div className="sidebar-section-label">Rubric Structure</div>
+      {rubric.dimensions.map(dim => (
+        <React.Fragment key={dim.id}>
+          <div
+            className={`tree-item ${openDims[dim.id] ? 'open' : ''} ${
+              selection.dimId === dim.id && !selection.compId ? 'active' : ''
+            }`}
+            onClick={() => { onSelect({ dimId: dim.id }); toggleDim(dim.id); }}
+          >
+            <span className="indent" style={{ width: 0 }} />
+            <span className="chevron">▶</span>
+            <span className="label">{dim.name}</span>
+            <span className="tree-badge">{dim.competencies.length}</span>
+          </div>
+
+          {openDims[dim.id] && dim.competencies.map(comp => (
+            <React.Fragment key={comp.id}>
+              <div
+                className={`tree-item ${openComps[`${dim.id}:${comp.id}`] ? 'open' : ''} ${
+                  selection.dimId === dim.id && selection.compId === comp.id && !selection.capId ? 'active' : ''
+                }`}
+                onClick={() => { onSelect({ dimId: dim.id, compId: comp.id }); toggleComp(dim.id, comp.id); }}
+              >
+                <span className="indent" style={{ width: 14 }} />
+                <span className="chevron">▶</span>
+                <span className="label">{comp.name}</span>
+                <span className="tree-badge">{comp.capabilities.length}</span>
+              </div>
+
+              {openComps[`${dim.id}:${comp.id}`] && comp.capabilities.map(cap => (
+                <div
+                  key={cap.id}
+                  className={`tree-item ${
+                    selection.dimId === dim.id && selection.compId === comp.id && selection.capId === cap.id ? 'active' : ''
+                  }`}
+                  onClick={() => onSelect({ dimId: dim.id, compId: comp.id, capId: cap.id })}
+                >
+                  <span className="indent" style={{ width: 28 }} />
+                  <span className="label">{cap.name}</span>
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Level descriptions editor
+// ──────────────────────────────────────────────────────────
+function DescriptionsEditor({ levels, levelNames, descriptions, onChange, readOnly }) {
+  return (
+    <div className="level-grid">
+      {levels.map(level => {
+        const val = descriptions[level] || '';
+        const isPlaceholder = val.startsWith('[') && val.endsWith(']');
+        return (
+          <div className="level-cell" key={level}>
+            <label>
+              {level}
+              <span className="level-name">— {levelNames[level]}</span>
+            </label>
+            <textarea
+              className={isPlaceholder ? 'placeholder-text' : ''}
+              value={val}
+              onChange={readOnly ? undefined : e => onChange(level, e.target.value)}
+              readOnly={readOnly}
+              placeholder={`Describe ${level} behavior here…`}
+              style={readOnly ? { cursor: 'default', background: 'var(--bg)' } : undefined}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Node Editor (Dimension / Competency / Capability)
+// ──────────────────────────────────────────────────────────
+function NodeEditor({ rubric, selection, onSave, readOnly }) {
+  const found = selection.dimId ? findNode(rubric, selection.dimId, selection.compId, selection.capId) : null;
+  const [localNode, setLocalNode] = useState(null);
+  const [dirty, setDirty] = useState(false);
+
+  useEffect(() => {
+    if (found) {
+      setLocalNode(deepClone(found.node));
+      setDirty(false);
+    }
+  }, [selection, found?.node]);
+
+  if (!selection.dimId) {
+    return (
+      <div className="main">
+        <div className="empty-state">
+          <div className="empty-state-icon">🗂</div>
+          <h3>{readOnly ? 'Select a node to view' : 'Select a node to edit'}</h3>
+          <p>Choose a Dimension, Competency, or Capability from the sidebar to {readOnly ? 'view' : 'view and edit'} its level descriptions.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!found || !localNode) return <div className="main"><div className="spinner" /></div>;
+
+  const { type, dim, comp } = found;
+  const typeLabel = { dimension: 'Dimension', competency: 'Competency', capability: 'Capability' }[type];
+  const typeBadge = `badge-${type}`;
+
+  const handleDescChange = (level, val) => {
+    setLocalNode(prev => ({ ...prev, descriptions: { ...prev.descriptions, [level]: val } }));
+    setDirty(true);
+  };
+
+  const handleNameChange = (val) => {
+    setLocalNode(prev => ({ ...prev, name: val }));
+    setDirty(true);
+  };
+
+  const handleSave = () => {
+    onSave(type, { dimId: dim.id, compId: comp?.id, capId: found.cap?.id }, localNode);
+    setDirty(false);
+  };
+
+  const children = type === 'dimension'
+    ? dim.competencies.map(c => ({ id: c.id, name: c.name, count: c.capabilities.length, label: 'Competency', countLabel: 'capabilities' }))
+    : type === 'competency'
+    ? comp.capabilities.map(c => ({ id: c.id, name: c.name, count: null, label: 'Capability' }))
+    : [];
+
+  return (
+    <div className="main">
+      {/* Breadcrumb */}
+      <div className="breadcrumb">
+        <span>{dim.name}</span>
+        {comp && <><span className="breadcrumb-sep">›</span><span>{comp.name}</span></>}
+        {found.cap && <><span className="breadcrumb-sep">›</span><span className="breadcrumb-current">{localNode.name}</span></>}
+        {!found.cap && <><span className="breadcrumb-sep">›</span><span className="breadcrumb-current">{localNode.name}</span></>}
+      </div>
+
+      {/* Lock state banner — swaps based on editing mode */}
+      {readOnly ? (
+        <div className="readonly-badge">
+          <LockedIcon /> View only — click the lock icon in the tab to enable editing
+        </div>
+      ) : (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          fontSize: 12, fontWeight: 500,
+          color: '#92400e',
+          background: '#fffbeb',
+          border: '1px solid #fcd34d',
+          borderRadius: 8, padding: '8px 14px',
+          marginBottom: 18,
+        }}>
+          <UnlockedIcon />
+          <span>Editing enabled — changes are saved directly to the rubric. Click the lock icon in the tab to lock.</span>
+        </div>
+      )}
+
+      {/* Node header */}
+      <span className={`node-type-badge ${typeBadge}`}>{typeLabel}</span>
+      <div className="name-display">
+        <input
+          className="name-input"
+          value={localNode.name}
+          onChange={readOnly ? undefined : e => handleNameChange(e.target.value)}
+          readOnly={readOnly}
+          style={readOnly ? { cursor: 'default', background: 'var(--bg)' } : undefined}
+        />
+      </div>
+      {localNode.intent && (
+        <div style={{ fontStyle: 'italic', color: 'var(--muted)', fontSize: 13, marginTop: 8, marginBottom: 2 }}>
+          {localNode.intent}
+        </div>
+      )}
+      <div className="node-subtitle" style={{ marginTop: 6 }}>
+        {type === 'dimension' && `${dim.competencies.length} competencies · ${dim.competencies.reduce((a,c) => a + c.capabilities.length, 0)} capabilities`}
+        {type === 'competency' && `${comp.capabilities.length} capabilities · within ${dim.name}`}
+        {type === 'capability' && `Leaf node · ${dim.name} › ${comp.name}`}
+      </div>
+
+      {/* Level descriptions */}
+      <div className="card">
+        <div className="card-title">Level Descriptions</div>
+        <DescriptionsEditor
+          levels={rubric.meta.levels}
+          levelNames={rubric.meta.level_names}
+          descriptions={localNode.descriptions}
+          onChange={handleDescChange}
+          readOnly={readOnly}
+        />
+      </div>
+
+      {/* Save — hidden in read-only mode */}
+      {!readOnly && (
+        <div className="action-bar">
+          <button
+            className="btn btn-primary"
+            disabled={!dirty}
+            onClick={handleSave}
+          >
+            {dirty ? 'Save Changes' : 'Saved'}
+          </button>
+          {dirty && (
+            <button
+              className="btn btn-ghost"
+              onClick={() => { setLocalNode(deepClone(found.node)); setDirty(false); }}
+            >
+              Discard
+            </button>
+          )}
+          {dirty && <span style={{ fontSize: 12, color: 'var(--warning)' }}>Unsaved changes</span>}
+        </div>
+      )}
+
+      {/* Children */}
+      {children.length > 0 && (
+        <div className="card" style={{ marginTop: 24 }}>
+          <div className="card-title">{type === 'dimension' ? 'Competencies' : 'Capabilities'}</div>
+          <div className="child-grid">
+            {children.map(child => (
+              <div key={child.id} className="child-card"
+                onClick={() => {/* no-op; navigate via sidebar */}}
+              >
+                <div className="child-card-label">{child.label}</div>
+                <div className="child-card-name">{child.name}</div>
+                {child.count != null && (
+                  <div className="child-card-count">{child.count} {child.countLabel}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Level View
+// ──────────────────────────────────────────────────────────
+function LevelView({ rubric, selectedTrack }) {
+  const [selectedLevel, setSelectedLevel] = useState(rubric?.meta.levels[2] || 'L3');
+  const [compareDown, setCompareDown] = useState(false);
+  const [compareUp,   setCompareUp]   = useState(false);
+
+  const [expandedDims, setExpandedDims] = useState(() => new Set());
+  const [expandedComps, setExpandedComps] = useState(() => new Set());
+
+  if (!rubric) return <div className="main"><div className="spinner" /></div>;
+
+  // Adjacent levels
+  const levels    = rubric.meta.levels;
+  const levelIdx  = levels.indexOf(selectedLevel);
+  const prevLevel = levelIdx > 0               ? levels[levelIdx - 1] : null;
+  const nextLevel = levelIdx < levels.length-1 ? levels[levelIdx + 1] : null;
+
+  const ln = (l) => rubric.meta.level_names[l] || l;
+  const totalCaps = rubric.dimensions.reduce((a, d) =>
+    a + d.competencies.reduce((b, c) => b + c.capabilities.length, 0), 0);
+
+  const toggleDim = (id) =>
+    setExpandedDims(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+  const toggleComp = (dId, cId) => {
+    const k = `${dId}:${cId}`;
+    setExpandedComps(prev => { const s = new Set(prev); s.has(k) ? s.delete(k) : s.add(k); return s; });
+  };
+  const expandAll = () => {
+    setExpandedDims(new Set(rubric.dimensions.map(d => d.id)));
+    setExpandedComps(new Set(rubric.dimensions.flatMap(d => d.competencies.map(c => `${d.id}:${c.id}`))));
+  };
+  const collapseAll = () => { setExpandedDims(new Set()); setExpandedComps(new Set()); };
+
+  // When the baseline level changes, keep compare toggles but clamp to valid edges
+  const handleLevelChange = (l) => {
+    setSelectedLevel(l);
+    const idx = levels.indexOf(l);
+    if (idx === 0)            setCompareDown(false);
+    if (idx === levels.length-1) setCompareUp(false);
+  };
+
+  // ── Visual theme for each column role ────────────────────
+  const COL = {
+    prev: {
+      headerBg:    '#4a5080',
+      headerColor: '#c8cce8',
+      cellBg:      '#f1f3fb',
+      textColor:   '#7880aa',
+      borderLeft:  '1px solid #d0d4ec',
+      label:       `◀ ${prevLevel} — ${ln(prevLevel)}`,
+      italic:      true,
+    },
+    base: {
+      headerBg:    'var(--sidebar-bg)',
+      headerColor: '#ffffff',
+      cellBg:      '#ffffff',
+      textColor:   'var(--text)',
+      borderLeft:  '3px solid var(--primary)',
+      label:       `${selectedLevel} — ${ln(selectedLevel)}`,
+      italic:      false,
+    },
+    next: {
+      headerBg:    '#5a4a30',
+      headerColor: '#d4c4a0',
+      cellBg:      '#fdf9f2',
+      textColor:   '#9a8050',
+      borderLeft:  '1px solid #e8dfc4',
+      label:       `${nextLevel} — ${ln(nextLevel)} ▶`,
+      italic:      true,
+    },
+  };
+
+  // Which description columns are active, in order
+  const activeCols = [
+    ...(compareDown && prevLevel ? ['prev'] : []),
+    'base',
+    ...(compareUp && nextLevel   ? ['next'] : []),
+  ];
+  const numDescCols = activeCols.length;
+
+  // Helper: get description for a node's descriptions object
+  const getDesc = (descriptions, level) => descriptions?.[level] || '';
+  const isPlaceholder = (s) => s.startsWith('[') && s.endsWith(']');
+
+  // Render the description cell(s) for a given node at each active column
+  const descCells = (descriptions, rowBgOverride) => activeCols.map(role => {
+    const col   = COL[role];
+    const level = role === 'prev' ? prevLevel : role === 'next' ? nextLevel : selectedLevel;
+    const desc  = getDesc(descriptions, level);
+    const ph    = isPlaceholder(desc);
+    return (
+      <td key={role} style={{
+        verticalAlign: 'top',
+        background:    rowBgOverride || col.cellBg,
+        borderLeft:    col.borderLeft,
+        color:         ph ? '#bbb' : col.textColor,
+        fontStyle:     (ph || col.italic) ? 'italic' : 'normal',
+        fontSize:      role === 'base' ? 13 : 12,
+        padding:       '11px 14px',
+        lineHeight:    1.55,
+      }}>
+        {desc || <span style={{ color: '#ccc' }}>—</span>}
+      </td>
+    );
+  });
+
+  // Chevron for tree toggle
+  const chevron = (open) => (
+    <span style={{
+      display: 'inline-block', fontSize: 9, color: 'var(--muted)',
+      transition: 'transform 0.15s', flexShrink: 0,
+      transform: open ? 'rotate(90deg)' : 'none',
+    }}>▶</span>
+  );
+
+  const rowToggleStyle = {
+    cursor: 'pointer', userSelect: 'none',
+    display: 'inline-flex', alignItems: 'center', gap: 8, width: '100%',
+  };
+
+  // Compare toggle button
+  const CompareToggle = ({ role, active, disabled, onToggle }) => {
+    const col = COL[role];
+    return (
+      <button
+        disabled={disabled}
+        onClick={onToggle}
+        style={{
+          padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          border: active ? `1.5px solid ${col.headerBg}` : '1.5px solid var(--border)',
+          background: active ? col.headerBg : 'transparent',
+          color: active ? col.headerColor : disabled ? '#ccc' : 'var(--muted)',
+          opacity: disabled ? 0.4 : 1,
+          transition: 'all 0.15s',
+          display: 'flex', alignItems: 'center', gap: 6,
+        }}
+      >
+        {role === 'prev'
+          ? <>{active ? '✓ ' : ''}◀ {prevLevel ? `${prevLevel} ${ln(prevLevel)}` : 'N/A'}</>
+          : <>{active ? '✓ ' : ''}{nextLevel ? `${nextLevel} ${ln(nextLevel)}` : 'N/A'} ▶</>
+        }
+      </button>
+    );
+  };
+
+  return (
+    <div className="main">
+      {/* ── Toolbar ─────────────────────────────────── */}
+      <div className="level-view-toolbar">
+        <div className="level-select-group">
+          {levels.map(l => (
+            <button key={l}
+              className={`level-pill ${l === selectedLevel ? 'active' : ''}`}
+              onClick={() => handleLevelChange(l)}>
+              {l} — {ln(l)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Second toolbar row: compare toggles + collapse controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.6px', marginRight: 2 }}>
+          Compare
+        </span>
+        <CompareToggle role="prev" active={compareDown} disabled={!prevLevel}
+          onToggle={() => setCompareDown(v => !v)} />
+        <CompareToggle role="next" active={compareUp}   disabled={!nextLevel}
+          onToggle={() => setCompareUp(v => !v)} />
+        <div style={{ width: 1, height: 20, background: 'var(--border)', margin: '0 6px' }} />
+        <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12 }} onClick={expandAll}>Expand all</button>
+        <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12 }} onClick={collapseAll}>Collapse all</button>
+        <div style={{ flex: 1 }} />
+        <a href={`/api/export/${selectedLevel}${selectedTrack ? `?track=${encodeURIComponent(selectedTrack)}` : ''}`}
+          className="btn btn-success"
+          style={{ textDecoration: 'none', fontSize: 12, padding: '7px 16px' }}>
+          ⬇ Export CSV ({selectedLevel})
+        </a>
+      </div>
+
+      {/* ── Table ────────────────────────────────────── */}
+      <table className="rubric-table" style={{ tableLayout: 'fixed' }}>
+        <colgroup>
+          <col style={{ width: numDescCols === 3 ? '12%' : numDescCols === 2 ? '14%' : '15%' }} />
+          <col style={{ width: numDescCols === 3 ? '14%' : numDescCols === 2 ? '16%' : '18%' }} />
+          <col style={{ width: numDescCols === 3 ? '14%' : numDescCols === 2 ? '16%' : '18%' }} />
+          {activeCols.map(role => <col key={role} />)}
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Competency</th>
+            <th>Capability</th>
+            {activeCols.map(role => {
+              const col = COL[role];
+              return (
+                <th key={role} style={{
+                  background: col.headerBg, color: col.headerColor,
+                  borderLeft: col.borderLeft,
+                  fontStyle: col.italic ? 'italic' : 'normal',
+                  fontWeight: role === 'base' ? 700 : 500,
+                  fontSize: role === 'base' ? 11 : 10,
+                }}>
+                  {col.label}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {rubric.dimensions.map(dim => {
+            const dimOpen = expandedDims.has(dim.id);
+
+            return (
+              <React.Fragment key={dim.id}>
+
+                {/* ── Dimension row ─────────────────────── */}
+                <tr>
+                  {dimOpen ? (
+                    <>
+                      <td style={{ fontWeight: 700, verticalAlign: 'top', paddingTop: 12, background: '#e8ebf7' }}>
+                        <span style={rowToggleStyle} onClick={() => toggleDim(dim.id)}>
+                          {chevron(true)}{dim.name}
+                        </span>
+                      </td>
+                      <td colSpan={2} style={{ background: '#e8ebf7', borderBottom: '1px solid var(--border)' }} />
+                    </>
+                  ) : (
+                    <td colSpan={3} style={{ fontWeight: 700, verticalAlign: 'top', paddingTop: 12, background: '#e8ebf7' }}>
+                      <span style={rowToggleStyle} onClick={() => toggleDim(dim.id)}>
+                        {chevron(false)}{dim.name}
+                      </span>
+                    </td>
+                  )}
+                  {descCells(dim.descriptions, '#eaedfa')}
+                </tr>
+
+                {dimOpen && dim.competencies.map(comp => {
+                  const compKey  = `${dim.id}:${comp.id}`;
+                  const compOpen = expandedComps.has(compKey);
+
+                  return (
+                    <React.Fragment key={comp.id}>
+
+                      {/* ── Competency row ─────────────── */}
+                      <tr>
+                        <td style={{ background: '#f7f8fc', borderBottom: '1px solid var(--border)' }} />
+                        {compOpen ? (
+                          <>
+                            <td style={{ fontWeight: 600, verticalAlign: 'top', paddingTop: 10, background: '#f7f8fc' }}>
+                              <span style={rowToggleStyle} onClick={() => toggleComp(dim.id, comp.id)}>
+                                {chevron(true)}{comp.name}
+                              </span>
+                              {comp.intent && <div style={{ fontWeight: 400, fontStyle: 'italic', fontSize: 11, color: 'var(--muted)', marginTop: 2, paddingLeft: 18 }}>{comp.intent}</div>}
+                            </td>
+                            <td style={{ background: '#f7f8fc', borderBottom: '1px solid var(--border)' }} />
+                          </>
+                        ) : (
+                          <td colSpan={2} style={{ fontWeight: 600, verticalAlign: 'top', paddingTop: 10, background: '#f7f8fc' }}>
+                            <span style={rowToggleStyle} onClick={() => toggleComp(dim.id, comp.id)}>
+                              {chevron(false)}{comp.name}
+                            </span>
+                            {comp.intent && <div style={{ fontWeight: 400, fontStyle: 'italic', fontSize: 11, color: 'var(--muted)', marginTop: 2, paddingLeft: 18 }}>{comp.intent}</div>}
+                          </td>
+                        )}
+                        {descCells(comp.descriptions, null)}
+                      </tr>
+
+                      {/* ── Capability rows ─────────────── */}
+                      {compOpen && comp.capabilities.map(cap => (
+                        <tr key={cap.id}>
+                          <td style={{ borderBottom: '1px solid var(--border)' }} />
+                          <td style={{ borderBottom: '1px solid var(--border)' }} />
+                          <td style={{ verticalAlign: 'top', paddingLeft: 20 }}>
+                            <div style={{ color: 'var(--muted)', fontStyle: 'italic' }}>{cap.name}</div>
+                            {cap.intent && <div style={{ fontSize: 11, color: 'var(--muted)', opacity: 0.75, marginTop: 2 }}>{cap.intent}</div>}
+                          </td>
+                          {descCells(cap.descriptions, null)}
+                        </tr>
+                      ))}
+
+                    </React.Fragment>
+                  );
+                })}
+
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Philosophy flip cards
+// ──────────────────────────────────────────────────────────
+// Punchy one-liners keyed to the NEW section numbers after reordering.
+// Group 1 — The Abstract Concept (1–3)
+// Group 2 — Design Constraints & Requirements (4–8)
+// Group 3 — How to Use It (9–12)
+// Group 4 — Gotchas & Caveats (13–14)
+const PHIL_PUNCHY = {
+  "1":  "One rubric, two questions: where do you want to go, and where are you right now?",
+  "2":  "You have a location in performance space — the rubric helps both of you see it.",
+  "3":  "A 3 is the archetype. A 5 here is roughly a 2 at the next level up. Ratings are relative to level, never absolute.",
+  "4":  "A 2 doesn't sink you if you have offsetting 4s — but a 1 overrides the center of mass.",
+  "5":  "Four levels of detail: go as deep as the conversation needs, no deeper.",
+  "6":  "Promotion needs rubric readiness AND a business need — never just one.",
+  "7":  "Describe what people do, not who they are — behaviors are citable, traits invite bias.",
+  "8":  "No degrees, no tenure — only demonstrated behaviors, calibrated across managers.",
+  "9":  "Shared dimensions travel across job functions; Domain-Specific is the one customization point per track.",
+  "10": "One number for HR, four for calibration, N rows for the conversation.",
+  "11": "Calibration is per level; forced distribution pressure belongs to leadership, not managers.",
+  "12": "Self-assess with specific examples: 'I did X in context Z' beats any number alone.",
+  "13": "'Proactively' is always L4+. 'Beginning to' is always L1. Learn the signal words and you can read any delta at a glance.",
+  "14": "Find the most important development investments — don't score every row exhaustively.",
+  "15": "No AI dimension: outcomes of effective tool use already show up in the capabilities that matter.",
+};
+
+// One accent color per group, used for card headers and group label bars.
+const PHIL_GROUP_COLORS = {
+  'The Abstract Concept':              '#6366f1',  // indigo
+  'Design Constraints & Requirements': '#0891b2',  // cyan
+  'How to Use It':                     '#059669',  // emerald
+  'Gotchas & Caveats':                 '#d97706',  // amber
+};
+
+// Lightweight markdown → JSX (handles bold, bullets, tables)
+function renderMd(text) {
+  const inline = (str) => {
+    const parts = str.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+    return parts.map((p, i) => {
+      if (p.startsWith('**') && p.endsWith('**')) return <strong key={i}>{p.slice(2,-2)}</strong>;
+      if (p.startsWith('*')  && p.endsWith('*'))  return <em key={i}>{p.slice(1,-1)}</em>;
+      return p;
+    });
+  };
+  const parseTableLine = (line) =>
+    line.split('|').slice(1, -1).map(cell => cell.trim());
+
+  const blocks = text.split(/\n\n+/);
+  return blocks.map((block, bi) => {
+    const lines = block.trim().split('\n');
+    // markdown table
+    if (lines.some(l => l.startsWith('|'))) {
+      const tableLines = lines.filter(l => l.startsWith('|'));
+      const isSeparator = (l) => /^\|[-| :]+\|$/.test(l.trim());
+      const headerLine = tableLines[0];
+      const bodyLines = tableLines.slice(2).filter(l => !isSeparator(l));
+      const headers = parseTableLine(headerLine);
+      return (
+        <table key={bi} style={{
+          borderCollapse: 'collapse', width: '100%',
+          fontSize: 12, margin: '8px 0', lineHeight: 1.4,
+        }}>
+          <thead>
+            <tr>
+              {headers.map((h, i) => (
+                <th key={i} style={{
+                  textAlign: 'left', padding: '5px 8px',
+                  borderBottom: '2px solid #d1d5db',
+                  fontWeight: 600, color: '#374151',
+                  whiteSpace: i === 0 ? 'nowrap' : 'normal',
+                }}>
+                  {inline(h)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {bodyLines.map((row, ri) => (
+              <tr key={ri} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                {parseTableLine(row).map((cell, ci) => (
+                  <td key={ci} style={{
+                    padding: '5px 8px', verticalAlign: 'top',
+                    fontStyle: ci > 0 ? 'italic' : 'normal',
+                    color: ci === 0 ? '#374151' : '#6b7280',
+                  }}>
+                    {inline(cell)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
+    }
+    // bullet list
+    if (lines.every(l => l.trimStart().startsWith('- '))) {
+      return (
+        <ul key={bi}>
+          {lines.map((l,i) => <li key={i}>{inline(l.replace(/^\s*-\s+/,''))}</li>)}
+        </ul>
+      );
+    }
+    // numbered list
+    if (lines.every(l => /^\d+\./.test(l.trim()))) {
+      return (
+        <ol key={bi} style={{ paddingLeft: 16, margin: '4px 0 8px' }}>
+          {lines.map((l,i) => <li key={i}>{inline(l.replace(/^\d+\.\s+/,''))}</li>)}
+        </ol>
+      );
+    }
+    return <p key={bi}>{inline(block.trim())}</p>;
+  }).filter(Boolean);
+}
+
+function PhilosophyCard({ section, groupColor }) {
+  const [flipped, setFlipped] = useState(false);
+  const color = groupColor;
+  const punchy = PHIL_PUNCHY[section.number] || '';
+
+  return (
+    <div className="phil-scene" onClick={() => setFlipped(v => !v)}
+      title={flipped ? 'Click to flip back' : 'Click for details'}>
+      <div className={`phil-flipper ${flipped ? 'is-flipped' : ''}`}>
+
+        {/* ── Front ── */}
+        <div className="phil-face">
+          <div className="phil-front-header" style={{ background: color }}>
+            <div className="phil-front-num">Principle {section.number}</div>
+            <div className="phil-front-title">{section.title}</div>
+          </div>
+          <div className="phil-front-body">
+            <div className="phil-front-punchy">{punchy}</div>
+            <div className="phil-front-hint">↻ flip for full text</div>
+          </div>
+        </div>
+
+        {/* ── Back ── */}
+        <div className="phil-face phil-back"
+          style={{ background: '#fafbff', border: `1px solid ${color}50` }}>
+          <div className="phil-back-header">
+            <div className="phil-back-title" style={{ color }}>
+              {section.number}. {section.title}
+            </div>
+          </div>
+          <div className="phil-back-content">
+            {renderMd(section.content)}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+function PhilosophyCards({ sections }) {
+  if (!sections || sections.length === 0) return null;
+
+  // Build ordered group list, preserving first-seen order from the .md file
+  const groupOrder = [];
+  const grouped = {};
+  sections.forEach(s => {
+    if (!grouped[s.group]) {
+      grouped[s.group] = [];
+      groupOrder.push(s.group);
+    }
+    grouped[s.group].push(s);
+  });
+
+  return (
+    <div className="card">
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+        <div className="card-title" style={{ marginBottom: 0, flex: 1 }}>
+          Design Philosophy — {sections.length} principles · click any card to read
+        </div>
+        <a
+          href="/api/philosophy/download"
+          download
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            fontSize: 11, fontWeight: 600, color: 'var(--primary)',
+            textDecoration: 'none', padding: '4px 10px',
+            border: '1px solid var(--primary)', borderRadius: 12,
+            transition: 'background 0.15s',
+            flexShrink: 0,
+          }}
+          onMouseOver={e => e.currentTarget.style.background = '#eef0fb'}
+          onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+        >
+          ⬇ Download .md
+        </a>
+      </div>
+
+      {groupOrder.map((group, gi) => {
+        const color = PHIL_GROUP_COLORS[group] || '#6b7194';
+        const cards = grouped[group];
+        return (
+          <div key={group} style={{ marginBottom: gi < groupOrder.length - 1 ? 28 : 4 }}>
+
+            {/* Group header bar */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14,
+            }}>
+              <div style={{
+                width: 4, height: 18, borderRadius: 2,
+                background: color, flexShrink: 0,
+              }} />
+              <div style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.9px',
+                textTransform: 'uppercase', color,
+              }}>
+                {group}
+              </div>
+              <div style={{ flex: 1, height: 1, background: `${color}30` }} />
+              <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                {cards.length} principle{cards.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+
+            {/* Cards grid */}
+            <div className="phil-grid">
+              {cards.map(s => (
+                <PhilosophyCard key={s.number} section={s} groupColor={color} />
+              ))}
+            </div>
+
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Meta / Overview panel
+// ──────────────────────────────────────────────────────────
+function MetaPanel({ rubric }) {
+  const [philosophy, setPhilosophy] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/philosophy')
+      .then(r => r.json())
+      .then(data => Array.isArray(data) && setPhilosophy(data))
+      .catch(() => {});
+  }, []);
+
+  if (!rubric) return <div className="main"><div className="spinner" /></div>;
+
+  const totalCompetencies = rubric.dimensions.reduce((a, d) => a + d.competencies.length, 0);
+  const totalCapabilities = rubric.dimensions.reduce((a, d) =>
+    a + d.competencies.reduce((b, c) => b + c.capabilities.length, 0), 0);
+
+  // Resolve display name from the tracks array using current_track id
+  const currentTrackId   = rubric.meta.current_track || rubric.meta.default_track || '';
+  const currentTrackName = rubric.meta.tracks?.find(t => t.id === currentTrackId)?.name || currentTrackId;
+
+  return (
+    <div className="main">
+      <span className="node-type-badge badge-dimension">Rubric</span>
+      <div className="node-title">{currentTrackName}</div>
+      <div className="node-subtitle">
+        {rubric.dimensions.length} dimensions · {totalCompetencies} competencies · {totalCapabilities} capabilities · {rubric.meta.levels.length} levels
+      </div>
+
+      <div className="card">
+        <div className="card-title">Metadata</div>
+        <div className="meta-grid">
+          <div className="meta-field">
+            <label>Version</label>
+            <div className="meta-value">{rubric.meta.version}</div>
+          </div>
+          <div className="meta-field">
+            <label>Status</label>
+            <div className="meta-status">{rubric.meta.status}</div>
+          </div>
+          <div className="meta-field">
+            <label>Last Updated</label>
+            <div className="meta-value">{rubric.meta.last_updated}</div>
+          </div>
+          <div className="meta-field">
+            <label>Track</label>
+            <div className="meta-value">{currentTrackName}</div>
+          </div>
+        </div>
+      </div>
+
+      <PhilosophyCards sections={philosophy} />
+
+      <div className="card">
+        <div className="card-title">Levels</div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {rubric.meta.levels.map(l => (
+            <div key={l} style={{
+              padding: '8px 16px', borderRadius: 8,
+              background: 'var(--bg)', border: '1px solid var(--border)',
+              fontSize: 13
+            }}>
+              <strong>{l}</strong> — {rubric.meta.level_names[l]}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">Dimensions</div>
+        <div className="child-grid">
+          {rubric.dimensions.map(d => (
+            <div key={d.id} className="child-card">
+              <div className="child-card-label">Dimension</div>
+              <div className="child-card-name">{d.name}</div>
+              <div className="child-card-count">
+                {d.competencies.length} competencies ·{' '}
+                {d.competencies.reduce((a, c) => a + c.capabilities.length, 0)} capabilities
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {rubric.meta.notes && (
+        <div className="card" style={{ borderLeft: '3px solid var(--warning)' }}>
+          <div className="card-title">Notes</div>
+          <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{rubric.meta.notes}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Lock icons
+// ──────────────────────────────────────────────────────────
+
+// Closed padlock — shackle is a symmetric U, both legs seated in the body.
+function LockedIcon() {
+  return (
+    <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.5" y="6" width="10" height="7.5" rx="1.5" fill="currentColor"/>
+      <path d="M2.5 6V4.2a3 3 0 0 1 6 0V6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <circle cx="5.5" cy="9.8" r="1.2" fill="white" opacity="0.75"/>
+    </svg>
+  );
+}
+
+// Open padlock — left leg still in body, right leg raised up and away.
+// The raised leg makes the open state immediately obvious at a glance.
+function UnlockedIcon() {
+  return (
+    <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.5" y="6" width="10" height="7.5" rx="1.5" fill="currentColor"/>
+      <path d="M2.5 6V4.2a3 3 0 0 1 6 0V1.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <circle cx="5.5" cy="9.8" r="1.2" fill="white" opacity="0.75"/>
+    </svg>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Track selector
+// ──────────────────────────────────────────────────────────
+
+// Tracks that exist today vs. on the roadmap.
+// 'available: false' entries are shown greyed-out and unselectable.
+const ALL_TRACKS = [
+  { id: 'swe-ic',  name: 'Software Engineering (IC)',  available: true  },
+  { id: 'em',      name: 'Engineering Management',      available: false },
+  { id: 'data-ml', name: 'Data / ML / AI',              available: true  },
+];
+
+function TrackSelector({ currentTrack, onTrackChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  const currentObj = ALL_TRACKS.find(t => t.id === currentTrack);
+  const displayName = currentObj?.name || currentTrack || '…';
+
+  return (
+    <div className="track-selector" ref={ref}>
+      <button className={`track-selector-btn ${open ? 'open' : ''}`}
+        onClick={() => setOpen(v => !v)}>
+        {displayName}
+        <span className="track-chevron">▾</span>
+      </button>
+
+      {open && (
+        <div className="track-dropdown">
+          <div className="track-dropdown-header">Track</div>
+          {ALL_TRACKS.map(t => {
+            const isActive = t.id === currentTrack;
+            const cls = `track-option ${isActive ? 'active' : t.available ? 'available' : 'unavailable'}`;
+            return (
+              <div key={t.id} className={cls}
+                onClick={() => {
+                  if (t.available && !isActive) {
+                    onTrackChange(t.id);
+                    setOpen(false);
+                  }
+                }}>
+                <span>{t.name}</span>
+                {isActive
+                  ? <span className="track-check">✓</span>
+                  : !t.available && <span className="track-soon">Coming soon</span>
+                }
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// Main App
+// ──────────────────────────────────────────────────────────
+function App() {
+  const [rubric, setRubric] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saveStatus, setSaveStatus] = useState('saved'); // saved | unsaved | saving | error
+  const [activeTab, setActiveTab] = useState('overview'); // overview | level-view | editor
+  const [editingEnabled, setEditingEnabled] = useState(false);
+  const [selection, setSelection] = useState({});
+  const { toasts, show: showToast } = useToast();
+  const saveTimer = useRef(null);
+
+  // Load rubric on mount (no track param → server picks default)
+  useEffect(() => {
+    fetch('/api/rubric')
+      .then(r => r.json())
+      .then(data => {
+        setRubric(data);
+        setSelectedTrack(data.meta.current_track || data.meta.default_track || 'swe-ic');
+        setLoading(false);
+      })
+      .catch(err => { showToast('Failed to load rubric: ' + err.message, 'error'); setLoading(false); });
+  }, []);
+
+  // Re-fetch rubric when user switches track
+  const handleTrackChange = useCallback((trackId) => {
+    setSelectedTrack(trackId);
+    setLoading(true);
+    fetch(`/api/rubric?track=${encodeURIComponent(trackId)}`)
+      .then(r => r.json())
+      .then(data => { setRubric(data); setLoading(false); })
+      .catch(err => { showToast('Failed to load track: ' + err.message, 'error'); setLoading(false); });
+  }, [showToast]);
+
+  // Save rubric
+  const saveRubric = useCallback((updatedRubric) => {
+    setSaveStatus('saving');
+    fetch('/api/rubric', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedRubric)
+    })
+      .then(r => r.json())
+      .then(result => {
+        if (result.error) throw new Error(result.error);
+        setSaveStatus('saved');
+        showToast('Saved successfully');
+      })
+      .catch(err => {
+        setSaveStatus('error');
+        showToast('Save failed: ' + err.message, 'error');
+      });
+  }, [showToast]);
+
+  // Handle node save
+  const handleNodeSave = useCallback((type, ids, updatedNode) => {
+    setRubric(prev => {
+      const next = deepClone(prev);
+      if (type === 'dimension') {
+        const dim = next.dimensions.find(d => d.id === ids.dimId);
+        if (dim) { dim.name = updatedNode.name; dim.descriptions = updatedNode.descriptions; }
+      } else if (type === 'competency') {
+        const dim = next.dimensions.find(d => d.id === ids.dimId);
+        const comp = dim?.competencies.find(c => c.id === ids.compId);
+        if (comp) { comp.name = updatedNode.name; comp.descriptions = updatedNode.descriptions; }
+      } else if (type === 'capability') {
+        const dim = next.dimensions.find(d => d.id === ids.dimId);
+        const comp = dim?.competencies.find(c => c.id === ids.compId);
+        const cap = comp?.capabilities.find(c => c.id === ids.capId);
+        if (cap) { cap.name = updatedNode.name; cap.descriptions = updatedNode.descriptions; }
+      }
+      saveRubric(next);
+      return next;
+    });
+  }, [saveRubric]);
+
+  const statusText = { saved: '✓ Saved', unsaved: '● Unsaved', saving: '↑ Saving…', error: '✕ Save failed' };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 16 }}>
+        <div className="spinner" style={{ margin: 0 }} />
+        <div style={{ fontSize: 14, color: 'var(--muted)' }}>Loading rubric…</div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Top bar */}
+      <div className="topbar">
+        <div className="topbar-logo">[DRAFT] Danielle's Technology Rubric</div>
+        {selectedTrack && <TrackSelector currentTrack={selectedTrack} onTrackChange={handleTrackChange} />}
+        <div className="topbar-spacer" />
+        <div className={`save-status ${saveStatus}`}>{statusText[saveStatus]}</div>
+      </div>
+
+      {/* Nav tabs */}
+      <div className="navtabs">
+        <div className={`navtab ${activeTab === 'overview'    ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>Overview</div>
+        <div className={`navtab ${activeTab === 'level-view'  ? 'active' : ''}`} onClick={() => setActiveTab('level-view')}>Level View</div>
+        <div
+          className={`navtab ${activeTab === 'editor' ? 'active' : ''} ${!editingEnabled ? 'locked' : ''}`}
+          onClick={() => setActiveTab('editor')}
+        >
+          Edit Descriptions
+          <span
+            className="tab-lock"
+            title={editingEnabled ? 'Lock editing' : 'Unlock editing'}
+            onClick={e => {
+              e.stopPropagation();
+              setEditingEnabled(v => !v);
+            }}
+          >
+            {editingEnabled ? <UnlockedIcon /> : <LockedIcon />}
+          </span>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="layout">
+        {activeTab === 'editor' && (
+          <SidebarTree rubric={rubric} selection={selection} onSelect={setSelection} />
+        )}
+
+        {activeTab === 'overview'   && <MetaPanel rubric={rubric} />}
+        {activeTab === 'editor'     && (
+          <NodeEditor rubric={rubric} selection={selection} onSave={handleNodeSave} readOnly={!editingEnabled} />
+        )}
+        {activeTab === 'level-view' && <LevelView rubric={rubric} selectedTrack={selectedTrack} />}
+      </div>
+
+      <ToastContainer toasts={toasts} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

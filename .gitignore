@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Server runtime
+rubric-editor/.server.pid
+
+# Old preview files
+FlexGen_Rubric_Preview.html
+
+# macOS
+.DS_Store
