@@ -671,7 +671,7 @@
     .dim-nav-chip { flex: 1; padding: 12px 10px 14px; border: 1px solid var(--border); border-bottom: none; border-radius: 10px 10px 0 0; background: var(--bg); cursor: pointer; text-align: center; position: relative; bottom: -1px; transition: background 0.12s; }
     .dim-nav-chip.active { background: #fff; z-index: 1; border-bottom: 2px solid #fff; }
     .dim-nav-chip:hover:not(.active) { background: #f4f5fb; }
-    .dim-chip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dim-chip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); line-height: 1.3; }
     .dim-chip-level { font-size: 20px; font-weight: 800; color: var(--primary); margin: 3px 0; }
     .dim-chip-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 6px; }
     .dim-chip-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width 0.3s; }
@@ -682,7 +682,14 @@
     .dim-arrow-btn { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: border-color 0.12s, color 0.12s; }
     .dim-arrow-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
     .dim-arrow-btn:disabled { opacity: 0.3; cursor: default; }
-    .comp-result-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 18px; }
+    .results-intro { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .results-intro strong { color: var(--text); }
+    .comp-result-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+    .comp-result-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; user-select: none; }
+    .comp-result-header:hover { background: var(--bg); }
+    .comp-collapse-arrow { font-size: 11px; color: var(--muted); margin-left: auto; flex-shrink: 0; transition: transform 0.15s; }
+    .comp-collapse-arrow.open { transform: rotate(90deg); }
+    .comp-result-body { padding: 0 20px 20px; }
     .comp-result-top { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
     .comp-result-name { font-size: 15px; font-weight: 700; }
     .comp-inferred-level { font-size: 30px; font-weight: 800; color: var(--primary); line-height: 1; }
@@ -2104,6 +2111,8 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const [dimIdx, setDimIdx] = useState(0);
   const [accepted, setAccepted] = useState({}); // { compId: level }
   const [evidence, setEvidence] = useState({}); // { compId: string }
+  const [collapsed, setCollapsed] = useState({}); // { compId: bool }
+  const toggleCollapsed = (compId) => setCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
 
   const window = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
@@ -2218,6 +2227,14 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
       {/* Dimension body */}
       <div className="results-body">
+        <div className="results-intro">
+          <strong>Here are your inferred levels</strong> based on how you rated the scenarios.
+          Navigate between dimensions using the tabs above. For each competency, review the inferred
+          level, override it if needed, and add a specific example that supports your assessment.
+          The progress bar on each tab fills when you've confirmed a level <em>and</em> added evidence.
+          Export to CSV at any time.
+        </div>
+
         <div className="results-dim-header">
           <div className="results-dim-title">{currentDim.name}</div>
           <div className="results-dim-arrows">
@@ -2243,77 +2260,83 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
             }
           });
 
+          const isOpen = !collapsed[comp.id];
           return (
             <div key={comp.id} className="comp-result-card">
-              {/* Header */}
-              <div className="comp-result-top">
-                <div className="comp-result-name">{comp.name}</div>
-                <div className="comp-inferred-level">{inf}</div>
-                <div className="comp-inferred-name">{levelNames[inf]}</div>
-              </div>
-
-              {/* Level override */}
-              <div className="comp-level-row">
-                <label>Accepted level</label>
-                <select className="comp-level-select"
-                  value={accepted[comp.id] || inf}
-                  onChange={e => setAccepted(prev => ({ ...prev, [comp.id]: e.target.value }))}>
-                  {levels.map(l => (
-                    <option key={l} value={l}>{l} — {levelNames[l] || l}</option>
-                  ))}
-                </select>
-                {accepted[comp.id] && accepted[comp.id] !== inf && (
-                  <span style={{ fontSize: 11, color: 'var(--muted)' }}>
-                    (overridden from {inf})
-                  </span>
+              {/* Collapsible header */}
+              <div className="comp-result-header" onClick={() => toggleCollapsed(comp.id)}>
+                <div className="comp-inferred-level" style={{ fontSize: 22, fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>{eff}</div>
+                <div>
+                  <div className="comp-result-name">{comp.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)' }}>{levelNames[eff]}{accepted[comp.id] && accepted[comp.id] !== inf ? ` (overridden from ${inf})` : ''}</div>
+                </div>
+                {(evidence[comp.id] || '').trim() && (
+                  <span style={{ fontSize: 11, background: '#dcfce7', color: '#166534', borderRadius: 20, padding: '2px 8px', fontWeight: 600 }}>✓ evidence</span>
                 )}
+                <span className={`comp-collapse-arrow ${isOpen ? 'open' : ''}`}>▶</span>
               </div>
 
-              {/* Capabilities */}
-              <div className="comp-caps-section">
-                <div className="comp-section-title">Capabilities</div>
-                {comp.capabilities.map(cap => (
-                  <div key={cap.id} className="comp-cap-item">
-                    <span className="comp-cap-dot">·</span>
-                    <div>
-                      <div className="comp-cap-name">{cap.name}</div>
-                      {cap.intent && <div className="comp-cap-intent">{cap.intent}</div>}
-                    </div>
+              {isOpen && (
+                <div className="comp-result-body">
+                  {/* Level override */}
+                  <div className="comp-level-row">
+                    <label>Accepted level</label>
+                    <select className="comp-level-select"
+                      value={accepted[comp.id] || inf}
+                      onChange={e => setAccepted(prev => ({ ...prev, [comp.id]: e.target.value }))}>
+                      {levels.map(l => (
+                        <option key={l} value={l}>{l} — {levelNames[l] || l}</option>
+                      ))}
+                    </select>
                   </div>
-                ))}
-              </div>
 
-              {/* Card columns */}
-              {compCards.length > 0 && (
-                <div className="card-columns">
-                  {[
-                    { key: 'easy',        label: 'Easy' },
-                    { key: 'comfortable', label: 'Comfortable' },
-                    { key: 'stretch',     label: 'Stretch' },
-                    { key: 'skip',        label: 'Skipped' },
-                  ].map(({ key, label }) => (
-                    <div key={key} className="card-col">
-                      <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>{label}</div>
-                      {byBucket[key].length === 0
-                        ? <div className="card-col-empty">—</div>
-                        : byBucket[key].map((text, i) => (
-                          <div key={i} className="card-chip">{abridgeText(text)}</div>
-                        ))
-                      }
+                  {/* Capabilities */}
+                  <div className="comp-caps-section">
+                    <div className="comp-section-title">Capabilities</div>
+                    {comp.capabilities.map(cap => (
+                      <div key={cap.id} className="comp-cap-item">
+                        <span className="comp-cap-dot">·</span>
+                        <div>
+                          <div className="comp-cap-name">{cap.name}</div>
+                          {cap.intent && <div className="comp-cap-intent">{cap.intent}</div>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Card columns */}
+                  {compCards.length > 0 && (
+                    <div className="card-columns">
+                      {[
+                        { key: 'easy',        label: 'Easy' },
+                        { key: 'comfortable', label: 'Comfortable' },
+                        { key: 'stretch',     label: 'Stretch' },
+                        { key: 'skip',        label: 'Skipped' },
+                      ].map(({ key, label }) => (
+                        <div key={key} className="card-col">
+                          <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>{label}</div>
+                          {byBucket[key].length === 0
+                            ? <div className="card-col-empty">—</div>
+                            : byBucket[key].map((text, i) => (
+                              <div key={i} className="card-chip">{abridgeText(text)}</div>
+                            ))
+                          }
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
+
+                  {/* Evidence */}
+                  <div className="comp-evidence">
+                    <label>Specific examples &amp; evidence</label>
+                    <textarea
+                      placeholder="Add a concrete example that illustrates your level in this competency…"
+                      value={evidence[comp.id] || ''}
+                      onChange={e => setEvidence(prev => ({ ...prev, [comp.id]: e.target.value }))}
+                    />
+                  </div>
                 </div>
               )}
-
-              {/* Evidence */}
-              <div className="comp-evidence">
-                <label>Specific examples &amp; evidence</label>
-                <textarea
-                  placeholder="Add a concrete example that illustrates your level in this competency…"
-                  value={evidence[comp.id] || ''}
-                  onChange={e => setEvidence(prev => ({ ...prev, [comp.id]: e.target.value }))}
-                />
-              </div>
             </div>
           );
         })}
@@ -2321,7 +2344,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
       {/* Footer */}
       <div className="results-footer">
-        <button className="wiz-restart-btn" onClick={onRestart}>Start over</button>
+        <button className="wiz-restart-btn" onClick={onRestart}>Clear results &amp; restart</button>
         <button className="export-csv-btn" onClick={exportCSV}>Export CSV</button>
       </div>
     </div>
@@ -2493,7 +2516,7 @@ function App() {
       </div>
 
       {/* Body */}
-      <div className="layout">
+      <div className="layout" style={{ display: activeTab === 'wizard' ? 'none' : undefined }}>
         {activeTab === 'editor' && (
           <SidebarTree rubric={rubric} selection={selection} onSelect={setSelection} />
         )}
@@ -2503,7 +2526,11 @@ function App() {
           <NodeEditor rubric={rubric} selection={selection} onSave={handleNodeSave} readOnly={!editingEnabled} />
         )}
         {activeTab === 'level-view' && <LevelView rubric={rubric} selectedTrack={selectedTrack} />}
-        {activeTab === 'wizard'     && <WizardTab rubric={rubric} />}
+      </div>
+
+      {/* Wizard always mounted to preserve state across tab switches */}
+      <div style={{ display: activeTab === 'wizard' ? 'flex' : 'none', flex: 1, flexDirection: 'column', overflow: 'hidden' }}>
+        {rubric && <WizardTab rubric={rubric} />}
       </div>
 
       <ToastContainer toasts={toasts} />
