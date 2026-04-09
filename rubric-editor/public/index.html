@@ -2235,6 +2235,8 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const toggleCollapsed = (compId) => setCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
   const [cardsCollapsed, setCardsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
   const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
+  const [capsCollapsed, setCapsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
+  const toggleCapsCollapsed = (compId) => setCapsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
 
   const levelWindow = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
@@ -2497,8 +2499,11 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
                   {/* Capabilities */}
                   <div className="comp-caps-section">
-                    <div className="comp-section-title">Capabilities</div>
-                    {comp.capabilities.map(cap => {
+                    <div className="cards-section-toggle" onClick={() => toggleCapsCollapsed(comp.id)}>
+                      <span className={`cards-section-arrow ${capsCollapsed[comp.id] ? 'open' : ''}`}>▶</span>
+                      Capabilities
+                    </div>
+                    {capsCollapsed[comp.id] && comp.capabilities.map(cap => {
                       const capDescs = cap.descriptions || {};
                       const capEffDesc  = capDescs[eff];
                       const capInfDesc  = inf && inf !== eff ? capDescs[inf] : null;
