@@ -20,7 +20,7 @@
       "L6": "Distinguished Engineer"
     },
     "notes": "This rubric is a representation of my mental model of what great engineering performance looks like across levels \u2014 not a formal HR policy, a complete picture of any individual, or a substitute for nuanced conversation. If you're using it for self-reflection or a discussion with your manager, treat it as a starting point rather than a verdict. It's a work in progress, as most worthwhile things are. If something doesn't ring true for your context, trust that instinct. Feedback is always welcome.",
-    "default_track": "swe-ic",
+    "default_track": "data-ml",
     "tracks": [
       {
         "id": "swe-ic",
@@ -34,7 +34,7 @@
       },
       {
         "id": "data-ml",
-        "name": "Data / ML / AI",
+        "name": "Data Science/Machine Learning",
         "available": true
       }
     ],

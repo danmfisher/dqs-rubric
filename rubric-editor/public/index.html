@@ -1797,7 +1797,7 @@ function UnlockedIcon() {
 const ALL_TRACKS = [
   { id: 'swe-ic',  name: 'Software Engineering (IC)',  available: true  },
   { id: 'em',      name: 'Engineering Management',      available: false },
-  { id: 'data-ml', name: 'Data / ML / AI',              available: true  },
+  { id: 'data-ml', name: 'Data Science/Machine Learning', available: true  },
 ];
 
 function TrackSelector({ currentTrack, onTrackChange }) {
@@ -1990,7 +1990,7 @@ function SetupScreen({ onStart, rubric }) {
   const [name, setName] = useState('Danielle');
   const [level, setLevel] = useState('L3');
   const [pronouns, setPronouns] = useState('she/her');
-  const [track, setTrack] = useState('swe-ic');
+  const [track, setTrack] = useState('data-ml');
 
   const tracks = (rubric?.meta?.tracks || []).filter(t => t.available);
   const levels = rubric?.meta?.levels || LEVELS;

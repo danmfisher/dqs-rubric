@@ -58,13 +58,17 @@ Session 3 — post-review prompt hardening
   - Duplicate scenarios at adjacent levels: added SCENARIO VARIETY section.
 
 Session 4 — bold markers
-  - BOLD MARKERS added to SYSTEM_PROMPT: 1–3 phrases bolded per card.
-  - Mental model refined across two prompt iterations: bold = evaluative
-    evidence, not just the action verb. Three evidentiary purposes in
-    priority order: (1) the action, (2) the autonomy/agency signal
-    ("without needing additional support"), (3) the scope signal
-    ("cross-team") when scale is the level indicator. Level signal words
-    (consistently, proactively, etc.) must sit inside the bold span.
+  - BOLD MARKERS added to SYSTEM_PROMPT: one bold per sentence, three
+    signal types must be represented across the card.
+  - Key mental model: bold phrases have "direct lineage from the rubric."
+    They are not general praise — they surface the exact vocabulary of the
+    LEVEL SIGNALS table: frequency words (consistently, proactively, etc.),
+    agency phrases (without waiting for specific direction, with minimal
+    guidance, without prompting), and scope phrases (cross-team, org-wide).
+  - Frequency word MUST be inside the bold span, not left outside it.
+  - Agency phrase must be bolded in full — the whole phrase carries the
+    signal ("without waiting for specific direction"), not just the verb.
+  - Scope is most critical at L4+ where scale is the primary differentiator.
   - Bold is part of the default generation flow. Existing cards were
     retrofitted in a one-time pass; the standalone --add-bold flag removed.
 
@@ -185,36 +189,58 @@ SCENARIO VARIETY — cards within the same competency must use distinct situatio
   different type of situation, even if both sit at adjacent levels.
 
 BOLD MARKERS
-Every sentence must contain at least one bolded phrase. Across the card, the bolded
-phrases must collectively cover all three of the following signal types:
+Bold is how the reader recognizes the level. Every bolded phrase must have direct lineage
+from the LEVEL SIGNALS table — it should surface one of the three rubric signal dimensions.
+Bolded phrases are not general praise; they are the specific words that tell a calibrated
+evaluator what level they are looking at.
 
-  1. ACTION — the verb phrase describing what the person did
-  2. AUTONOMY — how self-directed they were ("without needing additional support",
-     "without waiting for direction", "on their own initiative", "without prompting")
-  3. SCOPE — the scale of impact when it is the level indicator ("cross-team",
-     "across the org", "company-wide") — especially important at L4 and above
+Every sentence must contain at least one bolded phrase. Across the card, the bolded phrases
+must collectively surface all three signal types:
+
+  1. ACTION — the verb phrase for what the person did. The sentence's frequency signal word
+     (consistently, proactively, regularly, etc.) MUST be inside the bold span.
+       ✓ "**consistently drove** the refactoring..."
+       ✗ "consistently **drove** the refactoring..."  ← frequency word left outside
+
+  2. AGENCY — the phrase that shows how self-directed they were. These come directly from
+     the agency column of the LEVEL SIGNALS table. Bold the whole agency phrase:
+       L1: "**with guidance**", "**with help from their manager**"
+       L2: "**with minimal guidance**", "**starting with minimal input**"
+       L3: "**independently**", "**without waiting for specific direction**"
+       L4: "**without prompting**", "**without being asked**", "**on their own initiative**"
+       L5: "**without direction**", "**setting the direction for the team**"
+     The agency phrase must be bolded in full, whether it opens the sentence or is embedded mid-sentence.
+       ✓ "**Without waiting for specific direction**, {{name}} refactored the module."
+       ✓ "{{name}} refactored the module **without waiting for specific direction**."
+       ✗ "without waiting for **specific direction**"  ← partial — the signal is in the full phrase
+
+  3. SCOPE — the scale of impact, from the scope column of the LEVEL SIGNALS table.
+     Scope is most critical at L4+, where it is the primary level differentiator.
+       L3: "**across the feature**", "**for the project**"
+       L4: "**across the team**", "**cross-team**", "**two teams**"
+       L5: "**org-wide**", "**across the org**"
+       L6: "**company-wide**", "**across the industry**"
 
 In a 3-sentence card, aim for one signal type per sentence. In a 2-sentence card,
-combine autonomy and scope into the same bold span if both are present.
+combine agency and scope into the same bold span when both are present.
 
 Additional rules:
   - Bold MUST include the main verb — never bold a noun phrase or object alone
-  - Level signal words (consistently, proactively, etc.) belong INSIDE the bold
   - Do not bold outcomes or domains — bold the behavior, not what it produced
 
-  ✓ "{{name}} **independently led the refactoring of the auth module**."   ← action
-     "**Working without additional guidance**, she identified bottlenecks." ← autonomy
-     "Her changes **improved reliability across three downstream teams**."  ← scope
+  ✓ "{{name}} **consistently drove the refactoring effort**."             ← action (freq inside)
+     "**Without waiting for specific direction**, she caught the gaps."   ← agency (full phrase)
+     "The fix **rolled out across three downstream teams**."              ← scope
 
-  ✗ "{{name}} **independently led the refactoring of the auth module**,
-     working without additional guidance to improve reliability."
-     → autonomy and scope signals left unbolded; only action is represented
+  ✗ "{{name}} **consistently drove the refactoring effort**,
+     without waiting for specific direction across three downstream teams."
+     → agency phrase and scope left unbolded — only action represented
 
-  ✓ "{{name}} **proactively coordinated a cross-team effort** to address the outage."
-     (combines action + autonomy + scope in one span when card is tightly written)
+  ✓ "{{name}} **proactively coordinated a cross-team effort** to resolve the outage."
+     (combines action + agency + scope in one span when card is tightly written)
 
-  ✗ "{{name}} proactively coordinated **a cross-team effort** to address the outage."
-     → verb-free fragment bolded; "proactively" (the autonomy signal) left outside
+  ✗ "{{name}} proactively coordinated **a cross-team effort** to resolve the outage."
+     → "proactively" (the agency signal) left outside the bold span
 
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
