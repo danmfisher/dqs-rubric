@@ -108,7 +108,7 @@ src = src.replace(
     "      })\n"
     "      .catch(err => { showToast('Failed to load rubric: ' + err.message, 'error'); setLoading(false); });",
 
-    "Promise.resolve(window.BAKED.tracks['swe-ic'])\n"
+    f"Promise.resolve(window.BAKED.tracks['{rubric['meta']['default_track']}'])\n"
     "      .then(data => {\n"
     "        setRubric(data);\n"
     "        setSelectedTrack(data.meta.current_track || data.meta.default_track || 'swe-ic');\n"

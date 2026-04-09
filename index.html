@@ -2571,7 +2571,7 @@ function App() {
 
   // Load rubric on mount (no track param → server picks default)
   useEffect(() => {
-    Promise.resolve(window.BAKED.tracks['swe-ic'])
+    Promise.resolve(window.BAKED.tracks['data-ml'])
       .then(data => {
         setRubric(data);
         setSelectedTrack(data.meta.current_track || data.meta.default_track || 'swe-ic');
