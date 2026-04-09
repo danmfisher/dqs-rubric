@@ -144,8 +144,55 @@ When adapting for a new job function:
 
 ---
 
+<!-- group: The Building Blocks -->
+## 10. Understanding the Levels
+
+The rubric uses six levels — L1 through L6 — corresponding to Associate Engineer through Distinguished Engineer. Each level describes an *archetype*: a pattern of behaviors that characterizes someone operating solidly at that band. Levels are defined by scope, agency, and reach, not by years of experience or title tenure.
+
+Each level description below opens with its arc signal word (see §15) — the vocabulary that appears in the rubric's capability descriptions to mark where a behavior sits on the progression.
+
+**L1 — Associate Engineer**
+*Beginning to* develop the habits and skills of the role. Executes well-scoped tasks with guidance, absorbing how the team works and building foundational technical and behavioral patterns. The primary variable is what they can take on independently, which grows quickly with strong onboarding.
+
+**L2 — Engineer**
+*Regularly* delivers on day-to-day work with minimal guidance. Growing in craft and depth; owns feature-level work but still benefits from direction on genuinely ambiguous or larger-scope problems.
+
+**L3 — Senior Engineer**
+*Consistently* delivers complex work end-to-end, independently. The go-to person for their area. Starting to shape *how* the team works — not just what it ships — and actively investing in developing teammates.
+
+**L4 — Staff Engineer**
+*Proactively* identifies and removes systemic blockers, often without being asked. Operates across teams, defines technical direction for their domain, and makes the people around them measurably more effective. The shift from L3 to L4 is less about technical depth and more about scope and organizational leverage.
+
+**L5 — Principal Engineer**
+*Systematically* improves how engineering works at the org level — setting standards, driving cross-team alignment, and shaping culture without direction to do so. Work has consequences beyond their immediate team.
+
+**L6 — Distinguished Engineer**
+*Defines the standard* for technical leadership. Work sets the philosophy at the company level and shapes the discipline beyond the organization itself. This level is intentionally rare and represents an exceptional, sustained body of technical leadership.
+
+---
+
+## 11. Understanding the Dimensions
+
+The rubric organizes competencies into four dimensions — the broadest categories of what it means to perform well as an engineer. Dimensions represent the top-level framing before you get into the specific competencies and capabilities within each.
+
+**Impact & Scope**
+The tangible results your work produces and the breadth of your reach. Asks: what are you actually delivering, and how far does it travel? This dimension covers ownership, execution, business alignment, and values — the "what" of performance.
+
+**Reasoning & Framing**
+How you think. Distinguishes between someone who arrives at a solution and someone who first identifies whether they're solving the right problem. This dimension covers how you structure problems, generate options, and validate success — the "how you think" of performance.
+
+**Communication & Influence**
+How you move information, decisions, and people. Technical skill alone doesn't create organizational leverage — the ability to convey clearly, align stakeholders, and grow others does. This dimension covers the full arc from clear writing to org-wide influence.
+
+**Technical Competencies**
+The craft and domain knowledge that underpin everything else. Split into three competencies: Craft (the quality and rigor of your technical work product), Shared Technical (what every engineer needs regardless of track), and Domain-Specific (customized per track). This dimension is the foundation that the others sit on.
+
+Dimensions don't have weights, and they aren't substitutable. A strong Impact score doesn't offset a weak Technical Competencies score — each dimension represents a necessary facet of well-rounded performance.
+
+---
+
 <!-- group: How to Use It -->
-## 10. The Three-Tier Rating Structure
+## 12. The Three-Tier Rating Structure
 
 Formal performance ratings operate at three tiers of granularity:
 
@@ -164,7 +211,7 @@ The behavioral scaffolding that informs Dimension scores. Managers may or may no
 
 ---
 
-## 11. Calibration Philosophy
+## 13. Calibration Philosophy
 
 Calibration happens **per level** — the goal is consistent application of the rubric across individuals at the same level, not cross-level comparison.
 
@@ -177,7 +224,7 @@ Forced distribution (bell-curving) is a policy decision made at the leadership l
 
 ---
 
-## 12. Self-Assessment
+## 14. Self-Assessment
 
 Individuals are encouraged — and should be given space — to self-assess against the rubric before formal review conversations. A strong self-assessment practice:
 - Surfaces work and impact that managers may have missed
@@ -191,7 +238,7 @@ Managers may require or encourage self-ratings as a preparation step before revi
 
 ---
 
-## 13. How Descriptions Signal Progression
+## 15. How Descriptions Signal Progression
 
 Each description in this rubric is written using consistent **signal vocabulary** — words and phrases that carry meaning about frequency, agency, and scope. Reading descriptions vertically across levels, these signals make visible exactly what changes from one level to the next.
 
@@ -208,7 +255,7 @@ These signals serve two audiences. **Managers** calibrating ratings can quickly 
 ---
 
 <!-- group: Gotchas & Caveats -->
-## 14. The Rubric Is Not a Checklist
+## 16. The Rubric Is Not a Checklist
 
 Perhaps most importantly: this rubric is a **growth tool and a conversation guide**, not a compliance checklist.
 
@@ -218,7 +265,7 @@ The behaviors described are illustrative of a level, not exhaustive. A manager s
 
 ---
 
-## 15. AI Tools and Emerging Technology
+## 17. AI Tools and Emerging Technology
 
 There is no dedicated dimension or capability for AI tool adoption. This is intentional.
 
