@@ -18,8 +18,9 @@ from pathlib import Path
 BASE         = Path(__file__).parent          # rubric_artifacts/src/
 ARTIFACTS    = BASE.parent                    # rubric_artifacts/
 ROOT         = BASE.parent.parent             # project root
-RUBRIC_PATH  = ARTIFACTS / "rubric.json"
-PHIL_PATH    = ARTIFACTS / "philosophy.md"
+RUBRIC_PATH    = ARTIFACTS / "rubric.json"
+PHIL_PATH      = ARTIFACTS / "philosophy.md"
+EXAMPLES_PATH  = ARTIFACTS / "examples.json"
 SOURCE_HTML  = ROOT / "rubric-editor" / "public" / "index.html"
 OUTPUT_HTML  = ROOT / "index.html"
 
@@ -68,16 +69,18 @@ def read_philosophy():
 
 
 # ── Build baked data ─────────────────────────────────────────────────────────
-print("Reading rubric.json and philosophy.md...")
+print("Reading rubric.json, philosophy.md, and examples.json...")
 with open(RUBRIC_PATH, encoding="utf-8") as f:
     rubric = json.load(f)
 
 available_tracks = [t["id"] for t in rubric["meta"]["tracks"] if t.get("available")]
 tracks_data = {track: resolve_track(rubric, track) for track in available_tracks}
-philosophy   = read_philosophy()
-baked        = json.dumps({"tracks": tracks_data, "philosophy": philosophy})
+philosophy  = read_philosophy()
+examples    = json.loads(EXAMPLES_PATH.read_text(encoding="utf-8")) if EXAMPLES_PATH.exists() else []
+baked       = json.dumps({"tracks": tracks_data, "philosophy": philosophy, "examples": examples})
 print(f"  Tracks baked: {available_tracks}")
 print(f"  Philosophy sections: {len(philosophy)}")
+print(f"  Example cards: {len(examples)}")
 
 
 # ── Read source HTML ─────────────────────────────────────────────────────────
@@ -135,6 +138,16 @@ src = src.replace(
 
     "Promise.resolve(window.BAKED.philosophy)\n"
     "      .then(data => Array.isArray(data) && setPhilosophy(data));"
+)
+
+# Examples fetch (wizard card exercise)
+src = src.replace(
+    "fetch('/api/examples')\n"
+    "      .then(r => r.json())\n"
+    "      .then(data => {",
+
+    "Promise.resolve(window.BAKED.examples || [])\n"
+    "      .then(data => {"
 )
 
 # Save handler (no server in preview — just clear dirty state)
@@ -204,6 +217,8 @@ checks = [
     ("philosophy sections baked",  str(len(philosophy)) in baked),
     ("rubric CSV export is client-side", "exportRubricCSV" in src),
     ("philosophy download client-side",  "downloadPhilosophy" in src),
+    ("examples baked",                   f'"examples":{len(examples)}' in baked.replace(' ', '') or '"examples":' in baked),
+    ("examples fetch patched",           "window.BAKED.examples" in src),
 ]
 print()
 all_passed = True
