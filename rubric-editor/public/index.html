@@ -1981,6 +1981,7 @@ function CardExerciseScreen({ setup, onComplete }) {
   const [cards, setCards] = useState(null);   // shuffled, filtered
   const [ratings, setRatings] = useState({}); // { cardId: 'easy'|'comfortable'|'stretch'|'skip' }
   const [idx, setIdx] = useState(0);
+  const [showSkipConfirm, setShowSkipConfirm] = useState(false);
 
   const window = getLevelWindow(setup.level);
 
@@ -2099,19 +2100,26 @@ function CardExerciseScreen({ setup, onComplete }) {
         <button className="rating-btn skip-btn" onClick={() => rate('skip')}>Skip</button>
       </div>
 
-      <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', gap: 16, alignItems: 'center' }}>
-        <span>Card {idx + 1} of {cards.length}</span>
-        <span>·</span>
-        <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
-          onClick={() => {
-            const ok = window.confirm(
-              'Skip straight to results?\n\n' +
-              'Any cards you haven\'t rated yet will appear in the Skipped column. ' +
-              'You can still review and override the inferred levels on the results page.'
-            );
-            if (ok) onComplete(cards, ratings);
-          }}>Skip straight to results</span>
-      </div>
+      {showSkipConfirm ? (
+        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 20px', maxWidth: 520, textAlign: 'center' }}>
+          <div style={{ fontSize: 13, color: 'var(--text)', marginBottom: 10 }}>
+            Unrated cards will appear as <strong>Skipped</strong> on the results page. You can still review and override inferred levels there.
+          </div>
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+            <button style={{ padding: '6px 16px', background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+              onClick={() => onComplete(cards, ratings)}>Go to results</button>
+            <button style={{ padding: '6px 14px', background: '#fff', color: 'var(--muted)', border: '1px solid var(--border)', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}
+              onClick={() => setShowSkipConfirm(false)}>Keep going</button>
+          </div>
+        </div>
+      ) : (
+        <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', gap: 16, alignItems: 'center' }}>
+          <span>Card {idx + 1} of {cards.length}</span>
+          <span>·</span>
+          <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
+            onClick={() => setShowSkipConfirm(true)}>Skip straight to results</span>
+        </div>
+      )}
     </div>
   );
 }
