@@ -2441,9 +2441,9 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                     const infDesc = inf && inf !== eff ? (comp.descriptions || {})[inf] : null;
                     if (!effDesc && !infDesc) return null;
                     return (
-                      <div style={{ margin: '10px 0 4px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <div style={{ margin: '10px 0 4px', display: 'flex', flexDirection: 'row', gap: 8 }}>
                         {effDesc && (
-                          <div style={{ background: '#f4f6ff', borderLeft: '3px solid var(--primary)', borderRadius: '0 6px 6px 0', padding: '8px 12px' }}>
+                          <div style={{ flex: 1, background: '#f4f6ff', borderLeft: '3px solid var(--primary)', borderRadius: '0 6px 6px 0', padding: '8px 12px' }}>
                             <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>
                               {eff} — {levelNames[eff] || eff}{accepted[comp.id] ? ' (accepted)' : ' (inferred)'}
                             </div>
@@ -2451,7 +2451,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                           </div>
                         )}
                         {infDesc && (
-                          <div style={{ background: '#fafafa', borderLeft: '3px solid var(--muted)', borderRadius: '0 6px 6px 0', padding: '8px 12px', opacity: 0.85 }}>
+                          <div style={{ flex: 1, background: '#fafafa', borderLeft: '3px solid var(--muted)', borderRadius: '0 6px 6px 0', padding: '8px 12px', opacity: 0.85 }}>
                             <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>
                               {inf} — {levelNames[inf] || inf} (inferred)
                             </div>
