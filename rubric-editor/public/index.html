@@ -697,12 +697,13 @@
     .comp-cap-dot { color: var(--muted); flex-shrink: 0; margin-top: 1px; }
     .comp-cap-name { font-size: 13px; font-weight: 600; }
     .comp-cap-intent { font-size: 12px; color: var(--muted); margin-top: 1px; }
-    .card-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+    .card-columns { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
     .card-col { display: flex; flex-direction: column; }
     .card-col-hdr { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 10px; border-radius: 6px; text-align: center; margin-bottom: 8px; }
     .card-col-hdr.easy { background: #dcfce7; color: #166534; }
     .card-col-hdr.comfortable { background: #dbeafe; color: #1e40af; }
     .card-col-hdr.stretch { background: #fef3c7; color: #92400e; }
+    .card-col-hdr.skipped { background: #f1f5f9; color: var(--muted); }
     .card-chip { font-size: 12px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; margin-bottom: 6px; line-height: 1.45; }
     .card-col-empty { font-size: 12px; color: var(--muted); font-style: italic; padding: 6px 10px; }
     .comp-evidence label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); display: block; margin-bottom: 6px; }
@@ -1813,16 +1814,34 @@ function substituteTokens(text, name, pronouns) {
   const p = PRONOUN_MAP[pronouns] || PRONOUN_MAP['they/them'];
   const displayName = (name || '').trim() ||
     (p.they.charAt(0).toUpperCase() + p.they.slice(1));
+  // Use /gi so {{Name}}, {{They}}, etc. (any capitalisation) are all caught
   let s = text
-    .replace(/\{\{name\}\}/g, displayName)
-    .replace(/\{\{they\}\}/g,  p.they)
-    .replace(/\{\{their\}\}/g, p.their)
-    .replace(/\{\{them\}\}/g,  p.them);
-  // Capitalize letters that follow sentence-ending punctuation
+    .replace(/\{\{name\}\}/gi,  displayName)
+    .replace(/\{\{they\}\}/gi,  p.they)
+    .replace(/\{\{their\}\}/gi, p.their)
+    .replace(/\{\{them\}\}/gi,  p.them);
+  // Capitalise letters that follow sentence-ending punctuation
   s = s.replace(/([.!?]\s+)([a-z])/g, (_, punc, ch) => punc + ch.toUpperCase());
-  // Capitalize first character
+  // Capitalise first character
   if (s.length) s = s.charAt(0).toUpperCase() + s.slice(1);
   return s;
+}
+
+// Split card text into individual sentences for visual breathing room
+function splitSentences(text) {
+  const parts = [];
+  let remaining = text;
+  while (remaining.length > 0) {
+    const m = remaining.match(/^(.*?[.!?])(\s+|$)/);
+    if (m) {
+      parts.push(m[1]);
+      remaining = remaining.slice(m[0].length);
+    } else {
+      parts.push(remaining);
+      break;
+    }
+  }
+  return parts.filter(Boolean);
 }
 
 function shuffleArr(arr) {
@@ -1838,10 +1857,13 @@ function getCompKey(card) {
   return card.competency_id + '|' + (card.track || '');
 }
 
-// Returns true when a competency's cards have a clear signal
-// Rule: ≥60% answered AND ≥85% of answered in the same bucket
+// Returns true when a competency's cards have a clear signal, OR all are rated/skipped
+// Signal rule: ≥60% answered (non-skip) AND ≥85% of answered in the same bucket
 function isCompDone(compCards, ratings) {
-  const answered = compCards.filter(c => ratings[c.id] && ratings[c.id] !== 'skip');
+  const rated = compCards.filter(c => ratings[c.id]);           // any rating incl. skip
+  const answered = rated.filter(c => ratings[c.id] !== 'skip'); // excludes skip
+  // All cards touched → done regardless of signal clarity
+  if (rated.length === compCards.length) return true;
   if (answered.length === 0) return false;
   if (answered.length / compCards.length < 0.60) return false;
   const counts = { easy: 0, comfortable: 0, stretch: 0 };
@@ -1894,9 +1916,9 @@ function abridgeText(text, max = 90) {
 
 // ── Setup Screen ──────────────────────────────────────────
 function SetupScreen({ onStart, rubric }) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState('Danielle');
   const [level, setLevel] = useState('L3');
-  const [pronouns, setPronouns] = useState('they/them');
+  const [pronouns, setPronouns] = useState('she/her');
   const [track, setTrack] = useState('swe-ic');
 
   const tracks = (rubric?.meta?.tracks || []).filter(t => t.available);
@@ -2021,6 +2043,7 @@ function CardExerciseScreen({ setup, onComplete }) {
   const card = cards[idx];
   const currentRating = ratings[card.id];
   const cardText = substituteTokens(card.scenario, setup.name, setup.pronouns);
+  const sentences = splitSentences(cardText);
   const badgeClass = currentRating ? `badge-${currentRating}` : null;
   const badgeLabel = currentRating
     ? ({ easy: 'Easy', comfortable: 'Comfortable', stretch: 'Stretch', skip: 'Skipped' })[currentRating]
@@ -2028,6 +2051,15 @@ function CardExerciseScreen({ setup, onComplete }) {
 
   return (
     <div className="card-exercise">
+      <div style={{ textAlign: 'center', maxWidth: 520 }}>
+        <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+          How does this feel relative to your day-to-day work?
+        </div>
+        <div style={{ fontSize: 13, color: 'var(--muted)' }}>
+          Easy = below your level · Comfortable = right at your level · Stretch = above your level
+        </div>
+      </div>
+
       <div className="card-scene">
         <button className="card-nav-btn" onClick={() => setIdx(i => Math.max(0, i - 1))}
           disabled={idx === 0}>‹</button>
@@ -2036,7 +2068,11 @@ function CardExerciseScreen({ setup, onComplete }) {
           {badgeLabel && (
             <span className={`eval-card-badge ${badgeClass}`}>{badgeLabel}</span>
           )}
-          <p className="eval-card-text">{cardText}</p>
+          <div className="eval-card-text">
+            {sentences.map((s, i) => (
+              <p key={i} style={{ marginBottom: i < sentences.length - 1 ? '0.65em' : 0 }}>{s}</p>
+            ))}
+          </div>
         </div>
 
         <button className="card-nav-btn" onClick={() => setIdx(i => Math.min(cards.length - 1, i + 1))}
@@ -2053,8 +2089,11 @@ function CardExerciseScreen({ setup, onComplete }) {
         <button className="rating-btn skip-btn" onClick={() => rate('skip')}>Skip</button>
       </div>
 
-      <div style={{ fontSize: 12, color: 'var(--muted)' }}>
-        Card {idx + 1} of {cards.length}
+      <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', gap: 16, alignItems: 'center' }}>
+        <span>Card {idx + 1} of {cards.length}</span>
+        <span>·</span>
+        <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          onClick={() => onComplete(cards, ratings)}>Go to results</span>
       </div>
     </div>
   );
@@ -2196,10 +2235,10 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
           const inf = inferredLevels[comp.id];
           const eff = effectiveLevel(comp.id);
 
-          const byBucket = { easy: [], comfortable: [], stretch: [] };
+          const byBucket = { easy: [], comfortable: [], stretch: [], skip: [] };
           compCards.forEach(c => {
             const r = ratings[c.id];
-            if (r && r !== 'skip' && byBucket[r]) {
+            if (r && byBucket[r] !== undefined) {
               byBucket[r].push(substituteTokens(c.scenario, setup.name, setup.pronouns));
             }
           });
@@ -2247,14 +2286,17 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
               {/* Card columns */}
               {compCards.length > 0 && (
                 <div className="card-columns">
-                  {['easy','comfortable','stretch'].map(bucket => (
-                    <div key={bucket} className="card-col">
-                      <div className={`card-col-hdr ${bucket}`}>
-                        {bucket.charAt(0).toUpperCase() + bucket.slice(1)}
-                      </div>
-                      {byBucket[bucket].length === 0
-                        ? <div className="card-col-empty">none rated</div>
-                        : byBucket[bucket].map((text, i) => (
+                  {[
+                    { key: 'easy',        label: 'Easy' },
+                    { key: 'comfortable', label: 'Comfortable' },
+                    { key: 'stretch',     label: 'Stretch' },
+                    { key: 'skip',        label: 'Skipped' },
+                  ].map(({ key, label }) => (
+                    <div key={key} className="card-col">
+                      <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>{label}</div>
+                      {byBucket[key].length === 0
+                        ? <div className="card-col-empty">—</div>
+                        : byBucket[key].map((text, i) => (
                           <div key={i} className="card-chip">{abridgeText(text)}</div>
                         ))
                       }
