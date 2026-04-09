@@ -2539,12 +2539,25 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                               </div>
                               {isCardsOpen && (n === 0
                                 ? <div className="card-col-empty">—</div>
-                                : byBucket[key].map((card, i) => (
-                                  <div key={i} className="card-chip" style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                                    <span style={{ flexShrink: 0, fontSize: 9, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: 'var(--muted)', borderRadius: 4, padding: '2px 5px', marginTop: 1, letterSpacing: '0.04em' }}>{card.level}</span>
-                                    <span>{abridgeText(card.text)}</span>
-                                  </div>
-                                ))
+                                : byBucket[key].map((card, i) => {
+                                  const wi = levelWindow.indexOf(card.level);
+                                  const chipStyle = wi === 0
+                                    ? { background: '#f0fdf4', borderColor: '#bbf7d0' }  // LN-1 green
+                                    : wi === levelWindow.length - 1
+                                    ? { background: '#fffbeb', borderColor: '#fde68a' }  // LN+1 amber
+                                    : { background: '#eff6ff', borderColor: '#bfdbfe' }; // LN blue
+                                  const badgeStyle = wi === 0
+                                    ? { background: '#dcfce7', color: '#166534' }
+                                    : wi === levelWindow.length - 1
+                                    ? { background: '#fef3c7', color: '#92400e' }
+                                    : { background: '#dbeafe', color: '#1e40af' };
+                                  return (
+                                    <div key={i} className="card-chip" style={{ display: 'flex', alignItems: 'flex-start', gap: 6, ...chipStyle }}>
+                                      <span style={{ flexShrink: 0, fontSize: 9, fontWeight: 700, borderRadius: 4, padding: '2px 5px', marginTop: 1, letterSpacing: '0.04em', ...badgeStyle }}>{card.level}</span>
+                                      <span>{abridgeText(card.text)}</span>
+                                    </div>
+                                  );
+                                })
                               )}
                             </div>
                           );
