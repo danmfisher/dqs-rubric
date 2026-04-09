@@ -702,11 +702,8 @@
     .comp-confirmed-badge { font-size: 12px; font-weight: 600; color: #166534; }
     .comp-caps-section { margin-bottom: 18px; }
     .comp-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; }
-    .comp-cap-item { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--bg); }
+    .comp-cap-item { display: flex; flex-direction: column; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--bg); }
     .comp-cap-item:last-child { border-bottom: none; }
-    .comp-cap-dot { color: var(--muted); flex-shrink: 0; margin-top: 1px; }
-    .comp-cap-name { font-size: 13px; font-weight: 600; }
-    .comp-cap-intent { font-size: 12px; color: var(--muted); margin-top: 1px; }
     .card-columns { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
     .card-col { display: flex; flex-direction: column; }
     .card-col-hdr { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 5px 10px; border-radius: 6px; text-align: center; margin-bottom: 8px; }
@@ -1916,19 +1913,27 @@ function getCompKey(card) {
   return card.competency_id + '|' + (card.track || '');
 }
 
-// Returns true when a competency's cards have a clear signal, OR all are rated/skipped
-// Signal rule: ≥60% answered (non-skip) AND ≥85% of answered in the same bucket
-function isCompDone(compCards, ratings) {
-  const rated = compCards.filter(c => ratings[c.id]);           // any rating incl. skip
-  const answered = rated.filter(c => ratings[c.id] !== 'skip'); // excludes skip
-  // All cards touched → done regardless of signal clarity
-  if (rated.length === compCards.length) return true;
-  if (answered.length === 0) return false;
-  if (answered.length / compCards.length < 0.60) return false;
-  const counts = { easy: 0, comfortable: 0, stretch: 0 };
-  answered.forEach(c => { if (counts[ratings[c.id]] !== undefined) counts[ratings[c.id]]++; });
-  const maxCount = Math.max(...Object.values(counts));
-  return maxCount / answered.length >= 0.85;
+// Expected rating for a card given the level window:
+//   window[0] (below declared) → easy
+//   window[1] (at declared)    → comfortable
+//   window[2] (above declared) → stretch
+function expectedRating(cardLevel, levelWindow) {
+  const i = levelWindow.indexOf(cardLevel);
+  return i === 0 ? 'easy' : i === levelWindow.length - 1 ? 'stretch' : 'comfortable';
+}
+
+// Returns true when a competency's cards have a clear signal, OR all are rated/skipped.
+// Signal rule: ≥75% of ALL cards are "aligned" — rated with their expected outcome
+//   (L(N-1)→easy, LN→comfortable, L(N+1)→stretch).
+// Unrated and skipped cards count as NOT aligned.
+function isCompDone(compCards, ratings, levelWindow) {
+  // All cards touched → done regardless
+  if (compCards.every(c => ratings[c.id])) return true;
+  if (!levelWindow || levelWindow.length === 0) return false;
+  const aligned = compCards.filter(c =>
+    ratings[c.id] && ratings[c.id] === expectedRating(c.level, levelWindow)
+  ).length;
+  return aligned / compCards.length >= 0.75;
 }
 
 // Infer level for a competency from ratings
@@ -2073,7 +2078,7 @@ function CardExerciseScreen({ setup, onComplete }) {
   // Which competency keys are done?
   const doneCounts = useMemo(() => {
     const done = {};
-    Object.entries(cardsByComp).forEach(([k, cs]) => { done[k] = isCompDone(cs, ratings); });
+    Object.entries(cardsByComp).forEach(([k, cs]) => { done[k] = isCompDone(cs, ratings, levelWindow); });
     return done;
   }, [cardsByComp, ratings]);
 
@@ -2192,11 +2197,28 @@ function CardExerciseScreen({ setup, onComplete }) {
           </div>
         </div>
       ) : (
-        <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', gap: 16, alignItems: 'center' }}>
-          <span>Card {idx + 1} of {cards.length}</span>
-          <span>·</span>
-          <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
-            onClick={() => setShowSkipConfirm(true)}>Skip straight to results</span>
+        <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center', width: '100%', maxWidth: 680 }}>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center', width: '100%', justifyContent: 'center' }}>
+            <span>Card {idx + 1} of {cards.length}</span>
+            <span>·</span>
+            <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              onClick={() => setShowSkipConfirm(true)}>Skip straight to results</span>
+          </div>
+          {(() => {
+            // A card is "counted" if explicitly rated OR if its competency is already done
+            const counted = cards.filter(c =>
+              ratings[c.id] || doneCounts[getCompKey(c)]
+            ).length;
+            const pct = Math.min(100, Math.round(counted / cards.length * 100));
+            return (
+              <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, height: 5, background: 'var(--border)', borderRadius: 99, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${pct}%`, background: 'var(--primary)', borderRadius: 99, transition: 'width 0.3s ease' }} />
+                </div>
+                <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: pct === 100 ? 'var(--primary)' : 'var(--muted)' }}>{pct}%</span>
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>
@@ -2212,6 +2234,8 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const toggleCollapsed = (compId) => setCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
   const [cardsCollapsed, setCardsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
   const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
+  const [capsCollapsed, setCapsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
+  const toggleCapsCollapsed = (compId) => setCapsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
 
   const levelWindow = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
@@ -2474,16 +2498,51 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
                   {/* Capabilities */}
                   <div className="comp-caps-section">
-                    <div className="comp-section-title">Capabilities</div>
-                    {comp.capabilities.map(cap => (
-                      <div key={cap.id} className="comp-cap-item">
-                        <span className="comp-cap-dot">·</span>
-                        <div>
-                          <div className="comp-cap-name">{cap.name}</div>
-                          {cap.intent && <div className="comp-cap-intent">{cap.intent}</div>}
+                    <div className="cards-section-toggle" onClick={() => toggleCapsCollapsed(comp.id)}>
+                      <span className={`cards-section-arrow ${capsCollapsed[comp.id] ? 'open' : ''}`}>▶</span>
+                      Capabilities
+                    </div>
+                    {capsCollapsed[comp.id] && comp.capabilities.map(cap => {
+                      const capDescs = cap.descriptions || {};
+                      const capEffDesc  = capDescs[eff];
+                      const capInfDesc  = inf && inf !== eff ? capDescs[inf] : null;
+                      const capDeclDesc = setup.level !== eff && setup.level !== inf ? capDescs[setup.level] : null;
+                      return (
+                        <div key={cap.id} className="comp-cap-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
+                          <div style={{ fontSize: 13, lineHeight: 1.5 }}>
+                            <strong>{cap.name}</strong>{cap.intent ? `: ${cap.intent}` : ''}
+                          </div>
+                          {(capEffDesc || capInfDesc || capDeclDesc) && (
+                            <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+                              {capEffDesc && (
+                                <div style={{ flex: 1, background: '#f4f6ff', borderLeft: '3px solid var(--primary)', borderRadius: '0 6px 6px 0', padding: '6px 10px' }}>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
+                                    {eff}{accepted[comp.id] ? ' accepted' : ' inferred'}
+                                  </div>
+                                  <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.45 }}>{capEffDesc}</div>
+                                </div>
+                              )}
+                              {capInfDesc && (
+                                <div style={{ flex: 1, background: '#fafafa', borderLeft: '3px solid var(--muted)', borderRadius: '0 6px 6px 0', padding: '6px 10px', opacity: 0.85 }}>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
+                                    {inf} inferred
+                                  </div>
+                                  <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.45 }}>{capInfDesc}</div>
+                                </div>
+                              )}
+                              {capDeclDesc && (
+                                <div style={{ flex: 1, background: '#fffbeb', borderLeft: '3px solid #f59e0b', borderRadius: '0 6px 6px 0', padding: '6px 10px', opacity: 0.85 }}>
+                                  <div style={{ fontSize: 9, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
+                                    {setup.level} declared
+                                  </div>
+                                  <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.45 }}>{capDeclDesc}</div>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* Card columns — collapsible */}
@@ -2513,12 +2572,25 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                               </div>
                               {isCardsOpen && (n === 0
                                 ? <div className="card-col-empty">—</div>
-                                : byBucket[key].map((card, i) => (
-                                  <div key={i} className="card-chip" style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                                    <span style={{ flexShrink: 0, fontSize: 9, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: 'var(--muted)', borderRadius: 4, padding: '2px 5px', marginTop: 1, letterSpacing: '0.04em' }}>{card.level}</span>
-                                    <span>{abridgeText(card.text)}</span>
-                                  </div>
-                                ))
+                                : byBucket[key].map((card, i) => {
+                                  const wi = levelWindow.indexOf(card.level);
+                                  const chipStyle = wi === 0
+                                    ? { background: '#f0fdf4', borderColor: '#bbf7d0' }  // LN-1 green
+                                    : wi === levelWindow.length - 1
+                                    ? { background: '#fffbeb', borderColor: '#fde68a' }  // LN+1 amber
+                                    : { background: '#eff6ff', borderColor: '#bfdbfe' }; // LN blue
+                                  const badgeStyle = wi === 0
+                                    ? { background: '#dcfce7', color: '#166534' }
+                                    : wi === levelWindow.length - 1
+                                    ? { background: '#fef3c7', color: '#92400e' }
+                                    : { background: '#dbeafe', color: '#1e40af' };
+                                  return (
+                                    <div key={i} className="card-chip" style={{ display: 'flex', alignItems: 'flex-start', gap: 6, ...chipStyle }}>
+                                      <span style={{ flexShrink: 0, fontSize: 9, fontWeight: 700, borderRadius: 4, padding: '2px 5px', marginTop: 1, letterSpacing: '0.04em', ...badgeStyle }}>{card.level}</span>
+                                      <span>{abridgeText(card.text)}</span>
+                                    </div>
+                                  );
+                                })
                               )}
                             </div>
                           );
