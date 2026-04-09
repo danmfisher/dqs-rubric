@@ -149,23 +149,25 @@ When adapting for a new job function:
 
 The rubric uses six levels — L1 through L6 — corresponding to Associate Engineer through Distinguished Engineer. Each level describes an *archetype*: a pattern of behaviors that characterizes someone operating solidly at that band. Levels are defined by scope, agency, and reach, not by years of experience or title tenure.
 
+Each level description below opens with its arc signal word (see §15) — the vocabulary that appears in the rubric's capability descriptions to mark where a behavior sits on the progression.
+
 **L1 — Associate Engineer**
-Just starting out. Learns by doing with significant support from teammates. Focused on executing well-scoped tasks, building foundational habits, and absorbing how the team works. The primary variable is what they can take on independently, which grows quickly with strong onboarding.
+*Beginning to* develop the habits and skills of the role. Executes well-scoped tasks with guidance, absorbing how the team works and building foundational technical and behavioral patterns. The primary variable is what they can take on independently, which grows quickly with strong onboarding.
 
 **L2 — Engineer**
-Executing independently on most day-to-day work. Growing in technical depth and craft. Still benefits from guidance on larger-scope problems or genuinely ambiguous situations, but needs less of it than they used to.
+*Regularly* delivers on day-to-day work with minimal guidance. Growing in craft and depth; owns feature-level work but still benefits from direction on genuinely ambiguous or larger-scope problems.
 
 **L3 — Senior Engineer**
-Reliably delivering complex work end-to-end, often the go-to person for their area. Starting to shape *how* the team works — not just what it ships. Actively develops more junior teammates, though this isn't always their primary focus yet.
+*Consistently* delivers complex work end-to-end, independently. The go-to person for their area. Starting to shape *how* the team works — not just what it ships — and actively investing in developing teammates.
 
 **L4 — Staff Engineer**
-Operating across teams and systems. Defines technical direction for their domain, removes systemic blockers, and makes the people around them meaningfully more effective. The shift from L3 to L4 is less about technical depth and more about scope and organizational leverage.
+*Proactively* identifies and removes systemic blockers, often without being asked. Operates across teams, defines technical direction for their domain, and makes the people around them measurably more effective. The shift from L3 to L4 is less about technical depth and more about scope and organizational leverage.
 
 **L5 — Principal Engineer**
-Org-wide technical leadership. Sets standards that others follow, drives alignment across multiple teams, and actively shapes engineering culture and practices. Work has consequences beyond their immediate team.
+*Systematically* improves how engineering works at the org level — setting standards, driving cross-team alignment, and shaping culture without direction to do so. Work has consequences beyond their immediate team.
 
 **L6 — Distinguished Engineer**
-Industry-level scope and impact. Work has company-defining consequences; helps shape the discipline beyond the organization itself. This level is intentionally rare and represents an exceptional, sustained body of technical leadership.
+*Defines the standard* for technical leadership. Work sets the philosophy at the company level and shapes the discipline beyond the organization itself. This level is intentionally rare and represents an exceptional, sustained body of technical leadership.
 
 ---
 
@@ -183,7 +185,7 @@ How you think. Distinguishes between someone who arrives at a solution and someo
 How you move information, decisions, and people. Technical skill alone doesn't create organizational leverage — the ability to convey clearly, align stakeholders, and grow others does. This dimension covers the full arc from clear writing to org-wide influence.
 
 **Technical Competencies**
-The craft and domain knowledge that underpin everything else. Split into Shared Technical (what every engineer needs) and Domain-Specific (customized per track). This dimension is the foundation that the others sit on.
+The craft and domain knowledge that underpin everything else. Split into three competencies: Craft (the quality and rigor of your technical work product), Shared Technical (what every engineer needs regardless of track), and Domain-Specific (customized per track). This dimension is the foundation that the others sit on.
 
 Dimensions don't have weights, and they aren't substitutable. A strong Impact score doesn't offset a weak Technical Competencies score — each dimension represents a necessary facet of well-rounded performance.
 
