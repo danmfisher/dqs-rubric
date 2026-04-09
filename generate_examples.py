@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 generate_examples.py — Generates real-world behavior example cards for the
-Evaluation Wizard from rubric.json, using the Anthropic API.
+Evaluation Wizard from rubric.json, using the Anthropic or OpenAI API.
 
 Usage:
     python3 generate_examples.py                              # all competencies
@@ -12,7 +12,10 @@ Output:
     examples.json  (same directory as this script)
 
 Requirements:
-    ANTHROPIC_API_KEY environment variable must be set.
+    Set one of:
+      ANTHROPIC_API_KEY  — uses claude-opus-4-5 (preferred)
+      OPENAI_API_KEY     — uses gpt-4o (fallback)
+    If both are set, Anthropic is used.
 
 Re-run whenever rubric.json is updated to refresh examples. Any guidance or
 redirects from review sessions should be captured in GENERATION_NOTES below
@@ -46,7 +49,8 @@ from pathlib import Path
 BASE          = Path(__file__).parent
 RUBRIC_PATH   = BASE / "rubric.json"
 OUTPUT_PATH   = BASE / "examples.json"
-MODEL         = "claude-opus-4-5"
+ANTHROPIC_MODEL = "claude-opus-4-5"
+OPENAI_MODEL    = "gpt-4o"
 CARDS_PER_LEVEL = 3   # number of example cards generated per competency × level
 
 # ── Level signal vocabulary (mirrors philosophy §15) ─────────────────────────
@@ -102,33 +106,68 @@ Each object: {{"scenario": "<2-3 sentence card text using {{name}} etc.>"}}
 
 # ── API call ──────────────────────────────────────────────────────────────────
 def call_api(system: str, user: str) -> str:
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY environment variable is not set.")
+    anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+    openai_key    = os.environ.get("OPENAI_API_KEY")
 
+    if anthropic_key:
+        return _call_anthropic(system, user, anthropic_key)
+    elif openai_key:
+        return _call_openai(system, user, openai_key)
+    else:
+        raise RuntimeError(
+            "No API key found. Set ANTHROPIC_API_KEY or OPENAI_API_KEY."
+        )
+
+
+def _call_anthropic(system: str, user: str, api_key: str) -> str:
     payload = json.dumps({
-        "model": MODEL,
+        "model":      ANTHROPIC_MODEL,
         "max_tokens": 1024,
-        "system": system,
-        "messages": [{"role": "user", "content": user}],
+        "system":     system,
+        "messages":   [{"role": "user", "content": user}],
     }).encode()
 
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
         data=payload,
         headers={
-            "x-api-key": api_key,
+            "x-api-key":         api_key,
             "anthropic-version": "2023-06-01",
-            "content-type": "application/json",
+            "content-type":      "application/json",
         },
         method="POST",
     )
-
     try:
         with urllib.request.urlopen(req, timeout=60) as resp:
             return json.loads(resp.read())["content"][0]["text"]
     except urllib.error.HTTPError as e:
-        raise RuntimeError(f"API error {e.code}: {e.read().decode()}") from e
+        raise RuntimeError(f"Anthropic API error {e.code}: {e.read().decode()}") from e
+
+
+def _call_openai(system: str, user: str, api_key: str) -> str:
+    payload = json.dumps({
+        "model":      OPENAI_MODEL,
+        "max_tokens": 1024,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user",   "content": user},
+        ],
+    }).encode()
+
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/chat/completions",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "content-type":  "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.loads(resp.read())["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"OpenAI API error {e.code}: {e.read().decode()}") from e
 
 
 # ── User prompt builder ───────────────────────────────────────────────────────
