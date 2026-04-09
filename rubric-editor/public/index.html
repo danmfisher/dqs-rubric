@@ -1923,22 +1923,33 @@ function expectedRating(cardLevel, levelWindow) {
 }
 
 // Returns true when a competency's cards have a clear signal, OR all are rated/skipped.
-// Signal rule: ≥75% of ALL cards are "aligned" — rated with their expected outcome
-//   (L(N-1)→easy, LN→comfortable, L(N+1)→stretch).
-// Unrated and skipped cards count as NOT aligned.
+// Two signal conditions (either triggers early stop):
+//   1. Aligned outcome: ≥75% of ALL cards rated with expected outcome
+//      (L(N-1)→easy, LN→comfortable, L(N+1)→stretch). Unrated = not aligned.
+//   2. Directional dominance: ≥75% of answered (non-skip) cards are in the same
+//      single bucket — handles "all easy" / "all stretch" strong-signal cases.
 function isCompDone(compCards, ratings, levelWindow) {
-  // All cards touched → done regardless
   if (compCards.every(c => ratings[c.id])) return true;
   if (!levelWindow || levelWindow.length === 0) return false;
+  // Condition 1: aligned with expected outcome
   const aligned = compCards.filter(c =>
     ratings[c.id] && ratings[c.id] === expectedRating(c.level, levelWindow)
   ).length;
-  return aligned / compCards.length >= 0.75;
+  if (aligned / compCards.length >= 0.75) return true;
+  // Condition 2: directional dominance among answered cards
+  const answered = compCards.filter(c => ratings[c.id] && ratings[c.id] !== 'skip');
+  if (answered.length === 0) return false;
+  const counts = { easy: 0, comfortable: 0, stretch: 0 };
+  answered.forEach(c => { if (ratings[c.id] in counts) counts[ratings[c.id]]++; });
+  const maxCount = Math.max(...Object.values(counts));
+  return maxCount / answered.length >= 0.75;
 }
 
-// Infer level for a competency from ratings
-// Priority: level with most "comfortable" ratings; tiebreak = higher level
-// Fallback if no comfortable: majority bucket nudges up/down from declared level
+// Infer level for a competency from ratings.
+// Priority: level with most "comfortable" ratings; tiebreak = higher level.
+// Fallback if no comfortable ratings: use majority bucket direction.
+//   Mostly easy  → operating above the window → infer LN+1 (highest in window)
+//   Mostly stretch → operating below the window → infer LN-1 (lowest in window)
 function inferCompLevel(compCards, ratings, window, declaredLevel) {
   const comfortable = {};
   window.forEach(l => comfortable[l] = 0);
@@ -1961,15 +1972,13 @@ function inferCompLevel(compCards, ratings, window, declaredLevel) {
   const answered = compCards.filter(c => ratings[c.id] && ratings[c.id] !== 'skip');
   if (answered.length === 0) return declaredLevel;
   const counts = { easy: 0, stretch: 0 };
-  answered.forEach(c => { if (c in counts) counts[ratings[c.id]]++; });
+  answered.forEach(c => { const r = ratings[c.id]; if (r in counts) counts[r]++; });
   if ((counts.easy || 0) > (counts.stretch || 0)) {
-    // Mostly easy → infer higher than middle
-    const midIdx = Math.floor(window.length / 2);
-    return window[Math.min(midIdx + 1, window.length - 1)];
+    // Mostly easy → person is above the window → infer LN+1
+    return window[window.length - 1];
   }
-  // Mostly stretch → infer lower than middle
-  const midIdx = Math.floor(window.length / 2);
-  return window[Math.max(midIdx - 1, 0)];
+  // Mostly stretch → person is below the window → infer LN-1
+  return window[0];
 }
 
 // Abridged card text for the results columns (~80 chars)
