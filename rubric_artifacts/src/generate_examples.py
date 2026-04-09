@@ -62,10 +62,30 @@ Session 2 — card action and framing revision
   - Avoid specific metrics ("reduced time by 30%") — qualitative impact
     descriptions are more recognizable and less fabricated-feeling.
 
+Session 3 — post-review fixes and prompt hardening
+  - {{Name}} capitalization bug: model occasionally starts a mid-sentence
+    reference with {{Name}} (capital N) instead of {{name}}. Fixed by
+    post-processing regex in parse_cards — no prompt change needed.
+  - Arc word leakage: "systematically" (L5 signal) appeared in L2 cards;
+    "proactively" (L4 signal) leaked into L3 narrative text. Prompt now
+    includes an explicit FORBIDDEN WORDS table per level.
+  - L6 theme clichés: sustainability/green tech, data privacy, and
+    diversity/inclusion were overused as default L6 themes across multiple
+    competencies. Prompt now explicitly calls these out as clichés to avoid.
+  - Duplicate themes at adjacent levels: team-multiplier L5 and L6 both
+    generated onboarding-redesign scenarios. Prompt now instructs that
+    cards within the same competency must use distinct concrete scenarios —
+    no two cards should be about the same situation.
+  - delivery-execution L6 card 3 used "sustainable technology / green
+    objectives" framing — another instance of the L6 cliché pattern.
+  - problem-structuring L4 card 1 used "50% reduction in incident
+    frequency" — specific invented metric. Already covered by Session 2
+    guidance but reinforced in FORBIDDEN PATTERNS.
+
 ──────────────────────────────────────────────────────────────────────────────
 """
 
-import json, os, sys, time, uuid, argparse, urllib.request, urllib.error
+import json, os, re, sys, time, uuid, argparse, urllib.request, urllib.error
 from pathlib import Path
 
 BASE          = Path(__file__).parent          # rubric_artifacts/src/
@@ -133,6 +153,38 @@ Using "proactively" in an L2 card, or "regularly" in an L4 card, is an error.
 
 Embed the signal through the texture of the scenario — the size of the problem,
 how much direction the person needed, and whether they were asked or self-directed.
+
+FORBIDDEN WORDS PER LEVEL (using these in the wrong level is an error):
+  L1 cards must NOT use: regularly, consistently, proactively, systematically, independently
+  L2 cards must NOT use: proactively, systematically, consistently, without prompting, without direction
+  L3 cards must NOT use: proactively, systematically, without prompting, without direction
+  L4 cards must NOT use: systematically, without direction, beginning to, with guidance
+  L5 cards must NOT use: beginning to, with guidance, with minimal guidance, proactively
+  L6 cards must NOT use: beginning to, with guidance, with minimal guidance, regularly
+
+FORBIDDEN PATTERNS (these are errors regardless of level):
+  - Specific invented metrics: "reduced time by 30%", "50% reduction", "2x faster"
+    Use qualitative impact instead: "significantly reduced", "noticeably faster"
+  - Evaluative summary endings: "demonstrating their ability to...", "showing initiative in...",
+    "highlighting their commitment to..." — end on what happened, not a judgment of it
+  - Placeholder token capitalization: always {{name}}, {{they}}, {{their}}, {{them}} —
+    never {{Name}}, {{They}}, {{Their}}, {{Them}}
+
+L6 THEME VARIETY — avoid these overused defaults:
+  The following themes have been used too many times across the L6 card set.
+  Do not use them unless the competency makes them genuinely unavoidable:
+    ✗ Sustainability / green technology / environmental impact
+    ✗ Data privacy / GDPR / privacy-first frameworks
+    ✗ Diversity, equity & inclusion initiatives
+  Strong L6 cards are about engineering philosophy, technical architecture,
+  industry-defining technical approaches, or company-wide process transformation —
+  things that would be cited in engineering blog posts or conference talks about
+  how to build excellent software organizations.
+
+SCENARIO VARIETY — cards within the same competency must use distinct situations:
+  Do not use the same concrete scenario (e.g., "redesigning the onboarding process")
+  at two different levels within the same competency. Each card should describe a
+  different type of situation, even if both sit at adjacent levels.
 
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
@@ -247,7 +299,6 @@ def parse_cards(raw: str, competency_id: str, level: str,
         items = json.loads(text)
     except json.JSONDecodeError:
         # Attempt to extract first JSON array from response
-        import re
         match = re.search(r'\[.*\]', text, re.DOTALL)
         if match:
             items = json.loads(match.group())
@@ -256,18 +307,25 @@ def parse_cards(raw: str, competency_id: str, level: str,
             print(f"    {raw[:200]}")
             return []
 
-    return [
-        {
+    cards = []
+    for item in items:
+        if not isinstance(item, dict) or "scenario" not in item:
+            continue
+        scenario = item["scenario"]
+        # Normalize {{Name}} → {{name}} (model occasionally capitalizes mid-sentence)
+        scenario = re.sub(r'\{\{Name\}\}', '{{name}}', scenario)
+        scenario = re.sub(r'\{\{They\}\}',  '{{they}}',  scenario)
+        scenario = re.sub(r'\{\{Their\}\}', '{{their}}', scenario)
+        scenario = re.sub(r'\{\{Them\}\}',  '{{them}}',  scenario)
+        cards.append({
             "id":            str(uuid.uuid4()),
             "competency_id": competency_id,
             "level":         level,
             "track":         track,
             "placeholder":   is_placeholder,
-            "scenario":      item["scenario"],
-        }
-        for item in items
-        if isinstance(item, dict) and "scenario" in item
-    ]
+            "scenario":      scenario,
+        })
+    return cards
 
 
 # ── Main generation logic ─────────────────────────────────────────────────────
@@ -334,6 +392,23 @@ def generate(args):
             print("Available:", [s["competency"]["id"] for s in collect_competencies(rubric)])
             sys.exit(1)
 
+    # Filter to a single level if requested
+    if args.level:
+        if args.level not in levels:
+            print(f"Level '{args.level}' not found. Available: {levels}")
+            sys.exit(1)
+        levels = [args.level]
+
+    # --force: drop matching existing cards so they get regenerated
+    if args.force:
+        force_keys = set()
+        for spec in specs:
+            for level in levels:
+                force_keys.add((spec["competency"]["id"], level, spec["track"]))
+        existing = [e for e in existing if (e["competency_id"], e["level"], e["track"]) not in force_keys]
+        existing_keys -= force_keys
+        print(f"  ⚠ --force: dropping {len(force_keys)} existing card set(s) for regeneration")
+
     system = SYSTEM_PROMPT.replace("{n}", str(CARDS_PER_LEVEL))
     new_cards = []
 
@@ -384,6 +459,9 @@ def generate(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate evaluation wizard example cards")
     parser.add_argument("--competency", help="Generate for a single competency ID only")
+    parser.add_argument("--level", help="Generate for a single level only (e.g. L4). Use with --competency.")
+    parser.add_argument("--force", action="store_true",
+                        help="Regenerate even if cards already exist (drops and replaces matching entries)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview prompts without calling the API")
     group = parser.add_mutually_exclusive_group()
