@@ -39,12 +39,12 @@
       }
     ],
     "level_descriptions": {
-      "L1": "Just starting out. Learns by doing with significant support from teammates. Focused on executing well-scoped tasks, building foundational habits, and absorbing how the team works.",
-      "L2": "Executing independently on most day-to-day work. Growing in depth and craft. Still benefits from guidance on larger-scope problems or genuinely ambiguous situations.",
-      "L3": "Reliably delivering complex work end-to-end, often the go-to for their area. Starting to shape how the team works \u2014 not just what it ships. Actively develops more junior teammates.",
-      "L4": "Operating across teams and systems. Defines technical direction for their domain, removes systemic blockers, and makes the people around them meaningfully more effective.",
-      "L5": "Org-wide technical leadership. Sets standards that others follow, drives alignment across multiple teams, and actively shapes engineering culture and practices.",
-      "L6": "Industry-level scope and impact. Work has company-defining consequences; helps shape the discipline beyond the organization itself."
+      "L1": "Beginning to develop the habits and skills of the role. Executes well-scoped tasks with guidance, absorbing how the team works and building foundational technical and behavioral patterns.",
+      "L2": "Regularly delivers on day-to-day work with minimal guidance. Growing in craft and depth; owns feature-level work but still benefits from direction on genuinely ambiguous or large-scope problems.",
+      "L3": "Consistently delivers complex work end-to-end, independently. The go-to for their area. Shapes how the team works \u2014 not just what it ships \u2014 and actively invests in developing teammates.",
+      "L4": "Proactively identifies and removes systemic blockers, often without being asked. Operates across teams, defines technical direction for their domain, and makes those around them measurably more effective.",
+      "L5": "Systematically improves how engineering works at the org level \u2014 setting standards, driving cross-team alignment, and shaping culture without direction to do so.",
+      "L6": "Defines the standard for technical leadership. Work sets the philosophy at the company level and shapes the discipline beyond the organization itself."
     }
   },
   "dimensions": [

@@ -446,7 +446,7 @@
       grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap: 12px;
     }
-    .lvl-card-scene { perspective: 800px; height: 120px; cursor: pointer; }
+    .lvl-card-scene { perspective: 800px; height: 160px; cursor: pointer; }
     .lvl-flipper {
       width: 100%; height: 100%;
       position: relative;
@@ -462,7 +462,7 @@
     }
     .lvl-front { background: var(--card-bg); align-items: flex-start; }
     .lvl-front:hover { border-color: var(--primary); box-shadow: 0 2px 8px rgba(79,106,245,0.10); }
-    .lvl-back { background: var(--bg); transform: rotateY(180deg); justify-content: flex-start; align-items: flex-start; }
+    .lvl-back { background: var(--bg); transform: rotateY(180deg); justify-content: flex-start; align-items: flex-start; overflow-y: auto; }
     .lvl-code { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; }
     .lvl-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
     .lvl-hint { font-size: 10px; color: var(--muted); margin-top: 8px; opacity: 0.5; }
@@ -1548,7 +1548,7 @@ function MetaPanel({ rubric }) {
         {rubric.dimensions.length} dimensions · {totalCompetencies} competencies · {totalCapabilities} capabilities · {rubric.meta.levels.length} levels
       </div>
 
-      {/* ── Notes banner at the top ── */}
+      {/* 1. Note from Danielle */}
       {rubric.meta.notes && (
         <div className="notes-banner">
           <div className="notes-banner-title">A note from Danielle</div>
@@ -1556,6 +1556,35 @@ function MetaPanel({ rubric }) {
         </div>
       )}
 
+      {/* 2. Design Philosophy */}
+      <PhilosophyCards sections={philosophy} />
+
+      {/* 3. Dimensions */}
+      <div className="card">
+        <div className="card-title">Dimensions — flip a card to see its competencies</div>
+        <div className="dim-card-grid">
+          {rubric.dimensions.map(d => (
+            <DimensionCard key={d.id} dim={d} />
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Levels */}
+      <div className="card">
+        <div className="card-title">Levels — flip a card to see what it means</div>
+        <div className="lvl-card-grid">
+          {rubric.meta.levels.map(l => (
+            <LevelCard
+              key={l}
+              levelId={l}
+              name={rubric.meta.level_names[l]}
+              description={levelDescs[l]}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Metadata */}
       <div className="card">
         <div className="card-title">Metadata</div>
         <div className="meta-grid">
@@ -1577,33 +1606,6 @@ function MetaPanel({ rubric }) {
           </div>
         </div>
       </div>
-
-      {/* ── Dimensions (above levels) ── */}
-      <div className="card">
-        <div className="card-title">Dimensions — flip a card to see its competencies</div>
-        <div className="dim-card-grid">
-          {rubric.dimensions.map(d => (
-            <DimensionCard key={d.id} dim={d} />
-          ))}
-        </div>
-      </div>
-
-      {/* ── Levels ── */}
-      <div className="card">
-        <div className="card-title">Levels — flip a card to see what it means</div>
-        <div className="lvl-card-grid">
-          {rubric.meta.levels.map(l => (
-            <LevelCard
-              key={l}
-              levelId={l}
-              name={rubric.meta.level_names[l]}
-              description={levelDescs[l]}
-            />
-          ))}
-        </div>
-      </div>
-
-      <PhilosophyCards sections={philosophy} />
     </div>
   );
 }
