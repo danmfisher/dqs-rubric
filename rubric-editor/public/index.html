@@ -1969,8 +1969,20 @@ function inferCompLevel(compCards, ratings, window, declaredLevel) {
 
 // Abridged card text for the results columns (~80 chars)
 function abridgeText(text, max = 90) {
-  if (text.length <= max) return text;
-  return text.slice(0, max).replace(/\s\S*$/, '') + '…';
+  const stripped = text.replace(/\*\*/g, '');
+  if (stripped.length <= max) return stripped;
+  return stripped.slice(0, max).replace(/\s\S*$/, '') + '…';
+}
+
+// Renders **bold** markers in card scenario text as <strong> spans.
+// Cards without markers render as plain text — safe fallback for unprocessed cards.
+function renderBold(text) {
+  const parts = text.split(/\*\*(.+?)\*\*/);
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? <strong key={i} style={{ fontWeight: 700, color: 'inherit' }}>{part}</strong>
+      : part
+  );
 }
 
 // ── Setup Screen ──────────────────────────────────────────
@@ -2158,7 +2170,7 @@ function CardExerciseScreen({ setup, onComplete }) {
           )}
           <div className="eval-card-text">
             {sentences.map((s, i) => (
-              <p key={i} style={{ marginBottom: i < sentences.length - 1 ? '0.65em' : 0 }}>{s}</p>
+              <p key={i} style={{ marginBottom: i < sentences.length - 1 ? '0.65em' : 0 }}>{renderBold(s)}</p>
             ))}
           </div>
         </div>

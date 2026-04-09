@@ -82,6 +82,16 @@ Session 3 — post-review fixes and prompt hardening
     frequency" — specific invented metric. Already covered by Session 2
     guidance but reinforced in FORBIDDEN PATTERNS.
 
+Session 4 — bold markers for key behavioral phrases
+  - Added BOLD MARKERS section to SYSTEM_PROMPT: new cards should wrap
+    1–3 key behavioral phrases in **double asterisks** so the evaluative
+    signal is immediately visible on the card.
+  - Added --add-bold flag: cheap retrofit pass that sends each existing
+    card's scenario text to the API with a minimal prompt to add markers
+    without changing any wording. Safe to re-run (skips already-bolded cards).
+  - Display: renderBold() in index.html parses **...** → <strong> inline.
+    Cards without markers render as plain text — no visual regression.
+
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -186,9 +196,22 @@ SCENARIO VARIETY — cards within the same competency must use distinct situatio
   at two different levels within the same competency. Each card should describe a
   different type of situation, even if both sit at adjacent levels.
 
+BOLD MARKERS
+Wrap exactly 1–3 key behavioral phrases in **double asterisks** — the specific
+actions or behaviors that are the core of what is being evaluated. Bold the behavior,
+not the context setup or the outcome. Do not bold single generic words; bold the
+meaningful phrase.
+
+  Good: "{{name}} **pushed back on the proposed approach** and drafted an alternative
+        that the team adopted without significant rework."
+  Bad:  "{{name}} **pushed** back on the proposed **approach** and drafted an alternative."
+
+Do not exceed 3 bolded phrases per card. The bolding should make the evaluative
+signal immediately visible to someone skimming the card.
+
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
-Each object: {{"scenario": "<2-3 sentence card text using {{name}} etc.>"}}
+Each object: {{"scenario": "<2-3 sentence card text with **bold** markers on key behaviors>"}}
 """
 
 # ── API call ──────────────────────────────────────────────────────────────────
@@ -455,6 +478,69 @@ def generate(args):
         print(f"\n(dry-run complete — {OUTPUT_PATH.name} not written)")
 
 
+ADD_BOLD_SYSTEM = """You are editing scenario text for an evaluation card tool.
+Add **double asterisk** bold markers around exactly 1–3 phrases that represent
+the core behavior or skill being evaluated. Bold the behavior, not the setup or outcome.
+
+Rules:
+- Bold meaningful phrases (3–7 words), not single generic words
+- Do not bold more than 3 phrases
+- Do not change any other wording — return the scenario text only, verbatim
+- If **bold** markers already exist, leave them as-is and return the text unchanged
+"""
+
+def add_bold(args):
+    """Retrofit **bold** markers onto existing cards without regenerating them."""
+    if not OUTPUT_PATH.exists():
+        print("No examples.json found — run generate first.")
+        return
+
+    cards = json.load(open(OUTPUT_PATH, encoding="utf-8"))
+    needs_bold = [c for c in cards if "**" not in c.get("scenario", "")]
+    already_done = len(cards) - len(needs_bold)
+
+    print(f"Cards total: {len(cards)}  |  already bolded: {already_done}  |  to process: {len(needs_bold)}")
+    if not needs_bold:
+        print("All cards already have bold markers — nothing to do.")
+        return
+
+    if args.dry_run:
+        print(f"\n(dry-run) Would send {len(needs_bold)} cards to the API.")
+        for c in needs_bold[:3]:
+            print(f"  [{c['competency_id']} {c['level']}] {c['scenario'][:80]}...")
+        return
+
+    updated = 0
+    failed  = 0
+    for i, card in enumerate(cards):
+        if "**" in card.get("scenario", ""):
+            continue  # already bolded
+
+        print(f"  [{i+1}/{len(cards)}] {card['competency_id']} {card['level']} ...", end=" ", flush=True)
+        try:
+            raw = call_api(ADD_BOLD_SYSTEM, card["scenario"], args.provider)
+            # Expect raw text back — strip any surrounding quotes or whitespace
+            raw = raw.strip().strip('"').strip("'")
+            if "**" in raw:
+                card["scenario"] = raw
+                updated += 1
+                print("✓")
+            else:
+                print("✗ (no bold markers returned — skipping)")
+                failed += 1
+        except Exception as e:
+            print(f"✗ {e}")
+            failed += 1
+
+        time.sleep(0.3)
+
+    OUTPUT_PATH.write_text(
+        json.dumps(cards, indent=2, ensure_ascii=False),
+        encoding="utf-8"
+    )
+    print(f"\n✓ Written: {OUTPUT_PATH.name}  ({updated} updated, {failed} failed, {already_done} already done)")
+
+
 # ── CLI ───────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate evaluation wizard example cards")
@@ -462,6 +548,8 @@ if __name__ == "__main__":
     parser.add_argument("--level", help="Generate for a single level only (e.g. L4). Use with --competency.")
     parser.add_argument("--force", action="store_true",
                         help="Regenerate even if cards already exist (drops and replaces matching entries)")
+    parser.add_argument("--add-bold", dest="add_bold", action="store_true",
+                        help="Retrofit **bold** markers onto existing cards without regenerating them")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview prompts without calling the API")
     group = parser.add_mutually_exclusive_group()
@@ -471,4 +559,7 @@ if __name__ == "__main__":
                        help="Use OpenAI API with OPENAI_API_KEY")
     parser.set_defaults(provider="anthropic")
     args = parser.parse_args()
-    generate(args)
+    if args.add_bold:
+        add_bold(args)
+    else:
+        generate(args)
