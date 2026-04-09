@@ -2496,33 +2496,31 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                           ({totalCards} total)
                         </span>
                       </div>
-                      {isCardsOpen && (
-                        <div className="card-columns">
-                          {[
-                            { key: 'easy',        label: 'Easy' },
-                            { key: 'comfortable', label: 'Comfortable' },
-                            { key: 'stretch',     label: 'Stretch' },
-                            { key: 'skip',        label: 'Skipped' },
-                          ].map(({ key, label }) => {
-                            const n = byBucket[key].length;
-                            const pct = totalCards > 0 ? Math.round(n / totalCards * 100) : 0;
-                            return (
-                              <div key={key} className="card-col">
-                                <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>
-                                  {label}
-                                  <span className="card-col-count">{n > 0 ? `${n} · ${pct}%` : '—'}</span>
-                                </div>
-                                {n === 0
-                                  ? <div className="card-col-empty">—</div>
-                                  : byBucket[key].map((text, i) => (
-                                    <div key={i} className="card-chip">{abridgeText(text)}</div>
-                                  ))
-                                }
+                      <div className="card-columns">
+                        {[
+                          { key: 'easy',        label: 'Easy' },
+                          { key: 'comfortable', label: 'Comfortable' },
+                          { key: 'stretch',     label: 'Stretch' },
+                          { key: 'skip',        label: 'Skipped' },
+                        ].map(({ key, label }) => {
+                          const n = byBucket[key].length;
+                          const pct = totalCards > 0 ? Math.round(n / totalCards * 100) : 0;
+                          return (
+                            <div key={key} className="card-col">
+                              <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>
+                                {label}
+                                <span className="card-col-count">{n > 0 ? `${n} · ${pct}%` : '—'}</span>
                               </div>
-                            );
-                          })}
-                        </div>
-                      )}
+                              {isCardsOpen && (n === 0
+                                ? <div className="card-col-empty">—</div>
+                                : byBucket[key].map((text, i) => (
+                                  <div key={i} className="card-chip">{abridgeText(text)}</div>
+                                ))
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </>
                   )}
 
