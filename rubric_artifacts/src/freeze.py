@@ -183,27 +183,8 @@ src = src.replace(
 )
 
 
-# ── Disable CSV export button ────────────────────────────────────────────────
-src = re.sub(
-    r'<a href=\{`/api/export/\$\{selectedLevel\}.*?</a>',
-    "<span\n"
-    "          className=\"btn btn-success\"\n"
-    "          title=\"CSV export not available in preview\"\n"
-    "          style={{ fontSize: 12, padding: '7px 16px', opacity: 0.4, cursor: 'not-allowed' }}>\n"
-    "          ⬇ Export CSV ({selectedLevel})\n"
-    "        </span>",
-    src,
-    flags=re.DOTALL
-)
-
-
-# ── Remove philosophy download link (needs server) ───────────────────────────
-src = re.sub(
-    r'<a href="/api/philosophy/download"[^>]*>.*?</a>',
-    "",
-    src,
-    flags=re.DOTALL
-)
+# NOTE: Rubric CSV export and philosophy .md download are now fully client-side
+# (Blob + URL.createObjectURL) — no stubs needed here.
 
 
 # ── Write output ─────────────────────────────────────────────────────────────
@@ -214,14 +195,15 @@ print(f"\n✓ Written: {OUTPUT_HTML.name}  ({kb} KB)")
 
 # ── Verify ───────────────────────────────────────────────────────────────────
 checks = [
-    ("Danielle's in title",       "Danielle's Technology Rubric" in src),
-    ("FlexGen not in title",      "FlexGen Technology Rubric" not in src),
-    ("editingEnabled constant",   "const editingEnabled = false;" in src),
-    ("no setEditingEnabled",      "setEditingEnabled" not in src),
-    ("no /api/export link",       "/api/export/" not in src),
-    ("no server fetch calls",     "fetch('/api/" not in src and "fetch(`/api/" not in src),
-    ("BAKED data injected",       "window.BAKED" in src),
-    ("philosophy sections baked", str(len(philosophy)) in baked),
+    ("Danielle's in title",        "Danielle's Technology Rubric" in src),
+    ("FlexGen not in title",       "FlexGen Technology Rubric" not in src),
+    ("editingEnabled constant",    "const editingEnabled = false;" in src),
+    ("no setEditingEnabled",       "setEditingEnabled" not in src),
+    ("no server fetch calls",      "fetch('/api/" not in src and "fetch(`/api/" not in src),
+    ("BAKED data injected",        "window.BAKED" in src),
+    ("philosophy sections baked",  str(len(philosophy)) in baked),
+    ("rubric CSV export is client-side", "exportRubricCSV" in src),
+    ("philosophy download client-side",  "downloadPhilosophy" in src),
 ]
 print()
 all_passed = True

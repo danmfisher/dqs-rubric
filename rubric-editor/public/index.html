@@ -1191,6 +1191,28 @@ function LevelView({ rubric, selectedTrack }) {
     );
   };
 
+  // Client-side CSV export — replicates server's build_csv()
+  const exportRubricCSV = () => {
+    const level = selectedLevel.toUpperCase();
+    const levelName = rubric.meta.level_names[level] || level;
+    const rows = [['"Dimension"', '"Competency"', '"Capability"', `"${level} — ${levelName}"`]];
+    rubric.dimensions.forEach(dim => {
+      dim.competencies.forEach(comp => {
+        comp.capabilities.forEach(cap => {
+          const desc = (cap.descriptions || {})[level] || '';
+          rows.push([dim.name, comp.name, cap.name, desc].map(v => `"${String(v).replace(/"/g, '""')}"`));
+        });
+      });
+    });
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const safeTrack = (selectedTrack || 'swe-ic').replace(/\//g, '-');
+    a.href = url; a.download = `Rubric_${safeTrack}_${level}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="main">
       {/* ── Toolbar ─────────────────────────────────── */}
@@ -1219,11 +1241,11 @@ function LevelView({ rubric, selectedTrack }) {
         <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12 }} onClick={expandAll}>Expand all</button>
         <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12 }} onClick={collapseAll}>Collapse all</button>
         <div style={{ flex: 1 }} />
-        <a href={`/api/export/${selectedLevel}${selectedTrack ? `?track=${encodeURIComponent(selectedTrack)}` : ''}`}
-          className="btn btn-success"
-          style={{ textDecoration: 'none', fontSize: 12, padding: '7px 16px' }}>
+        <button className="btn btn-success"
+          style={{ fontSize: 12, padding: '7px 16px' }}
+          onClick={exportRubricCSV}>
           ⬇ Export CSV ({selectedLevel})
-        </a>
+        </button>
       </div>
 
       {/* ── Table ────────────────────────────────────── */}
@@ -1511,28 +1533,45 @@ function PhilosophyCards({ sections }) {
     grouped[s.group].push(s);
   });
 
+  // Client-side .md download — reconstructs from parsed sections (no server needed)
+  const downloadPhilosophy = () => {
+    let md = '# FlexGen Rubric Design Philosophy\n\n';
+    let currentGroup = '';
+    sections.forEach(sec => {
+      if (sec.group !== currentGroup) {
+        currentGroup = sec.group;
+        md += `<!-- group: ${currentGroup} -->\n\n`;
+      }
+      md += `## ${sec.number}. ${sec.title}\n\n${sec.content}\n\n`;
+    });
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'FlexGen_Rubric_Philosophy.md'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="card">
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
         <div className="card-title" style={{ marginBottom: 0, flex: 1 }}>
           Design Philosophy — {sections.length} principles · click any card to read
         </div>
-        <a
-          href="/api/philosophy/download"
-          download
+        <button
+          onClick={downloadPhilosophy}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
             fontSize: 11, fontWeight: 600, color: 'var(--primary)',
-            textDecoration: 'none', padding: '4px 10px',
+            background: 'transparent', padding: '4px 10px',
             border: '1px solid var(--primary)', borderRadius: 12,
-            transition: 'background 0.15s',
+            transition: 'background 0.15s', cursor: 'pointer',
             flexShrink: 0,
           }}
           onMouseOver={e => e.currentTarget.style.background = '#eef0fb'}
           onMouseOut={e => e.currentTarget.style.background = 'transparent'}
         >
           ⬇ Download .md
-        </a>
+        </button>
       </div>
 
       {groupOrder.map((group, gi) => {
