@@ -729,8 +729,37 @@
     .results-footer { padding: 14px 32px; border-top: 1px solid var(--border); background: #fff; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
     .export-csv-btn { padding: 9px 18px; background: var(--text); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
     .export-csv-btn:hover { opacity: 0.85; }
+    .export-pdf-btn { padding: 9px 18px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .export-pdf-btn:hover { opacity: 0.85; }
     .wiz-restart-btn { padding: 9px 18px; background: #fff; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; cursor: pointer; }
     .wiz-restart-btn:hover { border-color: var(--muted); color: var(--text); }
+
+    @media print {
+      /* Hide all app chrome */
+      .tab-bar, .sidebar, .rubric-header,
+      .dim-nav-strip, .results-intro, .results-footer,
+      .dim-arrow-btn, .comp-collapse-arrow,
+      .cards-section-toggle, .cards-section-arrow,
+      .comp-confirm-btn, .comp-confirmed-badge,
+      .comp-level-select, .comp-evidence label,
+      .setup-summary-bar .ss-sep { display: none !important; }
+
+      /* Reset layout for print */
+      body { background: #fff; }
+      .results-wrap { display: block; height: auto; overflow: visible; }
+      .results-body { max-width: 100%; padding: 0; overflow: visible; }
+      .comp-result-card { box-shadow: none; border: 1px solid #e2e8f0; break-inside: avoid; }
+      .comp-result-body { display: block !important; }
+      .card-columns { break-inside: avoid; }
+
+      /* Dimension separator */
+      .print-dim-section { page-break-before: always; }
+      .print-dim-section:first-child { page-break-before: avoid; }
+      .results-dim-header { border-bottom: 2px solid var(--primary); margin-bottom: 16px; padding-bottom: 8px; }
+
+      /* Evidence textarea → plain text */
+      .comp-evidence textarea { border: none; resize: none; padding: 0; font-size: 13px; color: var(--text); height: auto; }
+    }
   </style>
 </head>
 <body>
@@ -2277,6 +2306,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
   const [capsCollapsed, setCapsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
   const toggleCapsCollapsed = (compId) => setCapsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
+  const [printMode, setPrintMode] = useState(false);
 
   const levelWindow = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
@@ -2373,6 +2403,11 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
     URL.revokeObjectURL(url);
   };
 
+  const exportPDF = () => {
+    setPrintMode(true);
+    setTimeout(() => { window.print(); setPrintMode(false); }, 50);
+  };
+
   return (
     <div className="results-wrap">
       {/* Dimension navigation strip */}
@@ -2423,17 +2458,25 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
           Export to CSV at any time.
         </div>
 
-        <div className="results-dim-header">
-          <div className="results-dim-title">{currentDim.name}</div>
-          <div className="results-dim-arrows">
-            <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i - 1)}
-              disabled={dimIdx === 0}>‹</button>
-            <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i + 1)}
-              disabled={dimIdx === dims.length - 1}>›</button>
+        {!printMode && (
+          <div className="results-dim-header">
+            <div className="results-dim-title">{currentDim.name}</div>
+            <div className="results-dim-arrows">
+              <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i - 1)}
+                disabled={dimIdx === 0}>‹</button>
+              <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i + 1)}
+                disabled={dimIdx === dims.length - 1}>›</button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {currentDim.competencies.map(comp => {
+        {(printMode ? dims : [currentDim]).map((dim, dimI) => (<div key={dim.id} className={printMode ? 'print-dim-section' : ''}>
+          {printMode && (
+            <div className="results-dim-header">
+              <div className="results-dim-title">{dim.name}</div>
+            </div>
+          )}
+          {dim.competencies.map(comp => {
           const compKey = getCompKey({ competency_id: comp.id, track: comp.id === 'domain-specific' ? setup.track : null });
           const compCards = (cards || []).filter(c => c.competency_id === comp.id &&
             (comp.id !== 'domain-specific' || c.track === setup.track));
@@ -2456,8 +2499,9 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
             : effIdx < declaredIdx ? '#b91c1c'
             : 'var(--primary)';
 
-          const isOpen = !collapsed[comp.id];
-          const isCardsOpen = !!cardsCollapsed[comp.id]; // default collapsed; toggled open by click
+          const isOpen = printMode || !collapsed[comp.id];
+          const isCardsOpen = printMode || !!cardsCollapsed[comp.id];
+          const isCapsOpen = printMode || !!capsCollapsed[comp.id];
           return (
             <div key={comp.id} className="comp-result-card">
               {/* Collapsible header */}
@@ -2540,10 +2584,10 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                   {/* Capabilities */}
                   <div className="comp-caps-section">
                     <div className="cards-section-toggle" onClick={() => toggleCapsCollapsed(comp.id)}>
-                      <span className={`cards-section-arrow ${capsCollapsed[comp.id] ? 'open' : ''}`}>▶</span>
+                      <span className={`cards-section-arrow ${isCapsOpen ? 'open' : ''}`}>▶</span>
                       Capabilities
                     </div>
-                    {capsCollapsed[comp.id] && comp.capabilities.map(cap => {
+                    {isCapsOpen && comp.capabilities.map(cap => {
                       const capDescs = cap.descriptions || {};
                       const capEffDesc  = capDescs[eff];
                       const capInfDesc  = inf && inf !== eff ? capDescs[inf] : null;
@@ -2654,12 +2698,14 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
             </div>
           );
         })}
+        </div>))}
       </div>
 
       {/* Footer */}
       <div className="results-footer">
         <button className="wiz-restart-btn" onClick={onRestart}>Clear results &amp; restart</button>
         <button className="export-csv-btn" onClick={exportCSV}>Export CSV</button>
+        <button className="export-pdf-btn" onClick={exportPDF}>Export PDF</button>
       </div>
     </div>
   );
