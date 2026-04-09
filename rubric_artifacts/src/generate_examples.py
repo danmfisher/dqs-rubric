@@ -171,6 +171,8 @@ FORBIDDEN PATTERNS (these are errors regardless of level):
     "highlighting their commitment to..." — end on what happened, not a judgment of it
   - Placeholder token capitalization: always {{name}}, {{they}}, {{their}}, {{them}} —
     never {{Name}}, {{They}}, {{Their}}, {{Them}}
+  - Invalid tokens: {{themself}} is not a valid token — never use it. Rewrite the sentence
+    to avoid the reflexive pronoun, e.g. "took it upon {{themself}} to" → "took the initiative to"
 
 L6 THEME VARIETY — avoid these overused defaults:
   The following themes have been used too many times across the L6 card set.
@@ -365,6 +367,13 @@ def parse_cards(raw: str, competency_id: str, level: str,
         scenario = re.sub(r'\{\{They\}\}',  '{{they}}',  scenario)
         scenario = re.sub(r'\{\{Their\}\}', '{{their}}', scenario)
         scenario = re.sub(r'\{\{Them\}\}',  '{{them}}',  scenario)
+        # Normalize reflexive pronoun — {{themself}} is not a render token; rewrite the phrase
+        scenario = re.sub(r'took it upon \{\{themself\}\} to', 'took the initiative to', scenario)
+        scenario = re.sub(r'\{\{themself\}\}', '{{them}}self', scenario)  # fallback for other uses
+        # Warn on any remaining unknown tokens
+        unknown = re.findall(r'\{\{(?!name|they|their|them)[^}]+\}\}', scenario)
+        if unknown:
+            print(f"    ⚠ Unknown token(s) in {competency_id}/{level}: {unknown}")
         cards.append({
             "id":            str(uuid.uuid4()),
             "competency_id": competency_id,

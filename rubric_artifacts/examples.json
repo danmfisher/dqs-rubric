@@ -1821,7 +1821,7 @@
     "level": "L4",
     "track": null,
     "placeholder": false,
-    "scenario": "Recognizing gaps in the current system's documentation, {{name}} **took it upon {{themself}} to enhance the team’s internal knowledge base** by documenting complex data processing flows. This initiative facilitated new hires in onboarding faster and allowed other teams to leverage the documentation for their projects effectively."
+    "scenario": "Recognizing gaps in the current system's documentation, {{name}} **took the initiative to enhance the team’s internal knowledge base** by documenting complex data processing flows. This initiative facilitated new hires in onboarding faster and allowed other teams to leverage the documentation for their projects effectively."
   },
   {
     "id": "690fb612-b928-48a8-8afd-76c7a531fd9d",
