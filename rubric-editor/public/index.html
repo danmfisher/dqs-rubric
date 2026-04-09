@@ -697,6 +697,9 @@
     .comp-level-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
     .comp-level-row label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
     .comp-level-select { padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: #fff; color: var(--text); }
+    .comp-confirm-btn { padding: 5px 12px; border: 1px solid var(--primary); border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--primary); background: #fff; cursor: pointer; transition: all 0.12s; }
+    .comp-confirm-btn:hover { background: var(--primary); color: #fff; }
+    .comp-confirmed-badge { font-size: 12px; font-weight: 600; color: #166534; }
     .comp-caps-section { margin-bottom: 18px; }
     .comp-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; }
     .comp-cap-item { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--bg); }
@@ -2288,7 +2291,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                 <div className="comp-result-body">
                   {/* Level override */}
                   <div className="comp-level-row">
-                    <label>Accepted level</label>
+                    <label>Level</label>
                     <select className="comp-level-select"
                       value={accepted[comp.id] || inf}
                       onChange={e => setAccepted(prev => ({ ...prev, [comp.id]: e.target.value }))}>
@@ -2296,6 +2299,18 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                         <option key={l} value={l}>{l} — {levelNames[l] || l}</option>
                       ))}
                     </select>
+                    {!accepted[comp.id]
+                      ? (
+                        <button className="comp-confirm-btn"
+                          onClick={() => setAccepted(prev => ({ ...prev, [comp.id]: inf }))}>
+                          Confirm
+                        </button>
+                      ) : (
+                        <span className="comp-confirmed-badge">✓ Confirmed
+                          {accepted[comp.id] !== inf ? ` (inferred: ${inf})` : ''}
+                        </span>
+                      )
+                    }
                   </div>
 
                   {/* Capabilities */}
