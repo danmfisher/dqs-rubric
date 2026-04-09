@@ -2437,9 +2437,12 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
                   {/* Competency description(s) */}
                   {(() => {
-                    const effDesc = (comp.descriptions || {})[eff];
-                    const infDesc = inf && inf !== eff ? (comp.descriptions || {})[inf] : null;
-                    if (!effDesc && !infDesc) return null;
+                    const descs = comp.descriptions || {};
+                    const effDesc  = descs[eff];
+                    const infDesc  = inf && inf !== eff ? descs[inf] : null;
+                    const declaredLevel = setup.level;
+                    const declDesc = declaredLevel !== eff && declaredLevel !== inf ? descs[declaredLevel] : null;
+                    if (!effDesc && !infDesc && !declDesc) return null;
                     return (
                       <div style={{ margin: '10px 0 4px', display: 'flex', flexDirection: 'row', gap: 8 }}>
                         {effDesc && (
@@ -2456,6 +2459,14 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                               {inf} — {levelNames[inf] || inf} (inferred)
                             </div>
                             <div style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.5 }}>{infDesc}</div>
+                          </div>
+                        )}
+                        {declDesc && (
+                          <div style={{ flex: 1, background: '#fffbeb', borderLeft: '3px solid #f59e0b', borderRadius: '0 6px 6px 0', padding: '8px 12px', opacity: 0.85 }}>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>
+                              {declaredLevel} — {levelNames[declaredLevel] || declaredLevel} (declared)
+                            </div>
+                            <div style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.5 }}>{declDesc}</div>
                           </div>
                         )}
                       </div>
