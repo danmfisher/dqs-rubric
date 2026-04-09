@@ -264,7 +264,7 @@
           "intent": "How you embody and model the organization's principles"
         }
       ],
-      "intent": "The tangible results your work produces and the breadth of your reach \u2014 from shipping individual tasks to shaping org-wide outcomes."
+      "intent": "What you produce and how far it reaches."
     },
     {
       "id": "reasoning-framing",
@@ -441,7 +441,7 @@
           "intent": "How you define and measure whether you've actually succeeded"
         }
       ],
-      "intent": "How you think through problems \u2014 structuring ambiguity, generating good options, and validating that the solution actually solved what needed solving."
+      "intent": "How you think \u2014 structuring problems before you solve them."
     },
     {
       "id": "communication-influence",
@@ -739,7 +739,7 @@
           "intent": "How you grow the capability and effectiveness of those around you"
         }
       ],
-      "intent": "How you move information, decisions, and people \u2014 individually, within teams, and across the organization."
+      "intent": "How you move information, decisions, and people."
     },
     {
       "id": "technical-competencies",
@@ -960,7 +960,7 @@
           "intent": "The specialized knowledge, tools, and methods of your particular track"
         }
       ],
-      "intent": "The technical skills and knowledge that underpin your work \u2014 from craft and shared engineering foundations to the specialized tools of your domain."
+      "intent": "The craft and domain knowledge that underpin everything else."
     }
   ]
 }
