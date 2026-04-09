@@ -28,7 +28,6 @@ After editing `rubric.json` or `philosophy.md`, regenerate and commit:
 
 ```bash
 python3 freeze.py
-cp Danielle_Rubric_Preview.html index.html
 git add rubric.json philosophy.md index.html
 git commit -m "Update rubric content"
 git push
@@ -69,14 +68,18 @@ re-runs reproduce the same quality without repeating the conversation.
 ## Repo structure
 
 ```
+README.md
+index.html                   static frozen preview (GitHub Pages)
 rubric.json                  source of truth for all rubric content
 philosophy.md                design philosophy (17 principles)
 examples.json                evaluation wizard behavior cards (generated)
 freeze.py                    bakes rubric.json + philosophy.md into index.html
 generate_examples.py         generates examples.json via LLM API
-index.html                   static frozen preview (GitHub Pages)
 rubric-editor/
   public/index.html          full interactive editor UI
   server.py                  local dev server
   start.sh                   server launcher
+source-docs/                 original reference materials (not deployed)
+  FlexGen Leveling Guide.docx
+  Job Roles.xlsx
 ```

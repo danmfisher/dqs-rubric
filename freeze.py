@@ -6,7 +6,7 @@ Usage:
     python3 freeze.py
 
 Output:
-    Danielle_Rubric_Preview.html  (in the same directory as this script)
+    index.html  (in the same directory as this script — served by GitHub Pages)
 
 Run this any time you want to update the GitHub Pages file with the latest
 rubric.json and philosophy.md content.
@@ -19,7 +19,7 @@ BASE = Path(__file__).parent
 RUBRIC_PATH  = BASE / "rubric.json"
 PHIL_PATH    = BASE / "philosophy.md"
 SOURCE_HTML  = BASE / "rubric-editor" / "public" / "index.html"
-OUTPUT_HTML  = BASE / "Danielle_Rubric_Preview.html"
+OUTPUT_HTML  = BASE / "index.html"
 
 
 # ── Replicate server's resolve_track() ──────────────────────────────────────
