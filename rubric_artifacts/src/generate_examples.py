@@ -185,42 +185,36 @@ SCENARIO VARIETY — cards within the same competency must use distinct situatio
   different type of situation, even if both sit at adjacent levels.
 
 BOLD MARKERS
-Wrap 1–3 phrases in **double asterisks**. Each bolded phrase should serve a distinct
-evidentiary purpose — together they should answer: what did they do, how autonomously,
-and at what scope? Someone reading only the bolded text should understand what level
-this person is demonstrating and why.
+Every sentence must contain at least one bolded phrase. Across the card, the bolded
+phrases must collectively cover all three of the following signal types:
 
-Bold one or more of these, in priority order:
+  1. ACTION — the verb phrase describing what the person did
+  2. AUTONOMY — how self-directed they were ("without needing additional support",
+     "without waiting for direction", "on their own initiative", "without prompting")
+  3. SCOPE — the scale of impact when it is the level indicator ("cross-team",
+     "across the org", "company-wide") — especially important at L4 and above
 
-  1. THE ACTION — the verb phrase describing what the person did
-  2. THE AUTONOMY SIGNAL — how self-directed they were ("without needing additional
-     support", "without being asked", "on their own initiative"). This is often
-     where the level evidence lives — do not leave it outside the bold.
-  3. THE SCOPE SIGNAL — when scale is the point ("cross-team", "org-wide",
-     "across the company"). Bold it as part of the action phrase or on its own
-     if it's the key level indicator.
+In a 3-sentence card, aim for one signal type per sentence. In a 2-sentence card,
+combine autonomy and scope into the same bold span if both are present.
 
-Rules:
+Additional rules:
   - Bold MUST include the main verb — never bold a noun phrase or object alone
   - Level signal words (consistently, proactively, etc.) belong INSIDE the bold
-  - Do not bold the outcome or the domain being worked on
+  - Do not bold outcomes or domains — bold the behavior, not what it produced
 
-  ✓ "{{name}} **took charge of the investigation without needing additional support**,
-     diving into the codebase to identify the root cause."
-  ✗ "{{name}} **took charge of the investigation**, diving into the codebase to
-     identify the root cause without needing additional support."
-     → autonomy signal left outside the bold; reader misses the level evidence
+  ✓ "{{name}} **independently led the refactoring of the auth module**."   ← action
+     "**Working without additional guidance**, she identified bottlenecks." ← autonomy
+     "Her changes **improved reliability across three downstream teams**."  ← scope
 
-  ✓ "In a **cross-team** initiative, {{name}} **proactively identified communication
-     gaps** between front-end and back-end developers."
-  ✗ "In a cross-team meeting, {{name}} **proactively identified communication gaps**."
-     → scope signal ("cross-team") left unbolded; it's the point at L4
+  ✗ "{{name}} **independently led the refactoring of the auth module**,
+     working without additional guidance to improve reliability."
+     → autonomy and scope signals left unbolded; only action is represented
 
-  ✓ "{{name}} **consistently incorporates feedback from peers** to refine a new feature."
-  ✗ "{{name}} consistently incorporates **feedback from peers** to **refine a new feature**."
-     → bolded verb-free fragments; level signal word left outside the bold
+  ✓ "{{name}} **proactively coordinated a cross-team effort** to address the outage."
+     (combines action + autonomy + scope in one span when card is tightly written)
 
-Do not exceed 3 bolded phrases per card.
+  ✗ "{{name}} proactively coordinated **a cross-team effort** to address the outage."
+     → verb-free fragment bolded; "proactively" (the autonomy signal) left outside
 
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
