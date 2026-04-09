@@ -34,11 +34,33 @@ Session 1 — initial generation
   - Level signal words must be embedded in behavior, not stated explicitly
   - Domain-Specific cards are placeholders: flagged placeholder=true,
     reviewed and refined after track content is finalized
-  - Card action in UI: "More junior than me" / "Sounds like me" /
-    "More senior than me" — cards should be specific enough to trigger
-    a clear reaction but not so obvious the level is telegraphed
   - Scope: generate for all 6 levels per competency; wizard applies
     the +/- 1 window at runtime based on declared starting level
+
+Session 2 — card action and framing revision
+  - Card action in UI changed to: "Easy" / "Comfortable" / "Stretch"
+    This replaces the earlier "More junior / Sounds like me / More senior"
+    framing, which didn't account for the "I do that AND more" dynamic
+    of level progression. An L4 should be able to mark L2 behaviors as
+    "Easy" — that's useful signal, not noise.
+  - Easy     → below where they reliably operate; internalized
+  - Comfortable → their home base; the level they're at
+  - Stretch  → above where they reliably operate; aspirational
+  - Triangulation logic: highest level where "Comfortable" is dominant
+    response is the inferred level. Consecutive "Easy" responses shift
+    the window up; "Stretch" responses shift it down.
+  - Cards should capture the TEXTURE of effort, not just the behavior:
+    the difference between an L2 and an L4 fixing a bug isn't what they
+    did, it's that the L2 spent a day on it with one check-in while the
+    L4 did it in twenty minutes before a meeting. Write cards that make
+    the evaluator feel the weight of the task for the person described.
+  - Cards no longer need to be maximally ambiguous — the classification
+    (easy/comfortable/stretch) does the discriminating work. Cards should
+    be clear and recognizable; the evaluator's reaction to them is the signal.
+  - Avoid ending cards with evaluative summary sentences ("demonstrating
+    their ability to...", "showing initiative in...") — show, don't tell.
+  - Avoid specific metrics ("reduced time by 30%") — qualitative impact
+    descriptions are more recognizable and less fabricated-feeling.
 
 ──────────────────────────────────────────────────────────────────────────────
 """
@@ -90,6 +112,13 @@ WHAT MAKES A GOOD CARD
 - The behavior is observable — a manager could have witnessed it
 - The level signal is embedded in the behavior, not stated — never say "as an L3 would"
 - Grounded in real tech work, not abstract management language
+- Captures the TEXTURE of effort: an L2 spending a day on something with one
+  check-in reads differently than an L4 handling the same thing before a meeting.
+  The weight and context of the task should be feelable, not just the action.
+- Do NOT end cards with evaluative summary sentences ("demonstrating their ability
+  to...", "showing initiative in...") — show what happened, let the reader judge.
+- Do NOT use specific metrics ("reduced time by 30%") — qualitative impact reads
+  as more authentic and recognizable than invented numbers.
 
 LEVEL SIGNALS TO EMBED (do not state these explicitly in the card text):
   L1: beginning to develop habits, task-scoped, acting with guidance
