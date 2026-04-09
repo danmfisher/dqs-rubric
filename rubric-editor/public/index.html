@@ -2032,14 +2032,14 @@ function CardExerciseScreen({ setup, onComplete }) {
   const [idx, setIdx] = useState(0);
   const [showSkipConfirm, setShowSkipConfirm] = useState(false);
 
-  const window = getLevelWindow(setup.level);
+  const levelWindow = getLevelWindow(setup.level);
 
   useEffect(() => {
     fetch('/api/examples')
       .then(r => r.json())
       .then(data => {
         const filtered = data.filter(c => {
-          if (!window.includes(c.level)) return false;
+          if (!levelWindow.includes(c.level)) return false;
           if (c.competency_id === 'domain-specific' && c.track !== setup.track) return false;
           return true;
         });
@@ -2183,7 +2183,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const [cardsCollapsed, setCardsCollapsed] = useState({}); // { compId: bool } — collapses card columns only
   const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
 
-  const window = getLevelWindow(setup.level);
+  const levelWindow = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
   const levelDescs = rubric.meta.level_descriptions || {};
   const levels = rubric.meta.levels || LEVELS;
@@ -2208,7 +2208,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
           ? getCompKey({ competency_id: comp.id, track: setup.track })
           : getCompKey({ competency_id: comp.id, track: null });
         const compCards = cardsByComp[key] || [];
-        res[comp.id] = inferCompLevel(compCards, ratings, window, setup.level);
+        res[comp.id] = inferCompLevel(compCards, ratings, levelWindow, setup.level);
       });
     });
     return res;
