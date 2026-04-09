@@ -24,11 +24,11 @@ cd rubric-editor
 
 ## Updating the static preview (GitHub Pages)
 
-After editing `rubric.json` or `philosophy.md`, regenerate and commit:
+After editing `rubric_artifacts/rubric.json` or `rubric_artifacts/philosophy.md`, regenerate and commit:
 
 ```bash
-python3 freeze.py
-git add rubric.json philosophy.md index.html
+python3 rubric_artifacts/src/freeze.py
+git add rubric_artifacts/ index.html
 git commit -m "Update rubric content"
 git push
 ```
@@ -43,17 +43,17 @@ Re-run whenever `rubric.json` changes.
 ```bash
 # Using OpenAI (gpt-4o)
 export OPENAI_API_KEY=sk-...
-python3 generate_examples.py --openai
+python3 rubric_artifacts/src/generate_examples.py --openai
 
 # Using Anthropic (claude-opus-4-5)
 export ANTHROPIC_API_KEY=sk-ant-...
-python3 generate_examples.py --anthropic
+python3 rubric_artifacts/src/generate_examples.py --anthropic
 
 # Single competency (useful for testing or targeted refresh)
-python3 generate_examples.py --openai --competency ownership-autonomy
+python3 rubric_artifacts/src/generate_examples.py --openai --competency ownership-autonomy
 
 # Preview prompts without calling the API
-python3 generate_examples.py --openai --dry-run
+python3 rubric_artifacts/src/generate_examples.py --openai --dry-run
 ```
 
 The script is incremental — it skips competency/level pairs already present in
@@ -69,17 +69,19 @@ re-runs reproduce the same quality without repeating the conversation.
 
 ```
 README.md
-index.html                   static frozen preview (GitHub Pages)
-rubric.json                  source of truth for all rubric content
-philosophy.md                design philosophy (17 principles)
-examples.json                evaluation wizard behavior cards (generated)
-freeze.py                    bakes rubric.json + philosophy.md into index.html
-generate_examples.py         generates examples.json via LLM API
+index.html                        static frozen preview (GitHub Pages)
+rubric_artifacts/
+  rubric.json                     source of truth for all rubric content
+  philosophy.md                   design philosophy (17 principles)
+  examples.json                   evaluation wizard behavior cards (generated)
+  src/
+    freeze.py                     bakes rubric.json + philosophy.md → index.html
+    generate_examples.py          generates examples.json via LLM API
 rubric-editor/
-  public/index.html          full interactive editor UI
-  server.py                  local dev server
-  start.sh                   server launcher
-source-docs/                 original reference materials (not deployed)
+  public/index.html               full interactive editor UI
+  server.py                       local dev server
+  start.sh                        server launcher
+source-docs/                      original reference materials (not deployed)
   FlexGen Leveling Guide.docx
   Job Roles.xlsx
 ```

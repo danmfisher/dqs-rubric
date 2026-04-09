@@ -68,9 +68,10 @@ Session 2 — card action and framing revision
 import json, os, sys, time, uuid, argparse, urllib.request, urllib.error
 from pathlib import Path
 
-BASE          = Path(__file__).parent
-RUBRIC_PATH   = BASE / "rubric.json"
-OUTPUT_PATH   = BASE / "examples.json"
+BASE          = Path(__file__).parent          # rubric_artifacts/src/
+ARTIFACTS     = BASE.parent                    # rubric_artifacts/
+RUBRIC_PATH   = ARTIFACTS / "rubric.json"
+OUTPUT_PATH   = ARTIFACTS / "examples.json"
 ANTHROPIC_MODEL = "claude-opus-4-5"
 OPENAI_MODEL    = "gpt-4o"
 CARDS_PER_LEVEL = 3   # number of example cards generated per competency × level

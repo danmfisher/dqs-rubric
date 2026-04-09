@@ -21,7 +21,7 @@ from pathlib import Path
 PORT = 3737
 BASE_DIR   = Path(__file__).parent
 PUBLIC_DIR = BASE_DIR / "public"
-RUBRIC_PATH = BASE_DIR.parent / "rubric.json"
+RUBRIC_PATH = BASE_DIR.parent / "rubric_artifacts" / "rubric.json"
 
 MIME = {
     ".html": "text/html; charset=utf-8",
@@ -70,7 +70,7 @@ def read_philosophy():
     group comment is encountered.
     """
     import re
-    path = BASE_DIR.parent / "philosophy.md"
+    path = BASE_DIR.parent / "rubric_artifacts" / "philosophy.md"
     text = path.read_text(encoding="utf-8")
 
     # Find every group-comment and every ## section header, in document order,
@@ -162,7 +162,7 @@ class Handler(BaseHTTPRequestHandler):
         # API: download raw philosophy markdown (must come before /api/philosophy)
         if path == "/api/philosophy/download":
             try:
-                md_path = BASE_DIR.parent / "philosophy.md"
+                md_path = BASE_DIR.parent / "rubric_artifacts" / "philosophy.md"
                 data = md_path.read_bytes()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/markdown; charset=utf-8")
@@ -177,7 +177,7 @@ class Handler(BaseHTTPRequestHandler):
         # API: evaluation wizard example cards
         if path == "/api/examples":
             try:
-                examples_path = BASE_DIR.parent / "examples.json"
+                examples_path = BASE_DIR.parent / "rubric_artifacts" / "examples.json"
                 if examples_path.exists():
                     self.send_json(json.loads(examples_path.read_text(encoding="utf-8")))
                 else:

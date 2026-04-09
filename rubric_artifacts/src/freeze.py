@@ -15,11 +15,13 @@ rubric.json and philosophy.md content.
 import json, re, copy
 from pathlib import Path
 
-BASE = Path(__file__).parent
-RUBRIC_PATH  = BASE / "rubric.json"
-PHIL_PATH    = BASE / "philosophy.md"
-SOURCE_HTML  = BASE / "rubric-editor" / "public" / "index.html"
-OUTPUT_HTML  = BASE / "index.html"
+BASE         = Path(__file__).parent          # rubric_artifacts/src/
+ARTIFACTS    = BASE.parent                    # rubric_artifacts/
+ROOT         = BASE.parent.parent             # project root
+RUBRIC_PATH  = ARTIFACTS / "rubric.json"
+PHIL_PATH    = ARTIFACTS / "philosophy.md"
+SOURCE_HTML  = ROOT / "rubric-editor" / "public" / "index.html"
+OUTPUT_HTML  = ROOT / "index.html"
 
 
 # ── Replicate server's resolve_track() ──────────────────────────────────────
