@@ -716,6 +716,16 @@
     .card-col-hdr.skipped { background: #f1f5f9; color: var(--muted); }
     .card-chip { font-size: 12px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; margin-bottom: 6px; line-height: 1.45; }
     .card-col-empty { font-size: 12px; color: var(--muted); font-style: italic; padding: 6px 10px; }
+    .card-col-count { display: block; font-size: 10px; font-weight: 500; opacity: 0.75; margin-top: 1px; text-transform: none; letter-spacing: 0; }
+    .cards-section-toggle { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); cursor: pointer; user-select: none; margin-bottom: 10px; }
+    .cards-section-toggle:hover { color: var(--text); }
+    .cards-section-arrow { font-size: 9px; transition: transform 0.15s; display: inline-block; }
+    .cards-section-arrow.open { transform: rotate(90deg); }
+    .setup-summary-bar { display: flex; align-items: center; gap: 10px; background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; margin-bottom: 16px; flex-wrap: wrap; }
+    .setup-summary-bar .ss-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+    .setup-summary-bar .ss-val { font-size: 13px; font-weight: 600; color: var(--text); }
+    .setup-summary-bar .ss-sep { color: var(--border); font-size: 14px; }
+    .setup-summary-bar .ss-declared { display: inline-flex; align-items: center; gap: 4px; background: var(--primary); color: #fff; border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 700; }
     .comp-evidence label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); display: block; margin-bottom: 6px; }
     .comp-evidence textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; resize: vertical; min-height: 70px; font-family: inherit; color: var(--text); background: #fff; }
     .comp-evidence textarea:focus { outline: none; border-color: var(--primary); }
@@ -2129,8 +2139,10 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const [dimIdx, setDimIdx] = useState(0);
   const [accepted, setAccepted] = useState({}); // { compId: level }
   const [evidence, setEvidence] = useState({}); // { compId: string }
-  const [collapsed, setCollapsed] = useState({}); // { compId: bool }
+  const [collapsed, setCollapsed] = useState({}); // { compId: bool } — collapses whole comp
   const toggleCollapsed = (compId) => setCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
+  const [cardsCollapsed, setCardsCollapsed] = useState({}); // { compId: bool } — collapses card columns only
+  const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
 
   const window = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
@@ -2166,13 +2178,16 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   // Effective level (accepted override or inferred)
   const effectiveLevel = (compId) => accepted[compId] || inferredLevels[compId] || setup.level;
 
-  // % complete per dimension = fraction of competencies with (accepted level AND evidence)
+  // % complete per dimension: 25% per comp = confirmed level, 75% = evidence text
   const dimComplete = (dim) => {
     const total = dim.competencies.length;
-    const done = dim.competencies.filter(comp =>
-      accepted[comp.id] && (evidence[comp.id] || '').trim()
-    ).length;
-    return total > 0 ? done / total : 0;
+    if (total === 0) return 0;
+    const score = dim.competencies.reduce((sum, comp) => {
+      const hasLevel = !!accepted[comp.id];
+      const hasEvidence = !!(evidence[comp.id] || '').trim();
+      return sum + (hasLevel ? 0.25 : 0) + (hasEvidence ? 0.75 : 0);
+    }, 0);
+    return score / total;
   };
 
   // Dimension-level summary = most common effective level among its competencies
@@ -2245,11 +2260,26 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
       {/* Dimension body */}
       <div className="results-body">
+        {/* Setup summary */}
+        <div className="setup-summary-bar">
+          <span className="ss-label">Evaluation for</span>
+          <span className="ss-val">{setup.name}</span>
+          <span className="ss-sep">|</span>
+          <span className="ss-label">Declared level</span>
+          <span className="ss-declared">{setup.level}</span>
+          <span className="ss-sep">|</span>
+          <span className="ss-label">Pronouns</span>
+          <span className="ss-val">{setup.pronouns}</span>
+          <span className="ss-sep">|</span>
+          <span className="ss-label">Track</span>
+          <span className="ss-val">{setup.track}</span>
+        </div>
+
         <div className="results-intro">
           <strong>Here are your inferred levels</strong> based on how you rated the scenarios.
           Navigate between dimensions using the tabs above. For each competency, review the inferred
           level, override it if needed, and add a specific example that supports your assessment.
-          The progress bar on each tab fills when you've confirmed a level <em>and</em> added evidence.
+          Progress bars fill 25% when you confirm a level and 75% when you add evidence.
           Export to CSV at any time.
         </div>
 
@@ -2278,13 +2308,22 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
               byBucket[r].push(substituteTokens(c.scenario, setup.name, setup.pronouns));
             }
           });
+          const totalCards = compCards.length;
+
+          // Color-code level badge relative to declared level
+          const effIdx = LEVELS.indexOf(eff);
+          const declaredIdx = LEVELS.indexOf(setup.level);
+          const levelColor = effIdx > declaredIdx ? '#166534'
+            : effIdx < declaredIdx ? '#b91c1c'
+            : 'var(--primary)';
 
           const isOpen = !collapsed[comp.id];
+          const isCardsOpen = !cardsCollapsed[comp.id];
           return (
             <div key={comp.id} className="comp-result-card">
               {/* Collapsible header */}
               <div className="comp-result-header" onClick={() => toggleCollapsed(comp.id)}>
-                <div className="comp-inferred-level" style={{ fontSize: 22, fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>{eff}</div>
+                <div className="comp-inferred-level" style={{ fontSize: 22, fontWeight: 800, color: levelColor, lineHeight: 1 }}>{eff}</div>
                 <div>
                   <div className="comp-result-name">{comp.name}</div>
                   <div style={{ fontSize: 11, color: 'var(--muted)' }}>{levelNames[eff]}{accepted[comp.id] && accepted[comp.id] !== inf ? ` (overridden from ${inf})` : ''}</div>
@@ -2335,26 +2374,44 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                     ))}
                   </div>
 
-                  {/* Card columns */}
+                  {/* Card columns — collapsible */}
                   {compCards.length > 0 && (
-                    <div className="card-columns">
-                      {[
-                        { key: 'easy',        label: 'Easy' },
-                        { key: 'comfortable', label: 'Comfortable' },
-                        { key: 'stretch',     label: 'Stretch' },
-                        { key: 'skip',        label: 'Skipped' },
-                      ].map(({ key, label }) => (
-                        <div key={key} className="card-col">
-                          <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>{label}</div>
-                          {byBucket[key].length === 0
-                            ? <div className="card-col-empty">—</div>
-                            : byBucket[key].map((text, i) => (
-                              <div key={i} className="card-chip">{abridgeText(text)}</div>
-                            ))
-                          }
+                    <>
+                      <div className="cards-section-toggle" onClick={() => toggleCardsCollapsed(comp.id)}>
+                        <span className={`cards-section-arrow ${isCardsOpen ? 'open' : ''}`}>▶</span>
+                        Scenario Cards
+                        <span style={{ fontWeight: 500, textTransform: 'none', letterSpacing: 0, fontSize: 10, color: 'var(--muted)', opacity: 0.8 }}>
+                          ({totalCards} total)
+                        </span>
+                      </div>
+                      {isCardsOpen && (
+                        <div className="card-columns">
+                          {[
+                            { key: 'easy',        label: 'Easy' },
+                            { key: 'comfortable', label: 'Comfortable' },
+                            { key: 'stretch',     label: 'Stretch' },
+                            { key: 'skip',        label: 'Skipped' },
+                          ].map(({ key, label }) => {
+                            const n = byBucket[key].length;
+                            const pct = totalCards > 0 ? Math.round(n / totalCards * 100) : 0;
+                            return (
+                              <div key={key} className="card-col">
+                                <div className={`card-col-hdr ${key === 'skip' ? 'skipped' : key}`}>
+                                  {label}
+                                  <span className="card-col-count">{n > 0 ? `${n} · ${pct}%` : '—'}</span>
+                                </div>
+                                {n === 0
+                                  ? <div className="card-col-empty">—</div>
+                                  : byBucket[key].map((text, i) => (
+                                    <div key={i} className="card-chip">{abridgeText(text)}</div>
+                                  ))
+                                }
+                              </div>
+                            );
+                          })}
                         </div>
-                      ))}
-                    </div>
+                      )}
+                    </>
                   )}
 
                   {/* Evidence */}
