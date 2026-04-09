@@ -1913,63 +1913,103 @@ function getCompKey(card) {
   return card.competency_id + '|' + (card.track || '');
 }
 
-// Expected rating for a card given the level window:
-//   window[0] (below declared) → easy
-//   window[1] (at declared)    → comfortable
-//   window[2] (above declared) → stretch
-function expectedRating(cardLevel, levelWindow) {
+// Given a card's level and rating, return the implied true level of the person.
+// "easy" at L   → I'm above L   → implied = one level up (capped at window ceiling)
+// "comfortable" at L → I'm at L → implied = L
+// "stretch" at L → I'm below L  → implied = one level down (capped at window floor)
+// Capping is intentional: it causes directional signals to converge on the
+// boundary level, enabling earlier consensus (e.g. all-easy → LN+1 wins 2/3).
+function impliedLevel(cardLevel, rating, levelWindow) {
   const i = levelWindow.indexOf(cardLevel);
-  return i === 0 ? 'easy' : i === levelWindow.length - 1 ? 'stretch' : 'comfortable';
+  if (i === -1) return null;
+  if (rating === 'comfortable') return levelWindow[i];
+  if (rating === 'easy')        return levelWindow[Math.min(i + 1, levelWindow.length - 1)];
+  if (rating === 'stretch')     return levelWindow[Math.max(i - 1, 0)];
+  return null; // skip
 }
 
-// Returns true when a competency's cards have a clear signal, OR all are rated/skipped.
-// Signal rule: ≥75% of ALL cards are "aligned" — rated with their expected outcome
-//   (L(N-1)→easy, LN→comfortable, L(N+1)→stretch).
-// Unrated and skipped cards count as NOT aligned.
+// For a level group (cards at a single window level), return the dominant rating
+// if ≥75% of answered cards agree, otherwise null.
+function groupDominant(groupCards, ratings) {
+  const answered = groupCards.filter(c => ratings[c.id] && ratings[c.id] !== 'skip');
+  if (answered.length === 0) return null;
+  const counts = { easy: 0, comfortable: 0, stretch: 0 };
+  answered.forEach(c => { const r = ratings[c.id]; if (r in counts) counts[r]++; });
+  const [topRating, topCount] = Object.entries(counts).reduce((a, b) => b[1] > a[1] ? b : a);
+  return topCount / answered.length >= 0.75 ? topRating : null;
+}
+
+// Returns true when a competency's cards have a clear signal, or all are touched.
+// Signal: every level group has a dominant rating (≥75% of that group's answered
+// cards in one bucket), AND ≥2/3 of the implied levels agree on the same level.
+// Capping in impliedLevel() is what allows "all easy" / "all stretch" to converge.
 function isCompDone(compCards, ratings, levelWindow) {
-  // All cards touched → done regardless
   if (compCards.every(c => ratings[c.id])) return true;
   if (!levelWindow || levelWindow.length === 0) return false;
-  const aligned = compCards.filter(c =>
-    ratings[c.id] && ratings[c.id] === expectedRating(c.level, levelWindow)
-  ).length;
-  return aligned / compCards.length >= 0.75;
+
+  const byLevel = {};
+  levelWindow.forEach(l => { byLevel[l] = []; });
+  compCards.forEach(c => { if (byLevel[c.level]) byLevel[c.level].push(c); });
+
+  // Every group must have a dominant rating — ambiguity in any group = no early stop
+  const dominants = levelWindow.map(l => groupDominant(byLevel[l], ratings));
+  if (dominants.some(d => d === null)) return false;
+
+  // Tally implied levels; ≥2/3 consensus triggers stop
+  const impliedCounts = {};
+  levelWindow.forEach((l, i) => {
+    const il = impliedLevel(l, dominants[i], levelWindow);
+    if (il) impliedCounts[il] = (impliedCounts[il] || 0) + 1;
+  });
+  const maxVotes = Math.max(...Object.values(impliedCounts));
+  return maxVotes / levelWindow.length >= (2 / 3);
 }
 
-// Infer level for a competency from ratings
-// Priority: level with most "comfortable" ratings; tiebreak = higher level
-// Fallback if no comfortable: majority bucket nudges up/down from declared level
-function inferCompLevel(compCards, ratings, window, declaredLevel) {
+// Infer level for a competency from ratings.
+// Uses the same per-group dominant + implied-level vote as isCompDone.
+// Falls back to most-comfortable-cards logic if no group consensus exists.
+function inferCompLevel(compCards, ratings, levelWindow, declaredLevel) {
+  if (!levelWindow || levelWindow.length === 0) return declaredLevel;
+
+  const byLevel = {};
+  levelWindow.forEach(l => { byLevel[l] = []; });
+  compCards.forEach(c => { if (byLevel[c.level]) byLevel[c.level].push(c); });
+
+  const dominants = levelWindow.map(l => groupDominant(byLevel[l], ratings));
+
+  // If all groups have a dominant, use implied-level vote
+  if (dominants.every(d => d !== null)) {
+    const impliedCounts = {};
+    levelWindow.forEach((l, i) => {
+      const il = impliedLevel(l, dominants[i], levelWindow);
+      if (il) impliedCounts[il] = (impliedCounts[il] || 0) + 1;
+    });
+    const best = Object.entries(impliedCounts).reduce((a, b) => b[1] > a[1] ? b : a);
+    return best[0];
+  }
+
+  // Fallback: level with the most "comfortable" ratings, tiebreak = higher level
   const comfortable = {};
-  window.forEach(l => comfortable[l] = 0);
+  levelWindow.forEach(l => { comfortable[l] = 0; });
   compCards.forEach(c => {
     if (ratings[c.id] === 'comfortable' && comfortable[c.level] !== undefined)
       comfortable[c.level]++;
   });
-  const totalComfort = Object.values(comfortable).reduce((a,b) => a+b, 0);
+  const totalComfort = Object.values(comfortable).reduce((a, b) => a + b, 0);
   if (totalComfort > 0) {
-    let best = window[0], bestN = 0;
-    window.forEach(l => {
-      if (comfortable[l] > bestN ||
-          (comfortable[l] === bestN && LEVELS.indexOf(l) > LEVELS.indexOf(best))) {
-        best = l; bestN = comfortable[l];
-      }
-    });
-    return best;
+    return levelWindow.reduce((best, l) =>
+      comfortable[l] > comfortable[best] ||
+      (comfortable[l] === comfortable[best] && LEVELS.indexOf(l) > LEVELS.indexOf(best))
+        ? l : best
+    , levelWindow[0]);
   }
-  // No comfortable ratings — use majority bucket
+
+  // No comfortable ratings at all — majority easy/stretch direction
   const answered = compCards.filter(c => ratings[c.id] && ratings[c.id] !== 'skip');
   if (answered.length === 0) return declaredLevel;
   const counts = { easy: 0, stretch: 0 };
-  answered.forEach(c => { if (c in counts) counts[ratings[c.id]]++; });
-  if ((counts.easy || 0) > (counts.stretch || 0)) {
-    // Mostly easy → infer higher than middle
-    const midIdx = Math.floor(window.length / 2);
-    return window[Math.min(midIdx + 1, window.length - 1)];
-  }
-  // Mostly stretch → infer lower than middle
-  const midIdx = Math.floor(window.length / 2);
-  return window[Math.max(midIdx - 1, 0)];
+  answered.forEach(c => { const r = ratings[c.id]; if (r in counts) counts[r]++; });
+  return counts.easy >= counts.stretch ? levelWindow[levelWindow.length - 1] : levelWindow[0];
 }
 
 // Abridged card text for the results columns (~80 chars)
