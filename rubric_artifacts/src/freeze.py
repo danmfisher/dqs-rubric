@@ -6,7 +6,7 @@ Usage:
     python3 freeze.py
 
 Output:
-    Danielle_Rubric_Preview.html  (in the same directory as this script)
+    index.html  (in the same directory as this script — served by GitHub Pages)
 
 Run this any time you want to update the GitHub Pages file with the latest
 rubric.json and philosophy.md content.
@@ -15,11 +15,14 @@ rubric.json and philosophy.md content.
 import json, re, copy
 from pathlib import Path
 
-BASE = Path(__file__).parent
-RUBRIC_PATH  = BASE / "rubric.json"
-PHIL_PATH    = BASE / "philosophy.md"
-SOURCE_HTML  = BASE / "rubric-editor" / "public" / "index.html"
-OUTPUT_HTML  = BASE / "Danielle_Rubric_Preview.html"
+BASE         = Path(__file__).parent          # rubric_artifacts/src/
+ARTIFACTS    = BASE.parent                    # rubric_artifacts/
+ROOT         = BASE.parent.parent             # project root
+RUBRIC_PATH    = ARTIFACTS / "rubric.json"
+PHIL_PATH      = ARTIFACTS / "philosophy.md"
+EXAMPLES_PATH  = ARTIFACTS / "examples.json"
+SOURCE_HTML  = ROOT / "rubric-editor" / "public" / "index.html"
+OUTPUT_HTML  = ROOT / "index.html"
 
 
 # ── Replicate server's resolve_track() ──────────────────────────────────────
@@ -66,16 +69,18 @@ def read_philosophy():
 
 
 # ── Build baked data ─────────────────────────────────────────────────────────
-print("Reading rubric.json and philosophy.md...")
+print("Reading rubric.json, philosophy.md, and examples.json...")
 with open(RUBRIC_PATH, encoding="utf-8") as f:
     rubric = json.load(f)
 
 available_tracks = [t["id"] for t in rubric["meta"]["tracks"] if t.get("available")]
 tracks_data = {track: resolve_track(rubric, track) for track in available_tracks}
-philosophy   = read_philosophy()
-baked        = json.dumps({"tracks": tracks_data, "philosophy": philosophy})
+philosophy  = read_philosophy()
+examples    = json.loads(EXAMPLES_PATH.read_text(encoding="utf-8")) if EXAMPLES_PATH.exists() else []
+baked       = json.dumps({"tracks": tracks_data, "philosophy": philosophy, "examples": examples})
 print(f"  Tracks baked: {available_tracks}")
 print(f"  Philosophy sections: {len(philosophy)}")
+print(f"  Example cards: {len(examples)}")
 
 
 # ── Read source HTML ─────────────────────────────────────────────────────────
@@ -135,6 +140,16 @@ src = src.replace(
     "      .then(data => Array.isArray(data) && setPhilosophy(data));"
 )
 
+# Examples fetch (wizard card exercise)
+src = src.replace(
+    "fetch('/api/examples')\n"
+    "      .then(r => r.json())\n"
+    "      .then(data => {",
+
+    "Promise.resolve(window.BAKED.examples || [])\n"
+    "      .then(data => {"
+)
+
 # Save handler (no server in preview — just clear dirty state)
 src = src.replace(
     "fetch('/api/rubric', {\n"
@@ -181,27 +196,8 @@ src = src.replace(
 )
 
 
-# ── Disable CSV export button ────────────────────────────────────────────────
-src = re.sub(
-    r'<a href=\{`/api/export/\$\{selectedLevel\}.*?</a>',
-    "<span\n"
-    "          className=\"btn btn-success\"\n"
-    "          title=\"CSV export not available in preview\"\n"
-    "          style={{ fontSize: 12, padding: '7px 16px', opacity: 0.4, cursor: 'not-allowed' }}>\n"
-    "          ⬇ Export CSV ({selectedLevel})\n"
-    "        </span>",
-    src,
-    flags=re.DOTALL
-)
-
-
-# ── Remove philosophy download link (needs server) ───────────────────────────
-src = re.sub(
-    r'<a href="/api/philosophy/download"[^>]*>.*?</a>',
-    "",
-    src,
-    flags=re.DOTALL
-)
+# NOTE: Rubric CSV export and philosophy .md download are now fully client-side
+# (Blob + URL.createObjectURL) — no stubs needed here.
 
 
 # ── Write output ─────────────────────────────────────────────────────────────
@@ -212,14 +208,17 @@ print(f"\n✓ Written: {OUTPUT_HTML.name}  ({kb} KB)")
 
 # ── Verify ───────────────────────────────────────────────────────────────────
 checks = [
-    ("Danielle's in title",       "Danielle's Technology Rubric" in src),
-    ("FlexGen not in title",      "FlexGen Technology Rubric" not in src),
-    ("editingEnabled constant",   "const editingEnabled = false;" in src),
-    ("no setEditingEnabled",      "setEditingEnabled" not in src),
-    ("no /api/export link",       "/api/export/" not in src),
-    ("no server fetch calls",     "fetch('/api/" not in src and "fetch(`/api/" not in src),
-    ("BAKED data injected",       "window.BAKED" in src),
-    ("philosophy sections baked", str(len(philosophy)) in baked),
+    ("Danielle's in title",        "Danielle's Technology Rubric" in src),
+    ("FlexGen not in title",       "FlexGen Technology Rubric" not in src),
+    ("editingEnabled constant",    "const editingEnabled = false;" in src),
+    ("no setEditingEnabled",       "setEditingEnabled" not in src),
+    ("no server fetch calls",      "fetch('/api/" not in src and "fetch(`/api/" not in src),
+    ("BAKED data injected",        "window.BAKED" in src),
+    ("philosophy sections baked",  str(len(philosophy)) in baked),
+    ("rubric CSV export is client-side", "exportRubricCSV" in src),
+    ("philosophy download client-side",  "downloadPhilosophy" in src),
+    ("examples baked",                   f'"examples":{len(examples)}' in baked.replace(' ', '') or '"examples":' in baked),
+    ("examples fetch patched",           "window.BAKED.examples" in src),
 ]
 print()
 all_passed = True

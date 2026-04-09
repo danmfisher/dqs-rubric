@@ -1,0 +1,2306 @@
+[
+  {
+    "id": "56bce4a8-a120-4baa-bb80-d0377ecffb07",
+    "competency_id": "ownership-autonomy",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "With guidance from {{their}} manager, {{name}} worked through debugging a small feature that was breaking intermittently. {{They}} followed the instructions provided and asked for clarification when {{they}} encountered unfamiliar parts of the codebase. By the end of the day, {{they}} solved the issue, and it was incorporated into the next deployment."
+  },
+  {
+    "id": "ef9a383a-2b5d-4edf-b6a0-187223a4f692",
+    "competency_id": "ownership-autonomy",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During {{their}} first week on the project, {{name}} was tasked with updating the documentation for a utility script. {{They}} checked {{their}} understanding with a senior colleague to ensure accuracy. Once {{they}} felt confident, {{they}} pushed the changes with a few iterated edits from the feedback given."
+  },
+  {
+    "id": "320ea056-6126-410e-be86-dca66bae9792",
+    "competency_id": "ownership-autonomy",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Under the direction of {{their}} onboarding buddy, {{name}} set up {{their}} development environment, following a checklist provided by the team. {{They}} asked questions about the purpose of each tool during the setup process, which helped {{them}} get comfortable with {{their}} initial tasks."
+  },
+  {
+    "id": "97821be7-e864-447b-a8fe-dc402b127d39",
+    "competency_id": "ownership-autonomy",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly revisits and updates {{their}} own documentation as {{they}} learns new information, ensuring it always serves the team well, with only minimal input from {{their}} lead."
+  },
+  {
+    "id": "66164f01-8a2b-405a-946a-4e4fdafb2a76",
+    "competency_id": "ownership-autonomy",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the quarterly roadmap planning meeting, {{name}} presented {{their}} feature ideas that {{they}} had been refining over several weeks. {{They}} worked out the details with minimal guidance, keeping {{their}} scope aligned with the team's objectives."
+  },
+  {
+    "id": "0451a569-945a-4f8f-b355-76ac1d9fd710",
+    "competency_id": "ownership-autonomy",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} handled a backlog of support tickets related to a feature {{they}} maintained. Without needing detailed instructions, {{they}} regularly prioritized and resolved the issues, improving user satisfaction and efficiency in {{their}} own workflows."
+  },
+  {
+    "id": "325d2477-acee-451d-887c-99f263ca0387",
+    "competency_id": "ownership-autonomy",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} took charge of the quarterly roadmap for a key product feature, independently coordinating with design and backend teams. {{They}} identified potential roadblocks early in the planning phase and ensured that everyone was aligned on the timeline. As a result, the team delivered the feature ahead of schedule with fewer issues than in previous releases."
+  },
+  {
+    "id": "7458f74c-f916-4752-a339-bed4315eadd2",
+    "competency_id": "ownership-autonomy",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the project team encountered a sudden blocker involving third-party integrations, {{name}} independently researched potential solutions and proposed a workaround that allowed the team to keep moving forward without missing deadlines. {{Their}} quick thinking enabled the team to maintain momentum and stay on track."
+  },
+  {
+    "id": "d2dea4ef-6785-43c1-8479-f0501a429297",
+    "competency_id": "ownership-autonomy",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a sprint planning meeting, {{name}} consistently brought up concerns about potential technical debt that could arise from the current project scope. {{They}} independently drafted a proposal to address these concerns while ensuring feature delivery remained on schedule. This proactive approach was well-received by both developers and product managers, leading to a more sustainable project plan."
+  },
+  {
+    "id": "efd58ae4-a9eb-4128-b4cf-0e6995bf3bb3",
+    "competency_id": "ownership-autonomy",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a cross-team planning meeting, {{name}} identified a potential bottleneck in the deployment pipeline that could affect multiple teams. Without prompting, {{they}} organized a working group to address the issue, facilitating meetings and coordinating efforts across the teams involved until a solution was implemented."
+  },
+  {
+    "id": "9c8ac39d-d016-4d02-885f-293ccbac8c3e",
+    "competency_id": "ownership-autonomy",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a recent project faced unforeseen challenges that threatened its timeline, {{name}} took the initiative to assess the impact on their team and neighboring teams. {{They}} proactively adjusted the project plan, communicated the updates to all stakeholders, and ensured the project continued smoothly without external request."
+  },
+  {
+    "id": "5df78a81-6e38-429f-8c79-3136fccd1d36",
+    "competency_id": "ownership-autonomy",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Noticing a repeated pattern of delays in team deliverables, {{name}} independently conducted an analysis of processes and proposed cross-team improvements. {{They}} spearheaded the adoption of these changes, securing stakeholder buy-in and visibly enhancing the productivity across the teams involved."
+  },
+  {
+    "id": "4c53da8a-978d-45ec-9044-2a4470f09bf3",
+    "competency_id": "ownership-autonomy",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a major infrastructure upgrade, {{name}} worked closely with teams across the organization to identify potential roadblocks and ensured alignment on deployment timelines. {{They}} developed a comprehensive plan, which included clear guidelines for each team, systematically improving how updates are coordinated across the company."
+  },
+  {
+    "id": "4056e81b-391b-47d8-bb8d-e42548e22810",
+    "competency_id": "ownership-autonomy",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} spearheaded the initiative to overhaul the internal documentation system, recognizing the inefficiencies it was causing. {{They}} coordinated with department leads to understand specific needs and systematically designed a new system that was universally adopted, setting the standard for future internal communication practices."
+  },
+  {
+    "id": "df829dd6-58c0-4abd-954e-e14d2f1a0b97",
+    "competency_id": "ownership-autonomy",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Noticing delays in the product release cycle, {{name}} initiated a cross-department review process to identify bottlenecks. {{They}} then developed and implemented a streamlined workflow that systematically reduced turnaround times and became the benchmark for subsequent projects company-wide."
+  },
+  {
+    "id": "6e90010f-e7e5-4f05-9328-80b9441899ed",
+    "competency_id": "ownership-autonomy",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the company was expanding into a new international market with unknown regulatory challenges, {{name}} took charge of defining the strategic roadmap for the engineering team. {{They}} spent months engaging with industry leaders, legal experts, and local partners, shaping the company's approach to compliance with a vision that set new industry benchmarks."
+  },
+  {
+    "id": "6b5a1fb3-c679-446a-bf9d-6ba404df3b45",
+    "competency_id": "ownership-autonomy",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Faced with escalating customer concerns about data privacy, {{name}} initiated the creation of a comprehensive privacy framework that not only addressed current issues but also anticipated future industry trends. {{They}} led cross-functional teams, ensuring the company became a thought leader in data protection practices globally."
+  },
+  {
+    "id": "2f8ca932-0945-4239-b25a-e7924009a169",
+    "competency_id": "ownership-autonomy",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Amidst the transition to a new technological platform, {{name}} set the standard by establishing a guiding philosophy that emphasized sustainability and scalability. {{They}} worked closely with various departments to align on design principles that would influence company decisions and inspire other industry players to adopt similar sustainable practices."
+  },
+  {
+    "id": "3f587ed9-898f-4bdd-9ff7-6ed921b08a76",
+    "competency_id": "delivery-execution",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was assigned a straightforward bug fix in the login module. With guidance from a more experienced engineer, {{they}} broke down the steps needed to identify the issue, implement a solution, and test the fix to ensure it worked properly."
+  },
+  {
+    "id": "e83573b0-a88e-4d63-bdb1-80cdd6c5f512",
+    "competency_id": "delivery-execution",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the sprint planning meeting, {{name}} was beginning to learn how to estimate the time needed for simple tasks. With guidance from {{their}} manager, {{they}} contributed estimates for a small feature update, learning how to sequence the work effectively."
+  },
+  {
+    "id": "53ededde-fbd6-43ef-9be6-efbcb15c57ef",
+    "competency_id": "delivery-execution",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Upon encountering an unclear requirement for a UI component, {{name}} sought guidance from a senior teammate. Together, they identified the key elements that needed clarification and documented next steps for {{them}} to proceed with the development task."
+  },
+  {
+    "id": "bd957fa3-78ba-4366-a78a-609a4747a063",
+    "competency_id": "delivery-execution",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly delivers high-quality code by the sprint end. {{They}} make minor adjustments to the schedule as needed and coordinate with {{their}} team, ensuring that dependencies are handled with minimal guidance."
+  },
+  {
+    "id": "8bfc5847-2c16-4440-8e06-a8a57c83a02d",
+    "competency_id": "delivery-execution",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In the planning meeting, {{name}} proposed a practical breakdown of tasks for {{their}} feature, prioritizing the critical steps and regularly updating the timeline based on progress. {{They}} sought feedback only when necessary, showing {{they}} could manage their work efficiently."
+  },
+  {
+    "id": "213d59d6-6257-4fb9-a866-3185415cc1a7",
+    "competency_id": "delivery-execution",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the project requirements changed unexpectedly, {{name}} re-evaluated the tasks at hand with minimal guidance and re-prioritized {{their}} work to meet the new goals. {{They}} communicated {{their}} progress regularly during standups to keep everyone in sync."
+  },
+  {
+    "id": "4342295d-96f9-4d3c-9433-a10140aad8ea",
+    "competency_id": "delivery-execution",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After receiving the project requirements, {{name}} took the initiative to break down the tasks and set up a timeline without needing additional input. {{They}} consistently delivered updates during the bi-weekly sprint meetings, ensuring the team stayed informed about any potential roadblocks."
+  },
+  {
+    "id": "fcafc5eb-444c-40bf-9fb1-e28e392d8d51",
+    "competency_id": "delivery-execution",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Faced with an under-defined project segment, {{name}} independently assessed the risks and devised a plan to address potential issues. {{Their}} ability to consistently navigate the ambiguity allowed the feature to be completed on schedule, matching the project's broader goals."
+  },
+  {
+    "id": "8d9b9661-b2c0-4fbe-bed2-a3ccef568e1b",
+    "competency_id": "delivery-execution",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a critical bug threatened the scheduled release, {{name}} independently formulated a mitigation plan that addressed the issue effectively. By coordinating with relevant stakeholders and keeping the communication lines open, {{name}} ensured the feature was shipped on time."
+  },
+  {
+    "id": "ea23c910-6560-4671-b016-10886d7d3459",
+    "competency_id": "delivery-execution",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a critical project deadline, {{name}} noticed a related API from another team was consistently failing. Without prompting, {{they}} reached out to the owning team, coordinated a quick debugging session, and facilitated a temporary fix that allowed {{their}} team to continue development without delays."
+  },
+  {
+    "id": "197bb35c-1241-4cd0-bff9-3fc196d5c492",
+    "competency_id": "delivery-execution",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} proactively organized a mid-sprint checkpoint meeting with stakeholders from multiple teams to address potential bottlenecks in the release schedule. By surfacing and discussing these issues early, {{they}} ensured that necessary resources were allocated, keeping the project on track for delivery."
+  },
+  {
+    "id": "a025acdb-a642-4a3d-9d00-2664052e3ee0",
+    "competency_id": "delivery-execution",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a sudden priority shift required reorganizing the planned backlog, {{name}} adjusted the sprint tasks and dependencies across teams, ensuring all were aligned to the new objectives. {{They}} communicated the impact of these changes to all affected parties, keeping the overall project momentum intact."
+  },
+  {
+    "id": "98cbf180-c81d-4373-ac98-67d0d9a4810e",
+    "competency_id": "delivery-execution",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a meeting with several teams, {{name}} noticed recurring delays in project delivery and suggested implementing a unified tracking system. Over the following weeks, {{they}} worked without direction to design and roll out this system across the organization, addressing bottlenecks and streamlining communication. This change led to more predictable timelines and increased transparency across all project teams."
+  },
+  {
+    "id": "2b216075-beb5-4654-899d-d49d90778080",
+    "competency_id": "delivery-execution",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When multiple teams struggled with resource allocation, {{name}} spearheaded an initiative to create an organization-wide priority matrix. Collaborating with different department heads, {{they}} systematically built a framework that helped in aligning project priorities with business goals, leading to more efficient use of resources and achieving better focus on key projects."
+  },
+  {
+    "id": "d54721c6-c843-4f66-9a4e-0881d80dd459",
+    "competency_id": "delivery-execution",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} noticed that the lack of standardized documentation was causing confusion across various engineering teams. Systematically, {{they}} set up new documentation standards and organized workshops to ensure all teams across the organization were aligned. This initiative significantly reduced onboarding time for new engineers and improved inter-team collaboration."
+  },
+  {
+    "id": "462a29c6-45fc-455c-b0a6-49ff5a5b6484",
+    "competency_id": "delivery-execution",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the company's tech summit, {{name}} introduced a groundbreaking approach to agile delivery, which emphasized reducing bottlenecks across all teams. This philosophy was so effective that it was adopted as a company-wide standard, revolutionizing how projects were scoped and executed. {{Their}} insights provided a lasting framework that addressed common execution roadblocks industry-wide, inspiring other companies to follow suit."
+  },
+  {
+    "id": "8c1b5ee9-2d47-4b65-9e7c-e2c5629a02f5",
+    "competency_id": "delivery-execution",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the company faced chronic delays in deploying critical updates, {{name}} spearheaded a comprehensive overhaul of the release management process. {{They}} devised a new strategic delivery framework that became a benchmark not only for the organization but also influenced industry practices. {{Their}} sustained effort ensured that projects were consistently delivered on time, reshaping how timelines were structured across the company."
+  },
+  {
+    "id": "6f58f179-c58d-48af-a0ca-a4aa9b5ed8b3",
+    "competency_id": "delivery-execution",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing the industry's shift towards sustainable technology, {{name}} crafted a delivery execution strategy that balanced speed with environmental responsibility. {{They}} set a new industry standard for project execution that aligned with green objectives, defining a philosophy that not only enhanced the company's reputation but also sparked broader industry action towards sustainable delivery models."
+  },
+  {
+    "id": "e3369c57-ed27-4a36-a7f3-526d93d427d1",
+    "competency_id": "business-value-outcomes",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team meeting, {{name}} listened as the product manager explained a new feature. Afterwards, {{they}} asked clarifying questions to understand how {{their}} task in refactoring the codebase would align with the business goals outlined. With guidance from {{their}} mentor, {{they}} began making small code changes while keeping the feature's objectives in mind."
+  },
+  {
+    "id": "5eedcc9d-de27-429a-b0f0-0028d5c5cd89",
+    "competency_id": "business-value-outcomes",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While working on a bug fix, {{name}} noticed that the issue also exposed an outdated component. {{They}} brought it up with {{their}} team lead, seeking guidance on how to update the component without disrupting the user experience. Together, they determined the best course of action to address both the bug and enhance the product's overall stability."
+  },
+  {
+    "id": "69f34b92-d18c-4225-9e30-2f21da957f3a",
+    "competency_id": "business-value-outcomes",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was assigned a simple task of improving the loading speed of a specific page. {{They}} met with {{their}} supervisor to discuss the potential impact of various optimization techniques on user engagement. Under {{their}} supervisor's guidance, {{they}} implemented a solution that not only improved speed but also considered cost-effectiveness."
+  },
+  {
+    "id": "088e5334-f80e-438b-84d8-d6e19fb28f17",
+    "competency_id": "business-value-outcomes",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly checked in with the product team to ensure {{their}} code changes aligned with the upcoming product features. Without needing detailed instructions, {{they}} adjusted {{their}} implementation to better meet user needs, improving the overall user experience."
+  },
+  {
+    "id": "282289cb-2d89-4ac8-9028-66724cbd4e20",
+    "competency_id": "business-value-outcomes",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During sprint planning, {{name}} identified an area of the code that was taking extra resources. With minimal guidance, {{they}} proposed a simpler solution that reduced load times, ensuring the product remained cost-effective and efficient."
+  },
+  {
+    "id": "48ede43a-41dc-4e6b-bf60-094e9f92e38c",
+    "competency_id": "business-value-outcomes",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While reviewing customer feedback, {{name}} noticed a recurring issue that affected usability. {{They}} took it upon {{themselves}}, with minimal guidance, to draft a plan for an update that addressed these points, leading to improved customer satisfaction and retention."
+  },
+  {
+    "id": "37f89ad1-8fb6-4fe9-bf72-6a8e4a2dff83",
+    "competency_id": "business-value-outcomes",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a product planning session, {{name}} noticed that a proposed feature lacked a solid connection to customer pain points. {{They}} took the initiative to gather data from recent user feedback and presented a compelling case to pivot the project focus. This led to a redesigned feature that better addressed user needs and increased engagement."
+  },
+  {
+    "id": "606d87fc-919d-4064-8b5b-e03a0085a727",
+    "competency_id": "business-value-outcomes",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While reviewing a complex backend system, {{name}} independently identified an opportunity to optimize data processing in a way that reduced server costs. {{They}} implemented the change and shared the results with the team, emphasizing the balance between performance gains and business impact."
+  },
+  {
+    "id": "28286420-c99b-4dd2-b82c-b72c8b6e4bee",
+    "competency_id": "business-value-outcomes",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a sprint demo, {{name}} highlighted how the recent enhancements to the search functionality aligned with strategic goals of improving user retention. {{They}} connected feature use cases to overarching company objectives, consistently reinforcing the project's business value in team discussions."
+  },
+  {
+    "id": "c52c4856-4e4d-49da-8885-142c10d9fa4b",
+    "competency_id": "business-value-outcomes",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When {{name}} noticed that the team's feature roadmap was misaligned with the company's new strategic direction, {{they}} proactively organized a session that brought together stakeholders from product, engineering, and marketing. {{Name}} facilitated a collaborative reprioritization that ensured all efforts were directed towards supporting the updated business goals."
+  },
+  {
+    "id": "03e10c57-6065-48c8-8931-0dad72672a22",
+    "competency_id": "business-value-outcomes",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a design review, {{name}} realized the proposed user interface added unnecessary complexity for the end user. Without prompting, {{they}} drew insights from recent customer feedback and proposed a simpler, more intuitive design that better aligned with user needs and improved the overall product experience."
+  },
+  {
+    "id": "c516503e-f584-432f-8dbf-e3138baf7632",
+    "competency_id": "business-value-outcomes",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Observing a recurring pattern of excessive cloud costs across projects, {{name}} took the initiative to analyze the usage and shared a set of recommendations with the engineering teams. By proactively addressing this, {{they}} helped reduce costs which enabled the reallocation of resources towards revenue-generating features."
+  },
+  {
+    "id": "765179fd-4053-4916-9f33-b21ac5db80db",
+    "competency_id": "business-value-outcomes",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} recognized an opportunity for the engineering teams to better align their sprints with upcoming marketing campaigns. {{They}} initiated a quarterly planning process where engineers collaborate with marketing to ensure feature releases align with customer engagement peaks, significantly improving the company's go-to-market efficiency."
+  },
+  {
+    "id": "2622b3cd-7ee0-42ef-9e9c-1695b11e0079",
+    "competency_id": "business-value-outcomes",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After noticing recurring issues with feature adoption, {{name}} revamped the product feedback loop. {{They}} implemented a systematic approach that included metrics-based evaluations and bi-weekly sessions with the customer support team to surface key user pain points, allowing for strategic prioritization of feature enhancements."
+  },
+  {
+    "id": "ddee184a-cd2c-47d0-8af4-f068a6416519",
+    "competency_id": "business-value-outcomes",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Understanding the costs involved in cloud services, {{name}} led an initiative to refine the company's infrastructure strategy. {{They}} developed a framework for evaluating trade-offs between on-demand resource scaling and pre-purchased capacities, ensuring the engineering team's decisions consistently supported the organization's financial goals."
+  },
+  {
+    "id": "3a116a97-9000-4429-b6e4-496f05de5860",
+    "competency_id": "business-value-outcomes",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} initiated a company-wide shift toward Lean software methodologies, which reduced wasted effort across all teams and focused development directly on user feedback loops. {{They}} set the philosophy that every engineer should spend time understanding customer pain points firsthand."
+  },
+  {
+    "id": "8a96b6b6-6795-47bc-bae0-edfa8ed84168",
+    "competency_id": "business-value-outcomes",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing a gap in the market, {{name}} pioneered an internal tool that transformed how data was collected and analyzed across the organization. This innovation not only enhanced product insights but also became an industry benchmark, aligning directly with strategic business goals."
+  },
+  {
+    "id": "c4706cbd-89dd-4ad8-a752-85378a52d34f",
+    "competency_id": "business-value-outcomes",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the annual strategy retreat, {{name}} proposed a new approach for prioritizing feature development that concentrated on long-term value over short-term gains. {{Their}} philosophy in balancing technical debt with user needs was adopted by the entire product division, influencing practices company-wide."
+  },
+  {
+    "id": "7442d3c9-1279-44c0-8702-661825be1bb4",
+    "competency_id": "values",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team meeting, with guidance from a mentor, {{name}} contributed to a discussion on improving the onboarding process by suggesting small changes based on the company's value of inclusivity. {{They}} focused on making new hires feel more welcomed from day one."
+  },
+  {
+    "id": "bf14faea-7c34-4290-8f8b-186e1fd1eb46",
+    "competency_id": "values",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While working on a group project, {{name}} asked for advice on incorporating feedback from previous retrospectives to align with the company's value of continuous improvement. {{They}} then implemented a suggestion to streamline communication, showing a willingness to adapt."
+  },
+  {
+    "id": "e3f1f8fe-ac09-4b5a-913c-6d76c98d168e",
+    "competency_id": "values",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "With guidance, {{name}} raised a concern about a potential ethical issue in a product feature during a planning session. {{They}} sought advice on how to address the concern in line with the organization's integrity values, ensuring the team remained aligned with core principles."
+  },
+  {
+    "id": "be0af22a-baf4-4738-8c04-1415900c679e",
+    "competency_id": "values",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly takes the initiative to start each sprint planning meeting by sharing a recent learning experience or a challenge faced. Without needing much direction, {{they}} encourages the team to discuss how they can incorporate the company’s values into their upcoming work, creating an atmosphere of continuous learning and adaptation."
+  },
+  {
+    "id": "7e8654a4-bd2a-406a-8ed3-a814786972c4",
+    "competency_id": "values",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During project retrospectives, {{name}} consistently reflects on personal growth areas. {{They}} actively seeks feedback from peers to improve {{their}} coding practices, ensuring that {{their}} work aligns with the company's quality standards, and often shares these insights with minimal guidance to inspire others to do the same."
+  },
+  {
+    "id": "2d3a7f7d-b729-449d-a1ca-5f0db660942d",
+    "competency_id": "values",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} has developed a habit of volunteering to write up and share key learnings from postmortems. {{They}} independently highlights how the team's response efforts reflect the organization's commitment to transparency and learning from failure, helping {{their}} coworkers see the broader impact of their values in action."
+  },
+  {
+    "id": "99277fda-e5a4-46c8-8738-68ebbde1d5db",
+    "competency_id": "values",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} consistently incorporates feedback from peers to refine a new feature in development. {{They}} took the initiative to host a series of lunch-and-learns, sharing insights from recent conferences {{they}} attended. This not only improved the team's understanding of cutting-edge technologies but also reinforced the organization's value of continuous learning."
+  },
+  {
+    "id": "205cd7f5-72fc-4f2a-b1d3-3854a52742ff",
+    "competency_id": "values",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a recent project, {{name}} noticed an opportunity to enhance code quality and independently proposed a more robust testing strategy. {{They}} implemented it alongside the existing framework, ensuring that future iterations would align with the company's quality standards. This proactive approach consistently models the organization's principle of striving for excellence."
+  },
+  {
+    "id": "b70d5dd0-9089-4c6f-a3ef-3dab6adf7bdd",
+    "competency_id": "values",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When faced with a challenging bug that was impacting project delivery, {{name}} independently researched solutions and reached out to colleagues from other teams for their perspectives. By approaching the issue collaboratively and with a willingness to adapt, {{they}} resolved the problem efficiently and reinforced a culture of open communication and shared success."
+  },
+  {
+    "id": "8adee4b3-62ce-44cb-9c10-6f09118ac318",
+    "competency_id": "values",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} noticed that some teams were struggling with the latest updates in the company’s code of conduct during cross-functional meetings. {{They}} took the initiative to organize a workshop, inviting colleagues from multiple teams to discuss real-world scenarios and address questions. Not only did this help clarify expectations, but it also fostered a more cohesive understanding across different groups."
+  },
+  {
+    "id": "f89aa1cd-fb63-4c3c-8c55-5e4160ff3849",
+    "competency_id": "values",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a quarterly review, {{name}} identified gaps in the team's adherence to the company's sustainability goals. Without being prompted, {{they}} proposed a set of actionable steps that could be integrated into daily operations. This proactive approach led to a cross-team collaboration, significantly enhancing the team's commitment to the organization's values."
+  },
+  {
+    "id": "62e1f37c-3fd7-429d-bf36-8595803bafdd",
+    "competency_id": "values",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Seeing potential for improvement, {{name}} initiated a feedback mechanism involving peers from various departments, aimed at embedding the company's principle of transparency. {{They}} scheduled regular sessions where team members could openly discuss challenges and successes. The initiative was well-received and improved trust and openness across teams."
+  },
+  {
+    "id": "172ebe32-d0e5-43e1-ab40-53cb8a6f6881",
+    "competency_id": "values",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the company's ethical guidelines were put to the test during a high-stakes client negotiation, {{name}} set the philosophy for transparency and fairness by leading the discussion and insisting on clear communication about the potential impacts. This approach not only gained the client's trust but also reinforced the company's commitment to its values across the whole organization."
+  },
+  {
+    "id": "d698bd9d-1c99-4d37-b278-227b73e1e230",
+    "competency_id": "values",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "At the annual engineering retreat, {{name}} systematically addressed cultural challenges that had been impacting team morale by facilitating workshops focused on inclusivity and personal growth. {{Their}} efforts culminated in new policies that embraced diverse perspectives and improved collaborative dynamics across multiple teams."
+  },
+  {
+    "id": "3fff6a90-4d34-493e-b8d9-7394be8897f5",
+    "competency_id": "values",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing a recurring issue with new hires not fully understanding the organization's core values, {{name}} spearheaded the development of an immersive onboarding experience. This initiative not only aligned new team members with the company’s principles from day one but also set a new standard for how onboarding was conducted company-wide."
+  },
+  {
+    "id": "ce25db19-39d2-417e-bbb2-046b29f640d2",
+    "competency_id": "values",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a company-wide discussion on ethical AI, {{name}} set the philosophy by drafting a comprehensive guideline document that articulated clear principles for responsible development. This document quickly became a reference across the industry, influencing how others approached AI ethics in their own organizations."
+  },
+  {
+    "id": "3857ac94-32a0-4d0b-84e0-8839b9ef4c29",
+    "competency_id": "values",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a keynote address at an industry conference, {{name}} spoke passionately about the importance of balancing innovation with sustainability, inspiring many tech leaders to reassess their environmental impact strategies. {{Their}} articulation of these values positioned the company as a leader in green technology."
+  },
+  {
+    "id": "76d85496-c9ff-49da-a634-2067748eafdd",
+    "competency_id": "values",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing the importance of diversity and inclusion, {{name}} led the creation of an annual event aimed at fostering both within the tech community. The event not only raised awareness but also resulted in partnerships with several leading organizations, setting a new standard for industry engagement."
+  },
+  {
+    "id": "c05b469b-0364-4021-971b-4623d3356bb2",
+    "competency_id": "problem-structuring",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a bug fix session, {{name}} noticed a recurring error in the log files. With guidance from a senior engineer, {{they}} identified that the problem was due to a missing configuration setting in the latest deployment."
+  },
+  {
+    "id": "06e57d91-4aa7-4282-804e-a6e39f661a9e",
+    "competency_id": "problem-structuring",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a team meeting focused on improving page load times, {{name}}, with guidance from {{their}} manager, examined the tasks related to front-end optimizations, starting by analyzing the impact of large images on mobile devices."
+  },
+  {
+    "id": "1d130675-f559-4e5a-b080-0ce1916eb2c1",
+    "competency_id": "problem-structuring",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While investigating a failed test case, {{name}} worked with guidance to isolate the affected modules. {{They}} began by outlining individual function tests, which helped pinpoint a data mismatch issue in the input parameters."
+  },
+  {
+    "id": "12c7d5e6-033c-4c0e-b6a3-c68327f93754",
+    "competency_id": "problem-structuring",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a recent database incident where query times were spiking, {{name}} regularly examined logs and error rates independently. {{They}} narrowed the scope to the specific query patterns in the analytics module, identifying that a configuration change had unintentionally increased data load, directly impacting performance."
+  },
+  {
+    "id": "5c7e7cb6-0e54-46a1-8e8e-9f61e0f40c6a",
+    "competency_id": "problem-structuring",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a refinement session, {{name}} was tasked with improving the deployment pipeline. {{They}} regularly assessed various bottlenecks without much guidance and focused on a specific logging service where {{they}} found overlooked constraints in disk space usage that were contributing to delayed deployments."
+  },
+  {
+    "id": "1c5249b6-d8d2-4869-9312-7fe019455fd7",
+    "competency_id": "problem-structuring",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While addressing complaints about a new feature's sluggishness, {{name}} regularly traced the issue back through the API calls, isolating it to a poorly optimized algorithm step. {{They}} identified missing constraints in the initial design that were causing unnecessary data processing, thus limiting the performance."
+  },
+  {
+    "id": "53b0276b-b890-48ea-8b2f-16893842324d",
+    "competency_id": "problem-structuring",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was working on a project to improve the performance of the user authentication system. {{They}} independently identified several bottlenecks, including slow database queries and inefficient caching strategies. By breaking down the system components, {{they}} outlined a clear plan to address each issue, leading to significantly reduced login times."
+  },
+  {
+    "id": "1b364d94-0a92-4355-8593-5b44e501d410",
+    "competency_id": "problem-structuring",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the initial phase of a new API design project, {{name}} consistently mapped out the problem space by identifying dependencies and potential risks. {{They}} created a detailed diagram illustrating how different components interacted, which helped the team foresee integration challenges and adjust their approach accordingly."
+  },
+  {
+    "id": "b8038f9c-ec4c-412d-9a19-221f277bd315",
+    "competency_id": "problem-structuring",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a recurring bug in the payment processing feature surfaced, {{name}} independently reviewed the logs and user reports to trace back to its root. {{They}} discovered that mismatched data types were causing the error, then structured a fix that also included test coverage to prevent future occurrences."
+  },
+  {
+    "id": "a51c6329-f9f3-4f6d-be9b-f1dffd84ba87",
+    "competency_id": "problem-structuring",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} noticed recurring incidents during the oncall rotations that were previously dismissed as isolated cases. {{They}} initiated a series of discussions with different teams across the organization to identify the underlying root cause, systematically developing a new framework for issue classification that led to a 50% reduction in incident frequency."
+  },
+  {
+    "id": "09c06978-374e-48f2-a1d1-6e900429ea24",
+    "competency_id": "problem-structuring",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a proposal to revamp the company's data pipeline, {{name}} identified both organizational and technical constraints that were not immediately evident to others. {{They}} set new standards for how the team frames such complex projects, ensuring that future initiatives are effectively scoped and that potential pitfalls are accounted for from the outset."
+  },
+  {
+    "id": "59112ed1-a7b5-4463-8692-09225d58b430",
+    "competency_id": "problem-structuring",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the product launch kept hitting roadblocks, {{name}} mapped out all the contributing factors across multiple departments, systematically refining the problem boundaries. This approach clarified the obstacles and standards for cross-departmental communication, enabling the team to successfully realign priorities and meet the launch deadline."
+  },
+  {
+    "id": "b2110027-52b4-4706-b649-4f4e1e402265",
+    "competency_id": "problem-structuring",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a strategic planning workshop, {{name}} introduced a new framework for problem structuring that redefined how the company approaches tech debt issues across all product lines. {{They}} facilitated a discussion on the underlying causes of repeated incidents and codified a set of principles that has since influenced industry-wide conversations about sustainable system architecture."
+  },
+  {
+    "id": "254e78d8-01d7-4fa6-8d57-64f2f30089d3",
+    "competency_id": "problem-structuring",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "At a recent industry conference, {{name}} presented a thought-provoking analysis on the pervasive issue of scalability constraints, drawing from challenges {{they}} had initially identified in the company's flagship product. {{Their}} approach to framing the problem has been adopted as a benchmark in the industry, setting new standards for how tech companies define scalability needs without overextending resources."
+  },
+  {
+    "id": "6a8ccaf3-a2bd-494e-96cf-8037c5282ada",
+    "competency_id": "problem-structuring",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In response to recurring cross-team integration failures, {{name}} developed a comprehensive guide addressing the intricate dependencies among cloud services. By reframing the problem to consider wider organizational and industry trends, {{they}} set new precedents in how companies architect integrations, influencing sector norms and sparking collaborative workshops with partner organizations."
+  },
+  {
+    "id": "429f938c-931d-4ffb-a617-668557d01b47",
+    "competency_id": "solution-crafting",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a debugging session, {{name}} started exploring different solutions for a persistent issue in the login feature. With guidance from a senior developer, {{they}} considered multiple approaches and then focused on the one that seemed most feasible given the time constraints."
+  },
+  {
+    "id": "49157e73-249c-420c-98de-ad676951ae85",
+    "competency_id": "solution-crafting",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was tasked with optimizing a small script for data processing. Under the mentor's guidance, {{they}} attempted to decompose the script into simpler functions to improve readability, asking questions along the way to ensure {{they}} understood each step."
+  },
+  {
+    "id": "d671cce2-0a18-46cd-96ad-6b56b97b4f36",
+    "competency_id": "solution-crafting",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} participated in a meeting to brainstorm ways to reduce build times. With the help of the team lead, {{they}} contributed a few ideas to the discussion and began to understand how to weigh the pros and cons of each option, focusing on one potential solution as suggested by the lead."
+  },
+  {
+    "id": "85777100-5bb0-4997-9941-3dc397d3fc2f",
+    "competency_id": "solution-crafting",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the weekly sprint planning, {{name}} regularly presents multiple options for resolving recurring bug reports in {{their}} assigned module. After discussing with the team, {{they}} often decides on a course of action with minimal guidance, balancing code complexity against timelines."
+  },
+  {
+    "id": "4eac1296-172e-4a51-b419-c4c32881e193",
+    "competency_id": "solution-crafting",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly takes the initiative to sketch out potential improvements when faced with API performance issues. After evaluating the pros and cons of several approaches, {{they}} selects a feasible solution and refines it with minimal supervision to ensure it aligns with project goals."
+  },
+  {
+    "id": "13bdbcb2-c644-43de-bd45-ee2aa8d64889",
+    "competency_id": "solution-crafting",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Faced with a customer-reported issue, {{name}} regularly decomposes the problem into smaller pieces to explore various solutions. With minimal guidance from the senior engineer, {{name}} assesses each option, considering the implementation effort, and chooses a path that minimizes deployment risks."
+  },
+  {
+    "id": "3d2f5a3b-58d6-42cd-bfe1-5c8fcc3c4e52",
+    "competency_id": "solution-crafting",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} took the lead on a stalled feature redesign and independently developed three distinct approaches for improving user experience. After evaluating the potential impact and technical feasibility of each option, {{they}} presented them to the product team, which helped guide the decision-making process and unblocked the project."
+  },
+  {
+    "id": "c5d3fc70-864f-41ce-bb39-ae71076ce3dd",
+    "competency_id": "solution-crafting",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When faced with escalating loading time issues in the new analytics dashboard, {{name}} consistently broke down the root cause analysis across several microservices. {{They}} devised multiple enhancements to the data processing pipeline and coordinated with developers to incrementally implement each fix, significantly reducing the delay."
+  },
+  {
+    "id": "7f00c1c8-204a-4012-a9ab-d22453925f4c",
+    "competency_id": "solution-crafting",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In the planning stage of a new multi-step authentication feature, {{name}} independently mapped out a sequence of implementation phases. {{They}} assessed the tradeoffs of various security protocols and recommended an approach that balanced usability and security, ensuring the project remained on schedule without compromising user safety."
+  },
+  {
+    "id": "9f193019-a5b3-4ad5-986f-f7b6f8132853",
+    "competency_id": "solution-crafting",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a sudden uptick in error rates with the new API, {{name}} proactively organized a cross-team brainstorming session to explore potential root causes and solutions. Without prompting, {{they}} compiled data from the monitoring systems and initiated discussions with both the frontend and backend teams to comprehensively evaluate different approaches. This resulted in a collaborative plan that efficiently reduced errors and improved API stability."
+  },
+  {
+    "id": "5c085bb7-2441-46f6-81c6-a31e8235a56b",
+    "competency_id": "solution-crafting",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the product team proposed a major feature that could impact several services, {{name}} took the initiative to gather input from all affected teams. {{They}} drove a series of workshops, guiding the collective analysis of the tradeoffs between potential architectures. By facilitating this cross-team engagement, {{they}} ensured that the chosen solution was robust, scalable, and aligned with company objectives."
+  },
+  {
+    "id": "8dae7c2b-f4af-4263-ac29-be5b9b714176",
+    "competency_id": "solution-crafting",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Seeing potential for improvement in the deployment pipeline, {{name}} proactively assembled a cross-functional task force to dissect the current process and identify bottlenecks. Without being asked, {{they}} led the team in decomposing the complex system into actionable improvements, coordinating efforts that led to a more efficient and reliable deployment strategy across the organization."
+  },
+  {
+    "id": "5e8bc925-f315-40f1-ab23-1138ff500a65",
+    "competency_id": "solution-crafting",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} led an organization-wide initiative to overhaul the deployment pipeline. {{They}} introduced a framework for systematically evaluating candidate tools and methods, ensuring every team used a consistent approach to assess scalability, maintainability, and cost. This not only unified the deployment strategy across the org but also reduced deployment errors significantly."
+  },
+  {
+    "id": "f29a44af-4465-480a-bef8-6dff06e74ae5",
+    "competency_id": "solution-crafting",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Facing frequent production incidents, {{name}} spearheaded the creation of a decision matrix for prioritizing bug fixes versus feature deployments. {{They}} brought together cross-functional stakeholders to align on the framework, ensuring every team could systematically evaluate trade-offs, aligning with company priorities and reducing misaligned effort."
+  },
+  {
+    "id": "c105d169-9478-48ba-b2ff-864d3ef6e1e8",
+    "competency_id": "solution-crafting",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing gaps in how product requirements were being turned into technical specs, {{name}} defined a new standard process for decomposing complex projects into manageable units. {{Their}} approach became the default across multiple product teams, enhancing predictability and helping the organization maintain pace with market demands."
+  },
+  {
+    "id": "b3d868ae-66f0-4089-9cbd-b9ba38b08c99",
+    "competency_id": "solution-crafting",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the company's strategic planning retreat, {{name}} presented a framework that {{they}} had developed for evaluating emerging technologies. This framework not only addressed current company needs, but influenced industry standards by introducing a novel, modular approach to technology assessment, which was adopted by several partner firms over the following year."
+  },
+  {
+    "id": "49c6874c-8e14-432b-8d6d-80a4eb4885dd",
+    "competency_id": "solution-crafting",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When faced with industry-wide challenges regarding data privacy, {{name}} crafted a comprehensive solution guide that defined how tech companies could ethically navigate these waters. By setting new principles for data handling and privacy protection, {{they}} positioned the company as a leader in ethical tech, affecting industry policies and practices."
+  },
+  {
+    "id": "4f90d702-7d3f-46ca-bb74-376b9e6f1f82",
+    "competency_id": "solution-crafting",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a significant acquisition process, {{name}} designed a process to integrate both companies' tech stacks seamlessly. By establishing a new industry metric for assessing synergy between differing systems, {{they}} not only guided a smooth integration internally but also set a precedent that was adopted by leading figures across the sector."
+  },
+  {
+    "id": "fa8e0af2-a0de-42d0-b98b-3eae1d4ff969",
+    "competency_id": "realizing-success",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a small bug fix, {{name}} worked with guidance from a senior developer to clarify the exact criteria of success. Together, they established that the issue would be resolved when the feature passed all existing automated tests and the bug could no longer be reproduced manually."
+  },
+  {
+    "id": "0f1f30b8-2725-457c-ba2e-8e55dab3c246",
+    "competency_id": "realizing-success",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a team meeting about improving the UI, {{name}} asked for help in defining what a successful user experience would look like. With guidance from the UX lead, {{they}} drafted a checklist of tasks to test different user interactions."
+  },
+  {
+    "id": "9e02980b-bf50-4a40-a785-7908e1ea1407",
+    "competency_id": "realizing-success",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While tasked with updating a library dependency on a small internal tool, {{name}} consulted with a more experienced engineer to identify the key performance metrics to monitor after deployment. This involved setting up basic logging to ensure no functionality was broken after the update."
+  },
+  {
+    "id": "a97942b5-0c5d-4d94-bf22-94dc88060b28",
+    "competency_id": "realizing-success",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} led a new feature development, spending time at the start organizing a kickoff meeting to define success criteria with {{their}} team. {{They}} outlined what completion looked like and established checkpoints to ensure progress was on track. Throughout the project, {{they}} consistently monitored key metrics to measure the feature's performance."
+  },
+  {
+    "id": "35254a8e-8508-46fb-aa99-a86e4c1bf89c",
+    "competency_id": "realizing-success",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a project to enhance the search algorithm, {{name}} made independent decisions on prioritizing tasks despite incomplete data on user behavior patterns. By regularly assessing the available information, {{they}} kept the project aligned with expected outcomes and adjusted efforts based on evolving needs."
+  },
+  {
+    "id": "7dd59423-f5e9-408d-b262-7634405a62b5",
+    "competency_id": "realizing-success",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In preparation for a high-impact feature release, {{name}} developed a set of comprehensive KPIs to track the project's success over time. {{They}} consistently reviewed these indicators and made data-driven adjustments when dashboard metrics fell outside of targeted benchmarks, ensuring that the feature continuously met business goals."
+  },
+  {
+    "id": "cb05bc82-ccd2-4b89-8a8e-ab4720b2db45",
+    "competency_id": "realizing-success",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} noticed that the performance metrics for a critical cross-team project hadn't been clearly defined, causing confusion and misaligned priorities. Without prompting, {{they}} organized a meeting with key stakeholders from each team to collaboratively establish clear success criteria and monitoring dashboards. This initiative helped ensure all teams were aligned and could track their contributions to the project's goals."
+  },
+  {
+    "id": "2b359570-bcca-419a-bf6c-ccbbf90bd369",
+    "competency_id": "realizing-success",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When {{name}} realized the team lacked visibility on the progress of a crucial feature launch, {{they}} proactively set up a weekly sync with dashboards showing KPIs and milestone updates. This not only kept everyone informed but also allowed the teams to identify potential blockers early, ensuring a smooth and timely launch."
+  },
+  {
+    "id": "f7456b9a-03a7-4cd6-8f89-f577d132eaf8",
+    "competency_id": "realizing-success",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a planning workshop for an upcoming high-impact feature, {{name}} proactively suggested refining the definition of 'done' to include user experience benchmarks and adoption metrics. Their team appreciated the detailed approach, which enabled them to deliver results that met both internal expectations and user satisfaction goals."
+  },
+  {
+    "id": "6d6ecb16-f45a-40d8-8c24-f2d469c1663c",
+    "competency_id": "realizing-success",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a company-wide initiative to overhaul the onboarding process, {{name}} set a standard by establishing clear success metrics at the onset, incorporating feedback loops, and aligning across departments. {{They}} organized workshops and leveraged cross-team input to ensure everyone had a mutual understanding of these targets. This structured approach led to a smoother onboarding experience and improved new hire satisfaction scores across the organization."
+  },
+  {
+    "id": "79133ee6-88ce-49a0-9f52-106e23b00230",
+    "competency_id": "realizing-success",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When faced with a challenging decision regarding the deployment strategy for a pivotal feature, {{name}} systematically collected input from key stakeholders and analyzed potential outcomes under different scenarios. {{They}} crafted a decision framework that not only addressed current uncertainties but also provided a template for future projects. This method improved decision-making across teams, leading to more consistent feature launches."
+  },
+  {
+    "id": "98444e64-3267-4478-b286-fef2d705c93e",
+    "competency_id": "realizing-success",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing a gap in how success was traditionally monitored, {{name}} spearheaded the adoption of a new company-wide system for tracking project outcomes against defined objectives. {{They}} ensured all departments were trained and aligned on how to implement this system, which resulted in more transparent and actionable insights into project success metrics, ultimately raising the efficiency standards for the entire organization."
+  },
+  {
+    "id": "96d8c70f-4c29-48ec-9891-1e23247508c2",
+    "competency_id": "realizing-success",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a critical strategy meeting, {{name}} set the industry standard by introducing a new framework for measuring success that shifted the focus from short-term metrics to long-term impact, influencing other tech companies to adopt similar approaches. {{They}} outlined clear, high-level objectives that not only encompassed the company's goals but also anticipated future industry trends, ensuring sustained growth and innovation."
+  },
+  {
+    "id": "510d61f5-f906-4479-8b3a-7d0e50a304ee",
+    "competency_id": "realizing-success",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While leading a company-wide initiative to develop a groundbreaking product, {{name}} redefined what success meant by integrating ethical considerations and user trust into the core metrics for evaluation. {{They}} collaborated with thought leaders across the industry to ensure this new philosophy was embedded in both the product development lifecycle and the broader market strategy, setting a precedent that others began to follow."
+  },
+  {
+    "id": "f53f8345-086f-4abc-8732-4dff97282f34",
+    "competency_id": "realizing-success",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing the rapidly changing landscape of digital privacy, {{name}} spearheaded the company's shift towards prioritizing user data protection as a key indicator of success. By crafting an industry-wide campaign that emphasized these values, {{they}} not only redefined the company’s approach but influenced the sector to adopt more robust privacy-first policies, setting a new benchmark for success across the industry."
+  },
+  {
+    "id": "953db853-6098-41eb-ab6e-08b0660e0d50",
+    "competency_id": "communication",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was asked to draft a summary of the recent team meeting for the project lead. With guidance from a teammate, {{they}} included key discussion points and action items, ensuring the notes were clear and useful for those who couldn't attend."
+  },
+  {
+    "id": "fb202478-5189-4ad9-8e5d-b34c57b9d51e",
+    "competency_id": "communication",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team stand-up, {{name}} was beginning to articulate {{their}} task updates more clearly by following a structure suggested by {{their}} manager. This helped the team better understand the current status of each of {{name}}'s assignments."
+  },
+  {
+    "id": "2b57d518-059b-4af6-853d-6cb7e19f51c5",
+    "competency_id": "communication",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While working on a support ticket response, {{name}} sought guidance on how to address the customer's concerns clearly. {{They}} crafted a response detailing the solution step-by-step, making sure the explanation was easy for the customer to follow."
+  },
+  {
+    "id": "f9ab4279-f536-4262-88d7-599b487da79d",
+    "competency_id": "communication",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly writes clear and concise updates for the weekly project newsletter, ensuring that all team members are informed about {{their}} progress without having to ask for clarifications."
+  },
+  {
+    "id": "e58375d1-5957-4855-bb33-ed8c98b937cd",
+    "competency_id": "communication",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During sprint planning meetings, {{name}} shares {{their}} ideas and feedback with the team with minimal guidance, asking relevant questions that help {{them}} understand the scope of {{their}} own tasks."
+  },
+  {
+    "id": "73607d14-a049-41aa-bea2-c0653094a238",
+    "competency_id": "communication",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} routinely participates in team stand-ups, where {{they}} communicates {{their}} progress and any blockers in a way that is easily understandable, allowing the team to offer help and coordinate efforts effectively."
+  },
+  {
+    "id": "e1d8cc85-cac4-4567-b699-48869e848214",
+    "competency_id": "communication",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} led the feature kickoff meeting, explaining the roadmap and key milestones without any notes. {{They}} anticipated potential questions the engineers might have and tailored {{their}} explanations to address both technical and non-technical team members, ensuring everyone left the meeting with a clear understanding of the project's goals."
+  },
+  {
+    "id": "1e6b02ec-f915-4a94-9299-4cc7b59821a5",
+    "competency_id": "communication",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a codebase transition project, {{name}} consistently updated the shared documentation to reflect ongoing changes. {{Their}} clear written instructions helped new team members ramp up more quickly, reducing onboarding time and decreasing the number of repetitive questions the team had to field."
+  },
+  {
+    "id": "446a5abe-a3d8-495d-bb21-22d73b8d757e",
+    "competency_id": "communication",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} prepared a detailed email summary of the recent API changes, ensuring it was accessible to both developers and product managers. {{They}} independently made sure that answering follow-up questions was prompt, which minimized potential miscommunications that might have delayed the project's progress."
+  },
+  {
+    "id": "edaca12f-dac8-4255-b726-e1ab12a11af2",
+    "competency_id": "communication",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Without prompting, {{name}} organized a cross-team workshop to clarify the new API changes, ensuring all stakeholders understood their parts. {{They}} invited engineers, product managers, and customer support reps, tailoring the presentation to each group's needs and facilitating a Q&A session. Feedback after the workshop highlighted that everyone felt more confident moving forward."
+  },
+  {
+    "id": "47676176-3459-4187-bd26-e8945c36f3a1",
+    "competency_id": "communication",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing a gap in understanding the quarterly goals, {{name}} took the initiative to draft a comprehensive communication plan. {{They}} proactively included various communication formats, like emails, Slack updates, and a short video for the team. This approach ensured all team members were aligned and up-to-date, which minimized confusion during project execution."
+  },
+  {
+    "id": "6ca00949-862b-445b-95b5-bc2186cc0dd6",
+    "competency_id": "communication",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team meeting, {{name}} noticed a lack of engagement with recent updates from the product design team. Proactively, {{they}} scheduled a follow-up session with designers to bridge the communication gap, facilitating a joint discussion that clarified design intentions and operational constraints, resulting in smoother collaboration between teams."
+  },
+  {
+    "id": "6299b8a7-bb3f-4268-8969-f097eba9d0c2",
+    "competency_id": "communication",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the quarterly all-hands meeting, {{name}} presented a comprehensive overview of the new product roadmap, breaking down complex technical concepts into clear, digestible parts. {{They}} systematically addressed potential concerns from various departments, ensuring that each team's perspective was considered and understood. This approach set a new benchmark for how product updates were communicated across the organization."
+  },
+  {
+    "id": "b5db5c17-8db6-4cd2-9e74-069db5ff24dd",
+    "competency_id": "communication",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After observing inconsistencies in project documentation across teams, {{name}} developed a company-wide guideline for creating and maintaining technical documents. {{Their}} initiative included leading workshops to train teams, which resulted in improved clarity and accessibility of information for everyone involved. Team leads adopted these guidelines, leading to a more cohesive documentation approach throughout the organization."
+  },
+  {
+    "id": "f130cd8f-4313-4343-a8ab-379002038428",
+    "competency_id": "communication",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When onboarding new engineers, {{name}} led an initiative to create a centralized hub of knowledge where key processes, tools, and best practices were documented. {{They}} collaborated with teams across the org to gather input and systematically updated the hub based on feedback. This resource became the go-to reference and significantly reduced the time new hires took to become proficient with the company’s workflows."
+  },
+  {
+    "id": "63d33efa-a003-45a9-a51f-de254fab8b37",
+    "competency_id": "communication",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} crafted a comprehensive company-wide communication strategy that set a new standard for transparency and inclusivity. {{They}} established guidelines for how information is shared across different departments and levels, ensuring messages are tailored but aligned. {{Their}} framework became a model adopted by several of the company’s international branches."
+  },
+  {
+    "id": "a2e759a6-1b54-43c8-8b82-7af74068281a",
+    "competency_id": "communication",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During an industry conference, {{name}} delivered a keynote address that outlined a vision for improved cross-company communication practices. {{Their}} insights on integrating collaborative tools resonated with leaders from multiple tech companies, leading to invitations for follow-up discussions on setting industry benchmarks."
+  },
+  {
+    "id": "c3cd7891-ea0b-48c9-a13a-286aaba210b2",
+    "competency_id": "communication",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} authored a white paper addressing common pitfalls in technical documentation, pushing for a unified documentation standard across the company. The paper influenced industry best practices, cited by several partners looking to elevate their documentation processes."
+  },
+  {
+    "id": "6cae6e80-233d-4d6a-884e-736a1e8f75a5",
+    "competency_id": "feedback",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} worked on a bug fix and later joined a meeting with {{their}} mentor to discuss the proposed solution. With guidance, {{they}} asked for feedback on the approach and took notes on the suggestions to refine the fix before submitting the code."
+  },
+  {
+    "id": "be117a50-29e9-4ca7-a84e-3662d6ab15f9",
+    "competency_id": "feedback",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During {{their}} first design review, {{name}} shared initial wireframes and, with guidance from the team lead, asked peers for feedback on usability aspects. {{They}} took the notes back to {{their}} desk to make adjustments as suggested."
+  },
+  {
+    "id": "5dc85e96-9062-45f1-a9c7-cb37e093f61a",
+    "competency_id": "feedback",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After completing a task for a new feature, {{name}} sat down with {{their}} manager to understand how {{they}} could improve. Acting on guidance, {{they}} implemented the feedback, focusing on code documentation quality before marking the task complete."
+  },
+  {
+    "id": "d8ceeb45-43aa-46ea-88d1-ca3b0fc89dc6",
+    "competency_id": "feedback",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly asks for feedback during code reviews, making sure to check in with peers to confirm understanding. After minimal guidance, {{they}} adapts {{their}} code promptly, enhancing the clarity of functions and improving overall project quality."
+  },
+  {
+    "id": "72b3bd8d-6e0e-4e86-93cb-9ca80fe2ac1e",
+    "competency_id": "feedback",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After receiving design feedback suggesting more intuitive UI elements, {{name}} implemented changes with minimal guidance, resulting in a more user-friendly interface. {{They}} later requested follow-up input to ensure the adjustments aligned with the team's expectations."
+  },
+  {
+    "id": "2ddab967-0f51-4842-ae64-c7b8aacd7a0f",
+    "competency_id": "feedback",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During weekly 1:1s, {{name}} consistently brings up areas where {{they}} seek input to do better work. With minimal guidance, {{they}} incorporates this feedback into {{their}} tasks, creating cleaner documentation and more efficient workflows."
+  },
+  {
+    "id": "0d3cb624-2c08-4aa6-86fe-4983a47f4e7f",
+    "competency_id": "feedback",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} reviewed a team member's code for a new feature and independently identified several areas for improvement. {{They}} provided clear, actionable feedback that helped streamline the code and reduce its complexity. The team member expressed appreciation for the guidance, resulting in a cleaner codebase before the sprint deadline."
+  },
+  {
+    "id": "83b74ef2-fe11-4dda-9337-647202c6356a",
+    "competency_id": "feedback",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In preparation for a project launch, {{name}} consistently sought feedback from peers about the prototype {{they}} developed. {{They}} incorporated the suggestions into the final design, addressing a critical user experience flaw that had been overlooked, ensuring a smoother release."
+  },
+  {
+    "id": "d23ccf4e-f672-4cde-a20d-dc0be0de0239",
+    "competency_id": "feedback",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a retrospective meeting, {{name}} independently shared feedback on the project's communication flows. {{Their}} suggestions to implement regular check-ins and improve documentation were well-received, leading the team to adopt these practices for future projects, enhancing collaboration and knowledge sharing."
+  },
+  {
+    "id": "5a19556d-160a-4bb1-8b66-3119474a5a86",
+    "competency_id": "feedback",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a cross-team design review, {{name}} noticed some potential improvements in a colleague's proposal and, without prompting, provided detailed and constructive feedback that not only addressed immediate concerns but also anticipated future challenges. {{Their}} insights helped align the teams on a common approach, leading to a more robust final design."
+  },
+  {
+    "id": "25ad1783-2427-4984-89b0-b489fe287e98",
+    "competency_id": "feedback",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} proactively gathered the team for a postmortem after a challenging project phase and created a safe environment for everyone to share candid feedback. {{They}} encouraged team members to highlight both successes and areas for improvement, fostering a culture of learning and continuous enhancement."
+  },
+  {
+    "id": "5153021e-383d-4868-8914-458e4ae2d9db",
+    "competency_id": "feedback",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing an uptick in integration issues between teams, {{name}} initiated a feedback loop with representatives from each team. {{They}} collected insights and suggestions about the collaboration process and then implemented a revised workflow based on the feedback, which significantly improved the efficiency and communication across teams."
+  },
+  {
+    "id": "ceaa45cb-a750-4ddb-904a-314e4fc6a9db",
+    "competency_id": "feedback",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the quarterly all-hands meeting, {{name}} introduced a new initiative to streamline the feedback process across the organization. {{They}} shared plans for a cross-departmental committee to develop guidelines, making it easier for teams to give and receive structured feedback systematically. The initiative quickly gained traction, highlighting {{their}} ability to identify and address organizational needs."
+  },
+  {
+    "id": "7a966356-060f-43a5-a595-d8a152ff1909",
+    "competency_id": "feedback",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Noticing inconsistencies in how feedback was handled across teams, {{name}} led a series of workshops to establish best practices for delivering clear and actionable feedback. By proposing a standard framework, {{they}} enabled all departments to adopt a consistent approach, ensuring alignment in communication styles and improvement tracking throughout the company."
+  },
+  {
+    "id": "03114d68-d838-4bdc-9b92-433f2263096c",
+    "competency_id": "feedback",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After a strategic review, {{name}} recognized the opportunity to enhance the way the organization iterated on feedback. {{They}} collaborated with HR and leadership to design and implement a company-wide feedback tool that facilitated transparent and measurable progress. The tool became a staple resource, driving a culture of continuous improvement and learning."
+  },
+  {
+    "id": "88f18486-73d1-44bb-a2e9-089b30a220c8",
+    "competency_id": "feedback",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a company-wide meeting, {{name}} outlined a new strategy for gathering stakeholder feedback across all departments, emphasizing the importance of aligning it with the company's long-term goals. This approach became a foundational practice, influencing how the entire organization approached user feedback loops."
+  },
+  {
+    "id": "11f0b5e3-5833-411d-b9a6-fc9dc89ecb8e",
+    "competency_id": "feedback",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After observing inconsistencies in feedback implementation across teams, {{name}} developed a comprehensive feedback framework that was adopted company-wide. {{They}} ensured it was integrated into the company’s performance review processes, setting a new standard for actionable feedback."
+  },
+  {
+    "id": "e6071736-c3a5-4c6a-adf7-c56f16db20b5",
+    "competency_id": "feedback",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing a gap in industry feedback practices, {{name}} hosted a series of workshops open to tech peers from various companies, promoting a paradigm that prioritized iterative feedback as a driving force for innovation. {{Their}} initiatives inspired changes not only within the company but also influenced industry-wide best practices."
+  },
+  {
+    "id": "5a168025-b121-4790-8cf1-e585a325afe2",
+    "competency_id": "collaboration",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was part of a small team working on a bug fix. With guidance from a senior engineer, {{they}} asked clarifying questions in the team chat to ensure everyone was on the same page. {{Their}} questions helped the team address the issue more efficiently."
+  },
+  {
+    "id": "b40eab4b-e444-49fa-8336-4f1550eea5d0",
+    "competency_id": "collaboration",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team brainstorming session, {{name}} contributed an idea for the upcoming release feature after being prompted by {{their}} manager. {{They}} collaborated with a more experienced team member to flesh out the concept further."
+  },
+  {
+    "id": "13fca91d-8e68-41df-9174-f9a9778e6225",
+    "competency_id": "collaboration",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Facing a disagreement during a code review, {{name}} sought advice from {{their}} mentor on how to approach the situation. With guidance, {{they}} suggested a compromise that maintained code quality, which was well-received by the collaborator."
+  },
+  {
+    "id": "4c12440f-0cf4-4577-bd2d-9d3b3cd2603c",
+    "competency_id": "collaboration",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a planning meeting, {{name}} regularly contributed by outlining the tasks {{they}} would handle to meet the team's objectives. With minimal guidance, {{they}} coordinated with a teammate to ensure their tasks were aligned, facilitating a smoother workflow."
+  },
+  {
+    "id": "89961360-d996-4ec1-a5ef-bba443a12954",
+    "competency_id": "collaboration",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the team was working on a new feature, {{name}} regularly reached out to individuals from different departments to keep communication lines open. {{They}} needed minimal guidance to clarify dependencies for {{their}} own tasks, which helped in avoiding any potential bottlenecks."
+  },
+  {
+    "id": "609997e7-dbc3-4b07-8724-70cfa0641860",
+    "competency_id": "collaboration",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a cross-functional discussion, {{name}} regularly addressed potential sources of disagreement between product and engineering teams. With minimal guidance, {{they}} found common ground on technical approaches that supported both teams' objectives, enhancing collaboration and trust."
+  },
+  {
+    "id": "04bad452-ce78-49a1-b955-9fe0b9c1c644",
+    "competency_id": "collaboration",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} independently organized a project kick-off meeting with team members from various departments, ensuring that everyone had a clear understanding of their roles and responsibilities. {{They}} consistently followed up with each department lead to address any roadblocks, which kept the project on track and built trust across teams."
+  },
+  {
+    "id": "1172aa10-e3dc-4682-9c54-9c7bd12b5827",
+    "competency_id": "collaboration",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a disagreement arose between engineering and design about a feature implementation, {{name}} consistently facilitated discussions, encouraging each side to express their perspectives openly. {{They}} worked to find a compromise that met the project's objectives, maintaining a positive working relationship between the teams."
+  },
+  {
+    "id": "680be310-ec48-45e1-a427-de16f620463f",
+    "competency_id": "collaboration",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a major feature release, {{name}} took the initiative to coordinate regular check-ins with stakeholders, ensuring that updates were communicated clearly and any concerns were addressed promptly. This independent management of stakeholder relations helped maintain alignment and trust throughout the project's lifecycle."
+  },
+  {
+    "id": "ad97272b-322a-4cb0-9a54-e00d337400b0",
+    "competency_id": "collaboration",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a large cross-team project kickoff, {{name}} noticed potential conflicts in the timeline discussed. {{They}} proactively arranged a meeting with representatives from each team to align expectations and adjust the schedule, ensuring everyone was on the same page before work began."
+  },
+  {
+    "id": "92eefc4d-ba6f-4b9f-bbeb-9c4da4fa4766",
+    "competency_id": "collaboration",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a disagreement arose between two teams about the API design, {{name}} facilitated a workshop without prompting to bring together stakeholders. {{They}} created a space for understanding each perspective and finding a compromise that accounted for both teams' needs."
+  },
+  {
+    "id": "ec84616c-6fbc-45dd-b8c1-d273c2249c00",
+    "competency_id": "collaboration",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Seeing a pattern of miscommunication during a recurring cross-departmental meeting, {{name}} took the initiative to establish a new communication protocol. {{They}} shared this framework with all teams involved, which clarified roles and enhanced cooperative efforts moving forward."
+  },
+  {
+    "id": "2cf4d2c2-5083-4c03-8558-85b906959e85",
+    "competency_id": "collaboration",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a major initiative to revamp the company-wide onboarding process, {{name}} systematically engaged teams across multiple departments to collect feedback on current practices. {{They}} organized workshops that brought together diverse stakeholders to ensure all voices were heard and integrated into the new workflow, setting a standard for cross-functional collaboration that improved onboarding efficiency."
+  },
+  {
+    "id": "a5c0598c-343c-4448-9127-b1e9ca8be84d",
+    "competency_id": "collaboration",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} led a series of monthly tech talks that connected engineers across the organization, fostering a culture of knowledge sharing and mutual support. {{They}} ensured that the sessions covered topics relevant to different teams and provided a platform for team members to build relationships and discuss novel solutions to shared technical challenges."
+  },
+  {
+    "id": "8a67d603-2672-4bfd-bb41-0696d7a01fa9",
+    "competency_id": "collaboration",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Faced with significant pushback on a new product feature, {{name}} brought key players together to facilitate a structured discussion, setting a standard for how the organization handles disagreements. By encouraging open communication and systematically guiding the conversation towards common ground, {{they}} helped the team resolve conflicts constructively and align on a shared vision."
+  },
+  {
+    "id": "2dbcdfda-ae5f-413b-9a17-98bfadca17ac",
+    "competency_id": "collaboration",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a period of extensive growth, {{name}} initiated and led a company-wide effort to redefine collaboration tools and processes, ensuring scalability and adaptability. {{They}} engaged stakeholders across departments to gather input and align everyone on a unified vision. The resulting framework has not only improved internal communication but is now being adopted by other companies as an industry benchmark."
+  },
+  {
+    "id": "38ec6a7f-708c-4be8-be11-6c2cf9022241",
+    "competency_id": "collaboration",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "As the company prepared to enter new international markets, {{name}} developed a comprehensive strategy to integrate multicultural teams, fostering inclusion and shared objectives. {{They}} organized workshops that brought leaders together from all global offices, creating a template for cross-cultural collaboration that's shared at industry conferences as a leading practice."
+  },
+  {
+    "id": "b164b4c1-6418-47c1-9799-42935feb40b5",
+    "competency_id": "collaboration",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Facing recurring conflicts in cross-departmental projects, {{name}} created a conflict resolution architecture that has transformed how disagreements are addressed across the company. {{Their}} approach, which focuses on empathy and understanding diverse viewpoints, has not only reduced project friction but is also being piloted by partner organizations, setting a new standard in the industry."
+  },
+  {
+    "id": "c3dea2bf-4c3a-47c2-b75b-1dfdcf1568fc",
+    "competency_id": "driving-alignment",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a project kickoff meeting, {{name}} facilitated a brief discussion to make sure each team member understood the task objectives. With guidance, {{they}} asked clarifying questions provided by {{their}} manager to ensure everyone on the call was aligned on the initial deliverables for the upcoming sprint."
+  },
+  {
+    "id": "52941913-da7a-4cc9-9d6e-8892a8be20f7",
+    "competency_id": "driving-alignment",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While planning a small feature update, {{name}} was guided by a team lead to organize a meeting for stakeholders. {{They}} presented the meeting agenda and took notes on key points, ensuring that team members left with a clear understanding of who was responsible for specific tasks."
+  },
+  {
+    "id": "f0435c91-16f8-42c9-b8a7-482001e6c084",
+    "competency_id": "driving-alignment",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a weekly team sync, {{name}} sought guidance from a more experienced colleague to address a minor disagreement between developers about implementation details. {{They}} facilitated a short conversation, making space for both parties to express their perspectives and guided by feedback, helped to narrow down the options to a preferred approach."
+  },
+  {
+    "id": "abf50ade-a00e-4bcb-aa24-08dab89a65bb",
+    "competency_id": "driving-alignment",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a project kickoff, {{name}} independently gathered input from team members across different functions to ensure everyone was aligned on the objectives. By consistently summarizing discussions and proposing actionable next steps, {{they}} helped steer the group toward agreeing on a clear project plan."
+  },
+  {
+    "id": "cd8362eb-de1a-4649-882c-870e178ac113",
+    "competency_id": "driving-alignment",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In the weekly feature review meetings, {{name}} consistently made sure that quieter team members were included in the discussion by directly asking for their opinions, which led to a crucial insight that influenced the direction of the project. {{Their}} ability to independently manage group dynamics helped ensure all voices were heard."
+  },
+  {
+    "id": "433b024c-fe23-4705-b7fb-087dc8fc0065",
+    "competency_id": "driving-alignment",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While working on a cross-functional initiative, {{name}} independently identified confusion around the project goals and organized a series of focused meetings. By consistently connecting the feature discussions to broader strategic objectives, {{they}} facilitated a common understanding among team members, leading to a unified approach to the project."
+  },
+  {
+    "id": "b3f2041c-ea27-48f5-bb43-04e426b4ab99",
+    "competency_id": "driving-alignment",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a cross-departmental planning meeting, {{name}} recognized that several teams were working on overlapping features. Without prompting, {{they}} suggested a dedicated breakout session to align their approaches, ensuring resources were used efficiently. {{Their}} initiative led to a consensus on a singular path forward, reducing duplicated effort."
+  },
+  {
+    "id": "e4815c09-66af-4cb8-90cb-d6ec9293ef2d",
+    "competency_id": "driving-alignment",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Noticing recurring disagreements in the weekly strategy sync, {{name}} proactively restructured the meeting agenda to focus on top priorities and allow more time for each team to express concerns. This adjustment improved the quality of the discussions, resulting in a clearer understanding of shared goals."
+  },
+  {
+    "id": "782bdd35-2fae-4a1d-bcd3-cf9ef55126b4",
+    "competency_id": "driving-alignment",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a quarterly roadmap review, {{name}} observed that the quieter team members hadn't shared their perspectives. Acting without prompting, {{they}} paused the meeting to invite input from everyone in the room, ensuring a comprehensive discussion that brought new insights to the table and helped refine the project's direction."
+  },
+  {
+    "id": "d489f64d-b248-4ae9-8908-f6c9b8338a0c",
+    "competency_id": "driving-alignment",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} noticed that cross-department meetings often ended without clear decisions, causing confusion among the teams. {{They}} developed a structured meeting framework that included assigning clear next steps and defining decision-makers for each agenda item. This approach was adopted company-wide, leading to more focused and outcome-driven discussions."
+  },
+  {
+    "id": "36e7c5fa-64e2-4513-82ae-76f6fd6d5c2d",
+    "competency_id": "driving-alignment",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When a major project stalled due to conflicting priorities between engineering and marketing, {{name}} stepped in to organize a series of joint workshops. {{They}} encouraged open dialogue and systematically drew connections to the company’s long-term goals, guiding the teams to reach a consensus on a strategic path forward. This alignment significantly accelerated the project’s progress."
+  },
+  {
+    "id": "e0e64958-8f25-4155-be04-5523e6336d78",
+    "competency_id": "driving-alignment",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing that not all team members felt comfortable voicing their opinions during product planning sessions, {{name}} introduced a new protocol that included anonymous input rounds and designated time for quieter voices to share. This change was instrumental in raising diverse perspectives, and {{they}} implemented it as a standard practice across the organization, enriching the decision-making process."
+  },
+  {
+    "id": "28652f5f-4864-4a6e-a06b-4ecccc3c7c7f",
+    "competency_id": "team-multiplier",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team sprint review, {{name}} helped a new team member understand the testing framework by walking {{them}} through a simple debugging task. With guidance from a senior engineer, {{name}} explained the use of different testing methods, which helped the new member fix a minor bug and build confidence in using the framework."
+  },
+  {
+    "id": "3c337e78-24d4-4d78-8fe7-b6291c467975",
+    "competency_id": "team-multiplier",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was assigned to assist in onboarding a junior developer. With guidance from their manager, {{they}} created a small checklist of initial tasks to ensure the new hire had the needed resources to set up their development environment. This task helped reduce the onboarding time by providing clear steps to follow."
+  },
+  {
+    "id": "976b20ef-f3ea-41c6-b0bf-322f6d37bc7d",
+    "competency_id": "team-multiplier",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While working on a joint feature with another intern, {{name}} took the initiative to organize their shared code in a more structured way, based on a pattern suggested by their mentor. This small restructuring task made it easier for both to track their changes and manage their collaborative work without obstacles."
+  },
+  {
+    "id": "47c1c614-02ae-4ec8-80e6-9ec81f5d3e08",
+    "competency_id": "team-multiplier",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the team's daily stand-up meeting, {{name}} noticed that a newer team member was struggling with a recurring task. Later, {{they}} approached the colleague and offered to walk through the process together. This became a regular end-of-week check-in, allowing the team member to boost {{their}} confidence and autonomy in handling the task."
+  },
+  {
+    "id": "9267db50-a601-48d3-ab05-ccbbe0885fda",
+    "competency_id": "team-multiplier",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While working on a sprint task, {{name}} noticed that several team members were using outdated documentation that caused confusion. With minimal guidance, {{they}} took it upon {{themself}} to update the documentation regularly and shared the changes during the next team meeting, making it easier for everyone to stay updated."
+  },
+  {
+    "id": "d177fd2b-0c56-4a26-ab65-f5e0cfda0db0",
+    "competency_id": "team-multiplier",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a project planning session, {{name}} realized that team members were unclear about task dependencies. {{They}} began creating a simple reference guide that showed these dependencies clearly and regularly updated it as the project evolved, which helped team members organize their work more effectively."
+  },
+  {
+    "id": "7f5135ea-9f9f-45d9-9720-a7191b6f713a",
+    "competency_id": "team-multiplier",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} took it upon {{them}}self to mentor a new engineer during a product release cycle. {{They}} set up weekly one-on-one sessions to walk through complex parts of the codebase, answering questions and sharing {{their}} experiences, which led to the new team member confidently contributing to the project."
+  },
+  {
+    "id": "dfe89c44-f3d9-4a1a-8552-47e987f51e48",
+    "competency_id": "team-multiplier",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a planning meeting for a new feature, {{name}} independently identified potential blockers related to third-party API integration. {{They}} coordinated discussions with the API provider and shared a detailed integration plan with the team, ensuring everyone was aligned and ready to move forward."
+  },
+  {
+    "id": "479a56af-11cb-47ed-b974-205ffb6d9f4f",
+    "competency_id": "team-multiplier",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a project retrospective, {{name}} consistently provided thoughtful feedback and suggestions that helped the team adopt more efficient coding practices. This led to a noticeable improvement in the team's code review process, reducing back-and-forth and streamlining deployments."
+  },
+  {
+    "id": "9912d4da-cedd-4867-b3f6-b7c6a658753a",
+    "competency_id": "team-multiplier",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a sprint planning meeting, {{name}} noted that the team's workflow was slowed down by repeated confusion over coding standards. Without prompting, {{they}} organized and led a cross-team workshop to align everyone on best practices. The sessions not only reduced code review times but also led to more consistent quality across projects."
+  },
+  {
+    "id": "5b8a4dc4-d8d6-4739-80f4-c341b89316ee",
+    "competency_id": "team-multiplier",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When {{name}} noticed that the onboarding process for new engineers was causing delays in project ramp-up times, {{they}} proactively developed a comprehensive onboarding guide. {{They}} rolled it out to the team, resulting in new hires taking full ownership of their tasks more quickly and contributing to the team's deliverables sooner."
+  },
+  {
+    "id": "d951346c-c956-45ea-a9ab-b113befcce2c",
+    "competency_id": "team-multiplier",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Seeing recurring communication bottlenecks between the frontend and backend teams, {{name}} initiated a bi-weekly sync-up that hadn't been requested. This initiative improved collaboration and alignment, leading to smoother integration phases and fewer last-minute changes during deployments."
+  },
+  {
+    "id": "532d9c7d-02e3-4da8-88c8-7e000bd040f9",
+    "competency_id": "team-multiplier",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} spearheaded an initiative to redesign the onboarding process for new engineers across the company. {{They}} developed a comprehensive program that included mentorship pairings, a detailed learning path, and regular feedback loops. As a result, new hires were able to ramp up faster and contribute to projects effectively within their first month."
+  },
+  {
+    "id": "5884d508-33d1-4043-9a49-4bc6c5ec9f0c",
+    "competency_id": "team-multiplier",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Noticing recurring communication gaps during cross-department projects, {{name}} implemented a standardized framework for collaboration that included regular joint check-ins and shared documentation practices. This approach systematically streamlined project handoffs and reduced misunderstandings, improving the overall efficiency of inter-team efforts."
+  },
+  {
+    "id": "18e7dbc0-0ddf-4357-a321-40903f1ef1e4",
+    "competency_id": "team-multiplier",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After observing inconsistent code review practices across teams, {{name}} organized a series of workshops to establish best practices and exemplify high-quality feedback. {{They}} then integrated these standards into a company-wide handbook, ensuring that all engineers had access to the guidance needed to improve the quality and consistency of code reviews."
+  },
+  {
+    "id": "e3bdcfd8-25ba-4a15-9a38-cbd76b21e4ec",
+    "competency_id": "craft",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} worked on their first bug fix after their onboarding session. With guidance from their mentor, {{they}} carefully traced the code path to understand the cause of the issue. After implementing the fix, {{they}} checked in with their mentor for a review to ensure everything was up to the team's standards."
+  },
+  {
+    "id": "68093dea-8f4f-4145-a87b-52a44677a0bf",
+    "competency_id": "craft",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a code review, {{name}} followed a checklist provided by their team lead to ensure they addressed each point before submitting their changes. After the review, {{they}} sat down with their lead to discuss areas of improvement for future reviews, beginning to understand the importance of maintaining code quality."
+  },
+  {
+    "id": "2cfd76f9-6cd5-4058-b23c-8680c180ccd2",
+    "competency_id": "craft",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was tasked with documenting a small utility script they had written. With guidance from a senior team member, {{they}} added comments to clarify the logic and wrote a brief README to explain how the script should be run. This experience introduced {{them}} to the basics of effective documentation."
+  },
+  {
+    "id": "49c2fd74-4892-45f0-a4c6-feb865d95c00",
+    "competency_id": "craft",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly performs code reviews for their team and, with minimal guidance, always catches edge cases that others miss. Additionally, {{they}} ensures the code is not only correct but also maintainable."
+  },
+  {
+    "id": "02a87fc5-2122-47a0-97bc-b4d78e7141b3",
+    "competency_id": "craft",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During each sprint, {{name}} writes detailed technical documentation for their features with minimal guidance, which their team relies on to quickly understand new functionalities. This habit has become a valuable resource for onboarding new team members."
+  },
+  {
+    "id": "637f787d-7f95-4c75-89d5-5848a4631bca",
+    "competency_id": "craft",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Whenever there's a new feature to develop, {{name}} consistently refactors existing code that {{they}} work on to meet the team's evolving technical standards. Doing so regularly, {{they}} improves the project's maintainability and clarity without needing explicit instruction."
+  },
+  {
+    "id": "3fa9a5d4-a859-45a6-aa13-a40b77efe7fd",
+    "competency_id": "craft",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} independently refactored a critical service in the backend system to improve its maintainability and clarity. {{They}} ensured that all updates were thoroughly documented in the team’s Confluence page for future developers to understand the changes. The effort resolved long-standing confusion around the service's functionality and reduced onboarding time for new team members."
+  },
+  {
+    "id": "f7b7ecda-6108-4632-b697-7580855d2417",
+    "competency_id": "craft",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the development of a new user authentication feature, {{name}} consistently delivered code that passed rigorous peer reviews with minimal feedback necessary. {{Their}} attention to detail on edge cases and potential user paths resulted in a robust implementation that required fewer iterations, speeding up the testing phase."
+  },
+  {
+    "id": "5272e89e-795b-414b-9a2a-d0bab6da1549",
+    "competency_id": "craft",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} led the effort to update the technical standards document after observing recurring issues during code reviews. {{They}} gathered input from the team and integrated feedback into a comprehensive guide that clarified best practices for variable naming and error handling. The updated standards became a valuable reference, improving the team's code quality over time."
+  },
+  {
+    "id": "fda051fc-8b84-4bec-b5c0-a353feed441f",
+    "competency_id": "craft",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} noticed inconsistent error handling patterns across several teams' codebases and took the initiative to organize a workshop. {{They}} shared best practices and facilitated discussions to establish a unified approach, resulting in clearer and more consistent code standards across teams."
+  },
+  {
+    "id": "be5f4f18-3fe2-40b4-976b-d54aa433ef77",
+    "competency_id": "craft",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While reviewing a pull request, {{name}} identified an opportunity to optimize a recurring algorithm used by multiple teams. Without being asked, {{they}} implemented a refactored version and presented it at the next all-hands meeting, where it was adopted as a new performance standard."
+  },
+  {
+    "id": "90a3530e-03ec-418b-ba0d-7309eda84613",
+    "competency_id": "craft",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} realized that the team’s outdated API documentation was causing confusion for new developers. {{They}} updated the documentation and proactively created a living document template that other teams could adopt, streamlining onboarding processes company-wide."
+  },
+  {
+    "id": "092478c9-fe97-4ad7-83ad-eb9f22fea838",
+    "competency_id": "craft",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During the quarterly review of technical standards, {{name}} initiated an overhaul of the team's code quality guidelines by integrating new static analysis tools and creating examples of best practices. {{They}} collaborated with multiple teams to ensure the guidelines addressed common pain points and aligned with broader organizational goals. As a result, the new standards were adopted across several departments, significantly improving code readability and consistency."
+  },
+  {
+    "id": "b375ff5c-0c6e-4036-aadb-7d8a3d520263",
+    "competency_id": "craft",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "After identifying inconsistencies in how different teams documented their APIs, {{name}} spearheaded an initiative to develop a centralized documentation template. {{They}} led workshops to train engineers in its use and gathered feedback from key stakeholders to refine the template further. The improved documentation system has been implemented organization-wide, reducing onboarding time for new developers and easing cross-team collaborations."
+  },
+  {
+    "id": "90cc9310-9f60-4e8b-be17-b2908b1a49b0",
+    "competency_id": "craft",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Noticing a disparity in testing approaches across the org, {{name}} convened a working group to establish comprehensive testing standards. {{They}} systematically gathered input from a diverse set of engineering teams and defined a unified framework that prioritized both flexibility and thoroughness. This new approach has become the benchmark for the organization, leading to a decrease in post-release defects and more reliable deployments across all projects."
+  },
+  {
+    "id": "3e844ee1-5c16-4df1-adb9-0894e3ae13d4",
+    "competency_id": "craft",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a company-wide initiative to revamp the coding standards, {{name}} led a task force to establish a new set of industry-leading guidelines that prioritize both performance and security. {{They}} engaged experts across the industry, collated their insights, and synthesized them into a comprehensive framework that not only set a new company standard but also influenced best practices in the wider tech community."
+  },
+  {
+    "id": "42b284f9-6dbe-4505-9c32-02ed46e80fc3",
+    "competency_id": "craft",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} authored a detailed, innovative document outlining a new approach to API versioning that addressed persistent company pain points around backward compatibility and scalability. This document was adopted by multiple teams, significantly enhancing integration processes company-wide and earning recognition at industry conferences for its forward-thinking methodology."
+  },
+  {
+    "id": "116d0b2e-00bc-47ed-b227-686034098df5",
+    "competency_id": "craft",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing the need for a shift in the company's documentation culture, {{name}} spearheaded a movement that redefined how teams approached technical documentation. {{They}} created a philosophy prioritizing clarity and accessibility, which resulted in a marked improvement in onboarding processes and set a new industry benchmark for user-friendly developer documentation."
+  },
+  {
+    "id": "36316936-1220-4551-8fe4-2e33decac6db",
+    "competency_id": "shared-technical",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} participated in a system design session for the team's new feature, contributing ideas on how different components could communicate. {{They}} asked questions to the senior engineer leading the session, working with guidance to understand how the pieces fit together."
+  },
+  {
+    "id": "d5af1d80-58d6-4230-9c10-73abd7d025a5",
+    "competency_id": "shared-technical",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a team code review, {{name}} focused on a small change that involved reading data more efficiently from the database. With guidance, {{they}} suggested altering the query structure to improve performance, learning about database indexing in the process."
+  },
+  {
+    "id": "f9d2a8ab-84de-47e8-9aff-077997c030f9",
+    "competency_id": "shared-technical",
+    "level": "L1",
+    "track": null,
+    "placeholder": false,
+    "scenario": "While assisting with an integration task, {{name}} paired with a mentor to set up a basic notification service within the existing infrastructure. With guidance, {{they}} followed along in setting up monitoring tools to ensure the new service was correctly reporting any error states."
+  },
+  {
+    "id": "fc5addba-0c13-4d68-939c-c7bc0e5d54d1",
+    "competency_id": "shared-technical",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} was asked to update the logging mechanism for {{their}} team's service to improve observability. With minimal guidance, {{they}} regularly suggested and implemented improvements over the next few sprints, integrating more granular logging and tracking down intermittent bugs, which led to quicker incident resolutions."
+  },
+  {
+    "id": "32392ba6-c30a-4dfd-a8eb-8ad964fbbea0",
+    "competency_id": "shared-technical",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a weekly team planning meeting, {{name}} identified a bottleneck in a frequently executed query within {{their}} service. Without needing detailed instructions, {{they}} regularly introduced optimizations that reduced query time, enhancing the overall performance of the system for the team's ongoing project."
+  },
+  {
+    "id": "636ac6b6-f866-4491-8bf9-8f04fa4bea13",
+    "competency_id": "shared-technical",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Consistently experiencing issues with API timeouts, {{name}} took the initiative to analyze {{their}} service's integration points. Regularly, {{they}} proposed small configuration changes and streamlined API interactions, which gradually improved the reliability of {{their}} component in the larger ecosystem."
+  },
+  {
+    "id": "2dd7547e-71c8-4fcc-b12a-e5aa2cbab6ba",
+    "competency_id": "shared-technical",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} independently redesigned the architecture for a critical data pipeline, ensuring it could handle a 10x increase in traffic. {{They}} identified bottlenecks and optimized queries, resulting in a more efficient and scalable system. The changes consistently maintained data integrity while improving performance."
+  },
+  {
+    "id": "7ea7a883-bb01-40db-a5e0-182661f2ebab",
+    "competency_id": "shared-technical",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When tasked with improving the user notification system, {{name}} consistently delivered enhancements that significantly reduced latency issues. {{They}} refactored the existing code and adjusted the message queue configurations, leading to a more responsive and reliable user experience."
+  },
+  {
+    "id": "f079891b-1eed-4240-8f78-ce49cb019646",
+    "competency_id": "shared-technical",
+    "level": "L3",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Facing an upcoming new product launch, {{name}} independently took on the integration of a third-party service with the existing platform. {{They}} consistently delivered robust solutions, handling API changes and ensuring seamless operation within the team's deadlines and maintaining system performance."
+  },
+  {
+    "id": "4c10aedf-0ff2-4eda-9297-115441e107ef",
+    "competency_id": "shared-technical",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a company-wide architecture meeting, {{name}} presented a new system monitoring framework that {{they}} developed, which offered unprecedented insight into performance metrics across all teams. {{They}} had anticipated potential scaling issues as the organization grew, and the implementation became a standard for all engineering projects, significantly improving system reliability."
+  },
+  {
+    "id": "580caab8-ca69-47cc-bcc4-8573d758375a",
+    "competency_id": "shared-technical",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing the inefficiencies in the existing deployment processes across various teams, {{name}} spearheaded the creation of a new automated deployment pipeline. This initiative, rolled out across the organization without direction, ensured consistent release practices and reduced downtime. {{Their}} efforts set a new operational framework that teams now follow."
+  },
+  {
+    "id": "30af774d-2551-4173-9873-0a84e0667206",
+    "competency_id": "shared-technical",
+    "level": "L5",
+    "track": null,
+    "placeholder": false,
+    "scenario": "To address recurring performance bottlenecks affecting multiple departments, {{name}} systematically redesigned the database architecture. {{They}} integrated advanced caching strategies and optimized query performance, which became the benchmark for future designs in the company. This approach solved immediate issues and established a new standard for efficient data management."
+  },
+  {
+    "id": "f9a1f971-a5f2-45c1-bda5-ada27bd53470",
+    "competency_id": "shared-technical",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a major industry conference, {{name}} presented a new system architecture paradigm that addressed previously unsolved problems in scalability and performance, influencing multiple companies to adopt this approach. {{They}} set the philosophy for how software reliability could be enhanced across the industry, sparking a new series of discussions and implementations globally."
+  },
+  {
+    "id": "262fbf9f-5d45-43cb-8413-ee5b17c07467",
+    "competency_id": "shared-technical",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "At a strategic planning meeting, {{name}} proposed a cross-industry initiative to standardize the integration of AI-based systems into existing infrastructures, making them more resilient and efficient. {{Their}} vision led to a consortium of tech companies collaborating on a universal integration standard that changed how AI was operationalized worldwide."
+  },
+  {
+    "id": "1b5d2fc5-ebb7-4a89-9670-a4871b4eaa7a",
+    "competency_id": "shared-technical",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Recognizing a common challenge faced by cloud providers, {{name}} authored a comprehensive white paper on a novel method for handling data at scale, which was adopted by leading industry players. {{They}} defined the standard that now guides companies in architecting systems that meet modern demands for speed and reliability."
+  },
+  {
+    "id": "b02a4c42-3166-42bd-82d7-e3578b5b7de9",
+    "competency_id": "domain-specific",
+    "level": "L1",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} was part of a team meeting where the discussion centered around implementing a new feature set. With guidance from {{their}} mentor, {{they}} contributed to the conversation by sharing insights from a recent article about emerging technologies relevant to {{their}} domain."
+  },
+  {
+    "id": "4b1911ae-4028-41ec-9a98-f796e20f5191",
+    "competency_id": "domain-specific",
+    "level": "L1",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "During a sprint, {{name}} was tasked with a small bug fix related to {{their}} team's platform. Following detailed instructions, {{they}} used {{their}} knowledge of the domain's tools to identify the root cause and applied the necessary patches."
+  },
+  {
+    "id": "b04474e7-3ada-4c2f-81ef-4a0f50d89c87",
+    "competency_id": "domain-specific",
+    "level": "L1",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "On {{their}} first on-call shift, {{name}} encountered a common incident in the system. Under the direct supervision of a senior engineer, {{they}} executed basic troubleshooting steps to help restore service while gaining a better understanding of the platform's operations."
+  },
+  {
+    "id": "02d4d7cb-0ed6-45c6-a0fc-69aeb1f4e45c",
+    "competency_id": "domain-specific",
+    "level": "L2",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} regularly sets up their development environment with minimal guidance, ensuring the latest domain-specific tools and plugins are installed. {{They}} cross-references the internal documentation and follows the setup checklist to avoid any onboarding issues."
+  },
+  {
+    "id": "9c635541-bf93-4204-a977-d1eab6bd5284",
+    "competency_id": "domain-specific",
+    "level": "L2",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "During system updates, {{name}} independently configures {{their}} local instances of specialized software. {{They}} verify compatibility with new features by running a series of standard tests, allowing {{them}} to swiftly identify any integration challenges."
+  },
+  {
+    "id": "21ebe0b5-1d92-4801-9ec4-0b3546b87321",
+    "competency_id": "domain-specific",
+    "level": "L2",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "In routine meetings, {{name}} contributes detailed insights about the domain methodology applied in {{their}} current project. {{They}} are able to answer technical questions from teammates about recent changes in methodologies, showcasing a regular command of the subject with minimal external input."
+  },
+  {
+    "id": "ceb55e54-f73c-4110-b00e-fbb18b889e93",
+    "competency_id": "domain-specific",
+    "level": "L3",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} tackled the implementation of a major feature in {{their}} team's new application, selecting the right machine learning algorithms without needing consultation. {{They}} navigated the complexities of integrating these algorithms into the existing software architecture, consistently delivering well-structured code and thorough documentation."
+  },
+  {
+    "id": "9ac2c18b-8fe7-49d3-8cba-8b04086796a8",
+    "competency_id": "domain-specific",
+    "level": "L3",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "During the recent project sprint, {{name}} independently identified an opportunity to enhance the performance of the data pipeline. Leveraging {{their}} extensive knowledge of distributed systems, {{they}} refactored key components to ensure more efficient data processing, which consistently improved throughput."
+  },
+  {
+    "id": "eb7a0611-69de-4126-886f-3f64879b9b54",
+    "competency_id": "domain-specific",
+    "level": "L3",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} led the development of a new feature for the company's flagship platform, drawing on {{their}} deep understanding of cloud infrastructure. {{They}} decided on the optimal set of tools and efficiently managed the deployment process, ensuring the project was completed on schedule and met all functional requirements."
+  },
+  {
+    "id": "cdf6cdbc-8ee0-48c5-a5e3-bcec9e63b883",
+    "competency_id": "domain-specific",
+    "level": "L4",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "During a cross-team project to migrate services to a new cloud provider, {{name}} proactively researched the potential impact on existing infrastructure. {{They}} anticipated integration challenges that could arise and coordinated a workshop without prompting to ensure all teams understood the new deployment pipeline, resulting in a smoother transition."
+  },
+  {
+    "id": "ea1fa317-41aa-4b53-93fc-fa2ce9f79c54",
+    "competency_id": "domain-specific",
+    "level": "L4",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "Noticing frequent errors related to a legacy system, {{name}} proactively developed a script to automate a complex data validation process. Without being asked, {{they}} collaborated with both the development and QA teams to integrate this into the continuous deployment pipeline, significantly reducing manual effort and error rates."
+  },
+  {
+    "id": "7e19e72d-e1bb-4f68-989a-06057e5cae7b",
+    "competency_id": "domain-specific",
+    "level": "L4",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} identified that the company's CI/CD tools were not fully optimized for the new microservices architecture. Proactively, {{they}} revamped the build and deployment scripts, then led a knowledge-sharing session across teams to align on the updated methods, improving deployment speed and consistency across projects."
+  },
+  {
+    "id": "5dd9a3ca-3cc3-41e2-a23b-a59ce33f0ae8",
+    "competency_id": "domain-specific",
+    "level": "L5",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} systematically introduced a new testing framework across the organization, ensuring it integrated seamlessly with existing pipelines. {{They}} collaborated with multiple teams to identify pain points and address them, resulting in a more robust and efficient testing process. This initiative not only improved code quality but also reduced deployment times significantly."
+  },
+  {
+    "id": "d8dbfec8-1565-4f4d-9a0e-e7859bf76eaa",
+    "competency_id": "domain-specific",
+    "level": "L5",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "After identifying inconsistencies in data flow processes, {{name}} undertook the task of redesigning the data architecture for the entire organization. {{They}} established new guidelines and best practices for data handling that were adopted company-wide, drastically improving data accuracy and accessibility for all teams."
+  },
+  {
+    "id": "d6e3e3e5-60de-4170-9507-8803d4e9f30f",
+    "competency_id": "domain-specific",
+    "level": "L5",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "Recognizing frequent issues with scalability during peak loads, {{name}} led the development of a new infrastructure playbook. {{They}} worked without direction with team leads across various departments to refine deployment strategies, resulting in a playbook that became the go-to resource for scaling challenges across the organization."
+  },
+  {
+    "id": "62d5db6f-26c5-4396-bbf3-b73c10c47d8a",
+    "competency_id": "domain-specific",
+    "level": "L6",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} has been instrumental in shaping the company's approach to cloud infrastructure, setting a standard that has been adopted across the industry. {{They}} advocated for a unified platform that integrates seamlessly with various tools, significantly improving interoperability and efficiency. This vision has not only optimized internal workflows but also influenced how other tech companies approach similar challenges."
+  },
+  {
+    "id": "d2052ed0-a5a7-473f-a86f-bdcd6e4ccc59",
+    "competency_id": "domain-specific",
+    "level": "L6",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "When a major industry conference sought expertise on the future of AI ethics, {{name}} was invited as the keynote speaker. {{They}} presented a comprehensive framework that anticipated regulatory changes and encouraged fair practices, becoming a reference point for subsequent industry discussions. This thought leadership has positioned the company as an ethical leader in AI."
+  },
+  {
+    "id": "f09aa61c-3d20-480b-a95f-ccb84091df10",
+    "competency_id": "domain-specific",
+    "level": "L6",
+    "track": "swe-ic",
+    "placeholder": true,
+    "scenario": "{{name}} led a cross-functional task force that developed a novel methodology for data privacy that is now seen as best practice in the tech community. By integrating legal, technical, and ethical perspectives, {{they}} created a compliance standard that aligns with upcoming regulations and has been adopted by multiple organizations worldwide."
+  },
+  {
+    "id": "f48b58c9-8999-4be3-befd-40da06d78aa5",
+    "competency_id": "domain-specific",
+    "level": "L1",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} was tasked with setting up a basic environment using the company's cloud tooling. With guidance, {{they}} followed the step-by-step instructions provided by the team lead to ensure {{their}} configuration matched the standard requirements. {{Their}} setup was reviewed and successfully passed all initial checks."
+  },
+  {
+    "id": "3c3667f5-bf15-4463-8e3b-6c9f98ccc61a",
+    "competency_id": "domain-specific",
+    "level": "L1",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "During a team meeting, {{name}} was asked to update a small part of the existing documentation for a project. With some direction from {{their}} mentor, {{they}} began incorporating the latest method changes. {{Their}} contributions helped keep the documentation aligned with current practices."
+  },
+  {
+    "id": "efaa39e9-00e4-4621-b2e1-88774f0607ce",
+    "competency_id": "domain-specific",
+    "level": "L1",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "When a bug surfaced in a niche area of {{their}} team's application, {{name}}, with guidance, used the team's debugging tool to diagnose the problem. {{They}} successfully identified a misconfiguration and reported it back to the senior developer for further resolution."
+  },
+  {
+    "id": "6682fd05-7d75-4e80-a0ec-034e3340a6ac",
+    "competency_id": "domain-specific",
+    "level": "L2",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} regularly refines {{their}} approach to debugging using a specialized tool in {{their}} domain. Even when encountering newer versions or updates to the tool, {{they}} only needs minimal guidance to apply effective strategies that align with {{their}} ongoing work."
+  },
+  {
+    "id": "f06fb902-6fd2-4a55-aa8b-581ada9c60da",
+    "competency_id": "domain-specific",
+    "level": "L2",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "In the course of maintaining {{their}} module, {{name}} regularly fine-tunes the deployment scripts related to {{their}} domain's platform. {{They}} requires minimal guidance in adapting these scripts to suit the evolving needs of {{their}} work, ensuring optimal performance without disruptions."
+  },
+  {
+    "id": "732b9af5-4932-4a50-9fe9-757814155f3b",
+    "competency_id": "domain-specific",
+    "level": "L2",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "While working on the scheduled updates for a project, {{name}} regularly applies {{their}} knowledge of domain-specific methodologies to ensure best practices are met. {{They}} requires minimal guidance when incorporating the latest domain methods into {{their}} workflow, consistently delivering high-quality work."
+  },
+  {
+    "id": "2d4622a3-f388-4dea-8d13-b1f9770820b9",
+    "competency_id": "domain-specific",
+    "level": "L3",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} was tasked with building a new data pipeline to process and analyze incoming data streams. {{They}} independently chose the technology stack best suited for the job, implementing the solution in a way that scaled efficiently with minimal resource usage. The project ran smoothly and handled peak loads without any issues."
+  },
+  {
+    "id": "ccc67e8f-ccba-4845-ae32-0dc17e10db8b",
+    "competency_id": "domain-specific",
+    "level": "L3",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "During the redesign of a core API service, {{name}} took charge of the integration process, ensuring compatibility with existing systems. {{They}} consistently delivered updates that improved performance and reliability, resolving conflicts with other components and maintaining seamless operations."
+  },
+  {
+    "id": "35586e86-5724-45c7-9efb-9fdb7d90fef7",
+    "competency_id": "domain-specific",
+    "level": "L3",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "At the monthly planning session, {{name}} brought forward a proposal for a machine learning model that could enhance user engagement metrics. {{They}} had independently researched and developed the model, providing detailed insights into its potential impacts and integration strategies. The team adopted the model, leading to improved feature effectiveness."
+  },
+  {
+    "id": "9209399f-c9d9-4c08-8bfe-63ab1d9fd492",
+    "competency_id": "domain-specific",
+    "level": "L4",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} noticed that the release process for the team was causing unnecessary delays due to outdated scripting tools. Without needing any prompting, {{they}} developed a new script using a modern automation platform, which {{they}} then shared across teams, significantly streamlining the process for everyone involved."
+  },
+  {
+    "id": "dd507af6-fa53-4549-9ce1-c95fb9a1ea66",
+    "competency_id": "domain-specific",
+    "level": "L4",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "During a critical cross-team architecture meeting, {{name}} identified a potential flaw in the proposed design due to recent updates in an underlying framework that others had overlooked. {{They}} proactively presented an alternative approach that leveraged these new updates, ensuring the design was robust and future-proof."
+  },
+  {
+    "id": "da20ff25-5a84-4c5d-9c3a-1d72f4d7c7dd",
+    "competency_id": "domain-specific",
+    "level": "L4",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} took the initiative to organize a hands-on workshop on the latest data processing tools that some teams had struggled to integrate. By coordinating with stakeholders across different teams, {{they}} ensured everyone was equipped to implement the best practices, improving overall data handling efficiency."
+  },
+  {
+    "id": "99188b5b-357a-46c2-9e29-0ad97d91bc66",
+    "competency_id": "domain-specific",
+    "level": "L5",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} initiated an org-wide review of the deployment pipeline, identifying inefficiencies that were slowing down releases. {{They}} collaborated with multiple teams to introduce a new, standardized continuous integration tool, training others on its implementation and ensuring a smooth transition. This change streamlined deployments and reduced incident response times."
+  },
+  {
+    "id": "3659d5db-117d-4605-ab46-ee76291fd2be",
+    "competency_id": "domain-specific",
+    "level": "L5",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "Recognizing a gap in the team's understanding of a new architectural pattern, {{name}} created a comprehensive training module that addressed not just the technical aspects, but also the practical application across the organization. {{They}} systematically rolled out the training, tailoring sessions for each team's unique needs and consistently gathering feedback to refine the program."
+  },
+  {
+    "id": "1596b0ae-9c93-4f72-99dc-197bf33bc80a",
+    "competency_id": "domain-specific",
+    "level": "L5",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "In a strategic plan to future-proof the company's data processing capabilities, {{name}} led the adoption of a cutting-edge analytics platform. {{They}} worked closely with stakeholders across different departments to adapt the platform's use to suit the company's evolving needs, setting standards for data handling and consistently revisiting the framework to align with best practices."
+  },
+  {
+    "id": "515f51ac-9274-402e-a725-fab1a2bb3d25",
+    "competency_id": "domain-specific",
+    "level": "L6",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "{{name}} developed a new algorithm for database indexing that has become the standard approach across the company. {{They}} shared this approach at an industry conference, where it was widely discussed and adopted, influencing industry-wide practices."
+  },
+  {
+    "id": "4b670285-0d49-4c8a-91cc-ef8dff9389de",
+    "competency_id": "domain-specific",
+    "level": "L6",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "When faced with frequent downtime issues, {{name}} proposed a novel architecture for handling microservices communication failures. This architecture has now been adopted across multiple teams within the company and cited in external case studies as a best practice."
+  },
+  {
+    "id": "3f65799c-f4bc-4675-be09-7b50f6a98ae4",
+    "competency_id": "domain-specific",
+    "level": "L6",
+    "track": "data-ml",
+    "placeholder": true,
+    "scenario": "Recognizing the limitations of the current data analysis platforms, {{name}} designed and rolled out a custom analytics library that allowed for more granular insights. This library is now a cornerstone of the company's data strategy and is recognized as a pioneering approach in the industry."
+  },
+  {
+    "id": "9dbbf06e-fa68-4618-b411-31ad1bb4baf4",
+    "competency_id": "shared-technical",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When {{name}} noticed an increasing latency issue in the team’s microservices architecture, {{they}} proactively initiated a cross-team discussion. {{They}} gathered data, identified bottlenecks, and suggested a new caching strategy that reduced the response time significantly without being prompted."
+  },
+  {
+    "id": "abf95c9a-fea7-4ae8-a44e-e36e2e350eb2",
+    "competency_id": "shared-technical",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a sprint review, {{name}} recognized that the new feature could benefit from improved integration with existing data pipelines. Without waiting for any formal requests, {{they}} proposed and implemented adjustments to the data flow, enabling other teams to access more timely insights and improving overall system efficiency."
+  },
+  {
+    "id": "6fa9fb01-7949-4ff3-a0d9-a0221c2294cc",
+    "competency_id": "shared-technical",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Upon learning about an upcoming product that would require substantial system resources, {{name}} proactively reached out to infrastructure and operations teams to coordinate efforts. {{They}} led the design of a scalable solution to ensure that the deployment would handle peak loads gracefully and fit well within the current architecture."
+  },
+  {
+    "id": "dfe62d16-b76a-4880-9a28-bd2be7aa2241",
+    "competency_id": "driving-alignment",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly facilitates team stand-ups by structuring the agenda to ensure that each team member has an opportunity to share updates and voice any concerns. {{they}} ensures these sessions stay productive by gently steering conversations back on track if they stray, all with minimal guidance from {{their}} manager."
+  },
+  {
+    "id": "edd0edbe-50d8-4deb-ba7e-7a12adc3abff",
+    "competency_id": "driving-alignment",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In a product planning meeting, {{name}} took the initiative to summarize the differing viewpoints and regularly checked in with the team to ensure everyone was aligned with the proposed plan. With minimal guidance, {{name}} connected the immediate tasks to the long-term goals outlined by leadership, helping the team see the bigger picture."
+  },
+  {
+    "id": "2ac5bc17-86d0-4e6d-9fdc-22beff084c27",
+    "competency_id": "driving-alignment",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the engineering team was split over two technical approaches, {{name}} routinely conducted informal one-on-one discussions to gather insights from each team member. With minimal guidance, {{they}} compiled these insights into a document, which {{they}} then used in a team meeting to highlight common ground, guiding the group toward a consensus."
+  },
+  {
+    "id": "db5b35c2-7634-47fa-bec0-5dd6787db132",
+    "competency_id": "realizing-success",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} regularly sets success criteria for {{their}} tasks by drafting a clear definition of 'done' at the start of each sprint. With minimal guidance, {{they}} ensures that these criteria are specific and actionable, helping {{their}} team maintain focus on deliverables during weekly planning meetings."
+  },
+  {
+    "id": "af1b5654-45e7-4423-a257-c100e047fee9",
+    "competency_id": "realizing-success",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a new product feature development, {{name}} regularly consulted with peers to gather insights and made decisions on UX improvements with minimal guidance. By focusing on user feedback and initial test data, {{they}} refined {{their}} approach to meet customer needs more effectively."
+  },
+  {
+    "id": "eeb42f24-1d69-4b68-a2d3-58c874aea5c5",
+    "competency_id": "realizing-success",
+    "level": "L2",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In charge of a small bug-fix project, {{name}} regularly set up monitoring metrics on {{their}} own. Using minimal guidance, {{they}} created dashboards to track error rates and response times, ensuring {{they}} could make informed decisions quickly to maintain stability in the application."
+  },
+  {
+    "id": "90e2403b-f694-4085-8946-33becb51cc62",
+    "competency_id": "team-multiplier",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} defined the engineering growth philosophy for the entire company by creating a comprehensive mentorship framework that aligned with both technical and career development goals. {{they}} collaborated with teams across the organization to implement this structure, transforming the way mentorship pairs were formed and evaluated. This approach has become a model referenced by other companies in the industry for fostering talent and growth."
+  },
+  {
+    "id": "320b3f9c-a32a-404e-807c-35465fa9a728",
+    "competency_id": "team-multiplier",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Faced with team silos that hampered collaboration, {{name}} set the philosophy for cross-functional integration by introducing a company-wide initiative that encouraged team pairings with shared objectives. {{they}} led workshops and design sprints to align everyone on unified goals, leading to improved synergies that drew industry attention and were cited in engineering leadership forums for their impact."
+  },
+  {
+    "id": "f81784a8-74a7-4296-99ea-8fa595ca9ec0",
+    "competency_id": "team-multiplier",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} redefined the company standard for how technical knowledge is shared internally by establishing an open-source style documentation and tool repository. This resource not only empowered engineers with the autonomy to contribute and access information seamlessly but also became a benchmark for knowledge management, influencing practices across the tech industry."
+  },
+  {
+    "id": "f541dd42-b40d-4c68-91f9-9d47e8ed0ecf",
+    "competency_id": "problem-structuring",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a cross-team meeting, {{name}} noticed recurring issues with delayed project timelines. Without being prompted, {{they}} spoke up and suggested a session to analyze underlying bottlenecks affecting all teams. {{name}} proactively organized a collaborative root cause analysis, where the teams identified outdated dependency chains as the primary culprit."
+  },
+  {
+    "id": "4ddb8a1a-267f-4637-9f43-04402cd49726",
+    "competency_id": "problem-structuring",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "When the team struggled with increasing customer complaints about a feature, {{name}} proactively gathered input from support, engineering, and product teams to frame the problem clearly. Without waiting for direction, {{they}} proposed an analysis session, leading to the discovery that the issues stemmed from a misunderstanding of a critical user workflow, not a technical bug as initially assumed."
+  },
+  {
+    "id": "ac8f6863-3462-4a26-87cd-e603eeb0f013",
+    "competency_id": "problem-structuring",
+    "level": "L4",
+    "track": null,
+    "placeholder": false,
+    "scenario": "Facing repeated failures in a multi-service integration, {{name}} took it upon {{them}}self to organize a cross-department review meeting. {{they}} proactively guided the discussion to uncover hidden constraints related to API rate limits. This initiative enabled the teams to reframe the problem scope, focusing on optimizing request strategies rather than re-engineering the entire system."
+  },
+  {
+    "id": "8ea7ea89-7d62-4f54-af6a-7b9f974d6f3a",
+    "competency_id": "driving-alignment",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "During a pivotal company strategy session, {{name}} introduced an innovative decision-making framework that transformed how teams approached project alignment. By embedding this framework into the company culture, {{they}} ensured that cross-team collaborations aligned seamlessly with the company’s long-term strategy. This approach became a standard industry practice cited in several conferences."
+  },
+  {
+    "id": "e1356c9a-1774-4a41-a38c-d6ecf372a5d3",
+    "competency_id": "driving-alignment",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "{{name}} spearheaded a company-wide initiative to integrate diverse perspectives in high-stakes decision-making, establishing inclusive forums that allowed underrepresented voices to shape the company's strategic direction. This process not only refined the alignment process internally but was recognized as a leading model for inclusivity in tech, influencing peer companies in the industry."
+  },
+  {
+    "id": "8f0ad659-73a1-452c-b48d-84e40725419c",
+    "competency_id": "driving-alignment",
+    "level": "L6",
+    "track": null,
+    "placeholder": false,
+    "scenario": "In response to frequent misalignments between product and engineering teams, {{name}} crafted a universal alignment tool that connected everyday tasks to the larger corporate vision. This tool had such a profound impact on organizational cohesion that it was shared across the industry as a best practice for uniting different functional areas toward common goals."
+  }
+]
