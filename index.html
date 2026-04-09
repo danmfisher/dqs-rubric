@@ -687,7 +687,7 @@
     .comp-result-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
     .comp-result-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; user-select: none; }
     .comp-result-header:hover { background: var(--bg); }
-    .comp-collapse-arrow { font-size: 11px; color: var(--muted); margin-left: auto; flex-shrink: 0; transition: transform 0.15s; }
+    .comp-collapse-arrow { font-size: 11px; color: var(--muted); flex-shrink: 0; transition: transform 0.15s; }
     .comp-collapse-arrow.open { transform: rotate(90deg); }
     .comp-result-body { padding: 0 20px 20px; }
     .comp-result-top { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -2210,7 +2210,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const [evidence, setEvidence] = useState({}); // { compId: string }
   const [collapsed, setCollapsed] = useState({}); // { compId: bool } — collapses whole comp
   const toggleCollapsed = (compId) => setCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
-  const [cardsCollapsed, setCardsCollapsed] = useState({}); // { compId: bool } — collapses card columns only
+  const [cardsCollapsed, setCardsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
   const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
 
   const levelWindow = getLevelWindow(setup.level);
@@ -2392,11 +2392,12 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
             : 'var(--primary)';
 
           const isOpen = !collapsed[comp.id];
-          const isCardsOpen = !cardsCollapsed[comp.id];
+          const isCardsOpen = !!cardsCollapsed[comp.id]; // default collapsed; toggled open by click
           return (
             <div key={comp.id} className="comp-result-card">
               {/* Collapsible header */}
               <div className="comp-result-header" onClick={() => toggleCollapsed(comp.id)}>
+                <span className={`comp-collapse-arrow ${isOpen ? 'open' : ''}`}>▶</span>
                 <div className="comp-inferred-level" style={{ fontSize: 22, fontWeight: 800, color: levelColor, lineHeight: 1 }}>{eff}</div>
                 <div>
                   <div className="comp-result-name">{comp.name}</div>
@@ -2405,7 +2406,6 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                 {(evidence[comp.id] || '').trim() && (
                   <span style={{ fontSize: 11, background: '#dcfce7', color: '#166534', borderRadius: 20, padding: '2px 8px', fontWeight: 600 }}>✓ evidence</span>
                 )}
-                <span className={`comp-collapse-arrow ${isOpen ? 'open' : ''}`}>▶</span>
               </div>
 
               {isOpen && (
