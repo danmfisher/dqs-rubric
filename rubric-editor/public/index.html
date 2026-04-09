@@ -1916,19 +1916,27 @@ function getCompKey(card) {
   return card.competency_id + '|' + (card.track || '');
 }
 
-// Returns true when a competency's cards have a clear signal, OR all are rated/skipped
-// Signal rule: ≥60% answered (non-skip) AND ≥85% of answered in the same bucket
-function isCompDone(compCards, ratings) {
-  const rated = compCards.filter(c => ratings[c.id]);           // any rating incl. skip
-  const answered = rated.filter(c => ratings[c.id] !== 'skip'); // excludes skip
-  // All cards touched → done regardless of signal clarity
-  if (rated.length === compCards.length) return true;
-  if (answered.length === 0) return false;
-  if (answered.length / compCards.length < 0.60) return false;
-  const counts = { easy: 0, comfortable: 0, stretch: 0 };
-  answered.forEach(c => { if (counts[ratings[c.id]] !== undefined) counts[ratings[c.id]]++; });
-  const maxCount = Math.max(...Object.values(counts));
-  return maxCount / answered.length >= 0.85;
+// Expected rating for a card given the level window:
+//   window[0] (below declared) → easy
+//   window[1] (at declared)    → comfortable
+//   window[2] (above declared) → stretch
+function expectedRating(cardLevel, levelWindow) {
+  const i = levelWindow.indexOf(cardLevel);
+  return i === 0 ? 'easy' : i === levelWindow.length - 1 ? 'stretch' : 'comfortable';
+}
+
+// Returns true when a competency's cards have a clear signal, OR all are rated/skipped.
+// Signal rule: ≥75% of ALL cards are "aligned" — rated with their expected outcome
+//   (L(N-1)→easy, LN→comfortable, L(N+1)→stretch).
+// Unrated and skipped cards count as NOT aligned.
+function isCompDone(compCards, ratings, levelWindow) {
+  // All cards touched → done regardless
+  if (compCards.every(c => ratings[c.id])) return true;
+  if (!levelWindow || levelWindow.length === 0) return false;
+  const aligned = compCards.filter(c =>
+    ratings[c.id] && ratings[c.id] === expectedRating(c.level, levelWindow)
+  ).length;
+  return aligned / compCards.length >= 0.75;
 }
 
 // Infer level for a competency from ratings
@@ -2074,7 +2082,7 @@ function CardExerciseScreen({ setup, onComplete }) {
   // Which competency keys are done?
   const doneCounts = useMemo(() => {
     const done = {};
-    Object.entries(cardsByComp).forEach(([k, cs]) => { done[k] = isCompDone(cs, ratings); });
+    Object.entries(cardsByComp).forEach(([k, cs]) => { done[k] = isCompDone(cs, ratings, levelWindow); });
     return done;
   }, [cardsByComp, ratings]);
 
@@ -2193,11 +2201,28 @@ function CardExerciseScreen({ setup, onComplete }) {
           </div>
         </div>
       ) : (
-        <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', gap: 16, alignItems: 'center' }}>
-          <span>Card {idx + 1} of {cards.length}</span>
-          <span>·</span>
-          <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
-            onClick={() => setShowSkipConfirm(true)}>Skip straight to results</span>
+        <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center', width: '100%', maxWidth: 680 }}>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center', width: '100%', justifyContent: 'center' }}>
+            <span>Card {idx + 1} of {cards.length}</span>
+            <span>·</span>
+            <span style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              onClick={() => setShowSkipConfirm(true)}>Skip straight to results</span>
+          </div>
+          {(() => {
+            // A card is "counted" if explicitly rated OR if its competency is already done
+            const counted = cards.filter(c =>
+              ratings[c.id] || doneCounts[getCompKey(c)]
+            ).length;
+            const pct = Math.min(100, Math.round(counted / cards.length * 100));
+            return (
+              <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, height: 5, background: 'var(--border)', borderRadius: 99, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${pct}%`, background: 'var(--primary)', borderRadius: 99, transition: 'width 0.3s ease' }} />
+                </div>
+                <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: pct === 100 ? 'var(--primary)' : 'var(--muted)' }}>{pct}%</span>
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>
