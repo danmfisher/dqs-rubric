@@ -394,6 +394,92 @@
     .child-card-name { font-size: 14px; font-weight: 600; }
     .child-card-count { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
+    /* ── Dimension flip cards ──────────────── */
+    .dim-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .dim-card-scene {
+      perspective: 900px;
+      height: 190px;
+      cursor: pointer;
+    }
+    .dim-flipper {
+      width: 100%; height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(.4,0,.2,1);
+    }
+    .dim-flipper.is-flipped { transform: rotateY(180deg); }
+    .dim-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      display: flex; flex-direction: column;
+    }
+    .dim-front { background: var(--card-bg); }
+    .dim-front:hover { border-color: var(--primary); box-shadow: 0 2px 10px rgba(79,106,245,0.10); }
+    .dim-back { background: var(--bg); transform: rotateY(180deg); overflow-y: auto; }
+    .dim-front-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+    }
+    .dim-front-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .dim-front-count { font-size: 12px; color: var(--muted); margin-top: 5px; }
+    .dim-front-intent {
+      font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.5; flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .dim-front-hint { font-size: 10px; color: var(--muted); margin-top: 8px; opacity: 0.5; text-align: right; }
+    .dim-back-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; letter-spacing: 0.3px; }
+    .dim-back-comp { margin-bottom: 9px; }
+    .dim-back-comp-name { font-size: 12px; font-weight: 600; color: var(--text); }
+    .dim-back-comp-intent { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+    /* ── Level flip cards ───────────────────── */
+    .lvl-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .lvl-card-scene { perspective: 800px; height: 120px; cursor: pointer; }
+    .lvl-flipper {
+      width: 100%; height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    .lvl-flipper.is-flipped { transform: rotateY(180deg); }
+    .lvl-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border-radius: 10px; border: 1px solid var(--border);
+      padding: 14px 16px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .lvl-front { background: var(--card-bg); align-items: flex-start; }
+    .lvl-front:hover { border-color: var(--primary); box-shadow: 0 2px 8px rgba(79,106,245,0.10); }
+    .lvl-back { background: var(--bg); transform: rotateY(180deg); justify-content: flex-start; align-items: flex-start; }
+    .lvl-code { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; }
+    .lvl-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .lvl-hint { font-size: 10px; color: var(--muted); margin-top: 8px; opacity: 0.5; }
+    .lvl-back-content { font-size: 11.5px; color: var(--muted); line-height: 1.55; }
+
+    /* ── Notes banner ───────────────────────── */
+    .notes-banner {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-left: 4px solid #f59e0b; border-radius: 10px;
+      padding: 16px 20px; margin-bottom: 20px;
+      font-size: 13px; color: #78350f; line-height: 1.65;
+    }
+    .notes-banner-title {
+      font-weight: 700; font-size: 11px; letter-spacing: 0.8px;
+      text-transform: uppercase; color: #b45309; margin-bottom: 6px;
+    }
+
     /* ── Action bar ────────────────────────── */
     .action-bar {
       display: flex; align-items: center; gap: 12px; margin-top: 8px;
@@ -1160,18 +1246,21 @@ const PHIL_PUNCHY = {
   "7":  "Describe what people do, not who they are — behaviors are citable, traits invite bias.",
   "8":  "No degrees, no tenure — only demonstrated behaviors, calibrated across managers.",
   "9":  "Shared dimensions travel across job functions; Domain-Specific is the one customization point per track.",
-  "10": "One number for HR, four for calibration, N rows for the conversation.",
-  "11": "Calibration is per level; forced distribution pressure belongs to leadership, not managers.",
-  "12": "Self-assess with specific examples: 'I did X in context Z' beats any number alone.",
-  "13": "'Proactively' is always L4+. 'Beginning to' is always L1. Learn the signal words and you can read any delta at a glance.",
-  "14": "Find the most important development investments — don't score every row exhaustively.",
-  "15": "No AI dimension: outcomes of effective tool use already show up in the capabilities that matter.",
+  "10": "L1 executes tasks. L3 shapes how the team works. L5 shapes engineering culture. Level is about scope, not tenure.",
+  "11": "Four dimensions, none optional — Impact, Reasoning, Communication, and Technical are all load-bearing.",
+  "12": "One number for HR, four for calibration, N rows for the conversation.",
+  "13": "Calibration is per level; forced distribution pressure belongs to leadership, not managers.",
+  "14": "Self-assess with specific examples: 'I did X in context Z' beats any number alone.",
+  "15": "'Proactively' is always L4+. 'Beginning to' is always L1. Learn the signal words and you can read any delta at a glance.",
+  "16": "Find the most important development investments — don't score every row exhaustively.",
+  "17": "No AI dimension: outcomes of effective tool use already show up in the capabilities that matter.",
 };
 
 // One accent color per group, used for card headers and group label bars.
 const PHIL_GROUP_COLORS = {
   'The Abstract Concept':              '#6366f1',  // indigo
   'Design Constraints & Requirements': '#0891b2',  // cyan
+  'The Building Blocks':               '#7c3aed',  // violet
   'How to Use It':                     '#059669',  // emerald
   'Gotchas & Caveats':                 '#d97706',  // amber
 };
@@ -1377,6 +1466,60 @@ function PhilosophyCards({ sections }) {
 // ──────────────────────────────────────────────────────────
 // Meta / Overview panel
 // ──────────────────────────────────────────────────────────
+// ── Dimension flip card ───────────────────────────────────
+function DimensionCard({ dim }) {
+  const [flipped, setFlipped] = useState(false);
+  const capCount = dim.competencies.reduce((a, c) => a + c.capabilities.length, 0);
+  return (
+    <div className="dim-card-scene"
+      onClick={() => setFlipped(v => !v)}
+      title={flipped ? 'Click to flip back' : 'Click to see competencies'}>
+      <div className={`dim-flipper ${flipped ? 'is-flipped' : ''}`}>
+        <div className="dim-face dim-front">
+          <div className="dim-front-label">Dimension</div>
+          <div className="dim-front-name">{dim.name}</div>
+          <div className="dim-front-count">
+            {dim.competencies.length} competencies · {capCount} capabilities
+          </div>
+          {dim.intent && <div className="dim-front-intent">{dim.intent}</div>}
+          <div className="dim-front-hint">↻ flip</div>
+        </div>
+        <div className="dim-face dim-back">
+          <div className="dim-back-title">{dim.name}</div>
+          {dim.competencies.map(c => (
+            <div key={c.id} className="dim-back-comp">
+              <div className="dim-back-comp-name">{c.name}</div>
+              {c.intent && <div className="dim-back-comp-intent">{c.intent}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Level flip card ───────────────────────────────────────
+function LevelCard({ levelId, name, description }) {
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <div className="lvl-card-scene"
+      onClick={() => setFlipped(v => !v)}
+      title={flipped ? 'Click to flip back' : 'Click for details'}>
+      <div className={`lvl-flipper ${flipped ? 'is-flipped' : ''}`}>
+        <div className="lvl-face lvl-front">
+          <div className="lvl-code">{levelId}</div>
+          <div className="lvl-name">{name}</div>
+          {description && <div className="lvl-hint">↻ flip</div>}
+        </div>
+        <div className="lvl-face lvl-back">
+          <div className="lvl-back-content">{description || name}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── MetaPanel ─────────────────────────────────────────────
 function MetaPanel({ rubric }) {
   const [philosophy, setPhilosophy] = useState([]);
 
@@ -1393,9 +1536,9 @@ function MetaPanel({ rubric }) {
   const totalCapabilities = rubric.dimensions.reduce((a, d) =>
     a + d.competencies.reduce((b, c) => b + c.capabilities.length, 0), 0);
 
-  // Resolve display name from the tracks array using current_track id
   const currentTrackId   = rubric.meta.current_track || rubric.meta.default_track || '';
   const currentTrackName = rubric.meta.tracks?.find(t => t.id === currentTrackId)?.name || currentTrackId;
+  const levelDescs       = rubric.meta.level_descriptions || {};
 
   return (
     <div className="main">
@@ -1404,6 +1547,14 @@ function MetaPanel({ rubric }) {
       <div className="node-subtitle">
         {rubric.dimensions.length} dimensions · {totalCompetencies} competencies · {totalCapabilities} capabilities · {rubric.meta.levels.length} levels
       </div>
+
+      {/* ── Notes banner at the top ── */}
+      {rubric.meta.notes && (
+        <div className="notes-banner">
+          <div className="notes-banner-title">A note from Danielle</div>
+          {rubric.meta.notes}
+        </div>
+      )}
 
       <div className="card">
         <div className="card-title">Metadata</div>
@@ -1427,45 +1578,32 @@ function MetaPanel({ rubric }) {
         </div>
       </div>
 
-      <PhilosophyCards sections={philosophy} />
-
+      {/* ── Dimensions (above levels) ── */}
       <div className="card">
-        <div className="card-title">Levels</div>
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {rubric.meta.levels.map(l => (
-            <div key={l} style={{
-              padding: '8px 16px', borderRadius: 8,
-              background: 'var(--bg)', border: '1px solid var(--border)',
-              fontSize: 13
-            }}>
-              <strong>{l}</strong> — {rubric.meta.level_names[l]}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="card">
-        <div className="card-title">Dimensions</div>
-        <div className="child-grid">
+        <div className="card-title">Dimensions — flip a card to see its competencies</div>
+        <div className="dim-card-grid">
           {rubric.dimensions.map(d => (
-            <div key={d.id} className="child-card">
-              <div className="child-card-label">Dimension</div>
-              <div className="child-card-name">{d.name}</div>
-              <div className="child-card-count">
-                {d.competencies.length} competencies ·{' '}
-                {d.competencies.reduce((a, c) => a + c.capabilities.length, 0)} capabilities
-              </div>
-            </div>
+            <DimensionCard key={d.id} dim={d} />
           ))}
         </div>
       </div>
 
-      {rubric.meta.notes && (
-        <div className="card" style={{ borderLeft: '3px solid var(--warning)' }}>
-          <div className="card-title">Notes</div>
-          <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{rubric.meta.notes}</div>
+      {/* ── Levels ── */}
+      <div className="card">
+        <div className="card-title">Levels — flip a card to see what it means</div>
+        <div className="lvl-card-grid">
+          {rubric.meta.levels.map(l => (
+            <LevelCard
+              key={l}
+              levelId={l}
+              name={rubric.meta.level_names[l]}
+              description={levelDescs[l]}
+            />
+          ))}
         </div>
-      )}
+      </div>
+
+      <PhilosophyCards sections={philosophy} />
     </div>
   );
 }

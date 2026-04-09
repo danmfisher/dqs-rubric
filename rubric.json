@@ -19,7 +19,7 @@
       "L5": "Principal Engineer",
       "L6": "Distinguished Engineer"
     },
-    "notes": "First-pass content adapted from existing rubric artifacts. All descriptions should be reviewed and refined. Domain-Specific capabilities are placeholders pending track-specific content passes.",
+    "notes": "This rubric is a representation of my mental model of what great engineering performance looks like across levels \u2014 not a formal HR policy, a complete picture of any individual, or a substitute for nuanced conversation. If you're using it for self-reflection or a discussion with your manager, treat it as a starting point rather than a verdict. It's a work in progress, as most worthwhile things are. If something doesn't ring true for your context, trust that instinct. Feedback is always welcome.",
     "default_track": "swe-ic",
     "tracks": [
       {
@@ -37,7 +37,15 @@
         "name": "Data / ML / AI",
         "available": true
       }
-    ]
+    ],
+    "level_descriptions": {
+      "L1": "Just starting out. Learns by doing with significant support from teammates. Focused on executing well-scoped tasks, building foundational habits, and absorbing how the team works.",
+      "L2": "Executing independently on most day-to-day work. Growing in depth and craft. Still benefits from guidance on larger-scope problems or genuinely ambiguous situations.",
+      "L3": "Reliably delivering complex work end-to-end, often the go-to for their area. Starting to shape how the team works \u2014 not just what it ships. Actively develops more junior teammates.",
+      "L4": "Operating across teams and systems. Defines technical direction for their domain, removes systemic blockers, and makes the people around them meaningfully more effective.",
+      "L5": "Org-wide technical leadership. Sets standards that others follow, drives alignment across multiple teams, and actively shapes engineering culture and practices.",
+      "L6": "Industry-level scope and impact. Work has company-defining consequences; helps shape the discipline beyond the organization itself."
+    }
   },
   "dimensions": [
     {
@@ -255,7 +263,8 @@
           ],
           "intent": "How you embody and model the organization's principles"
         }
-      ]
+      ],
+      "intent": "The tangible results your work produces and the breadth of your reach \u2014 from shipping individual tasks to shaping org-wide outcomes."
     },
     {
       "id": "reasoning-framing",
@@ -431,7 +440,8 @@
           ],
           "intent": "How you define and measure whether you've actually succeeded"
         }
-      ]
+      ],
+      "intent": "How you think through problems \u2014 structuring ambiguity, generating good options, and validating that the solution actually solved what needed solving."
     },
     {
       "id": "communication-influence",
@@ -728,7 +738,8 @@
           ],
           "intent": "How you grow the capability and effectiveness of those around you"
         }
-      ]
+      ],
+      "intent": "How you move information, decisions, and people \u2014 individually, within teams, and across the organization."
     },
     {
       "id": "technical-competencies",
@@ -948,7 +959,8 @@
           "track_specific": true,
           "intent": "The specialized knowledge, tools, and methods of your particular track"
         }
-      ]
+      ],
+      "intent": "The technical skills and knowledge that underpin your work \u2014 from craft and shared engineering foundations to the specialized tools of your domain."
     }
   ]
 }
