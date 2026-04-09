@@ -174,6 +174,18 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json({"error": str(e)}, 500)
             return
 
+        # API: evaluation wizard example cards
+        if path == "/api/examples":
+            try:
+                examples_path = BASE_DIR.parent / "examples.json"
+                if examples_path.exists():
+                    self.send_json(json.loads(examples_path.read_text(encoding="utf-8")))
+                else:
+                    self.send_json([])
+            except Exception as e:
+                self.send_json({"error": str(e)}, 500)
+            return
+
         # API: philosophy sections (parsed JSON)
         if path == "/api/philosophy":
             try:
