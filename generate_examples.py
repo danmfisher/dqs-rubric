@@ -12,10 +12,10 @@ Output:
     examples.json  (same directory as this script)
 
 Requirements:
-    Set one of:
-      ANTHROPIC_API_KEY  — uses claude-opus-4-5 (preferred)
-      OPENAI_API_KEY     — uses gpt-4o (fallback)
-    If both are set, Anthropic is used.
+    Set the corresponding environment variable and pass the provider flag:
+      --anthropic  uses ANTHROPIC_API_KEY  with claude-opus-4-5
+      --openai     uses OPENAI_API_KEY     with gpt-4o
+    Defaults to --anthropic if neither flag is passed.
 
 Re-run whenever rubric.json is updated to refresh examples. Any guidance or
 redirects from review sessions should be captured in GENERATION_NOTES below
@@ -105,18 +105,17 @@ Each object: {{"scenario": "<2-3 sentence card text using {{name}} etc.>"}}
 """
 
 # ── API call ──────────────────────────────────────────────────────────────────
-def call_api(system: str, user: str) -> str:
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
-    openai_key    = os.environ.get("OPENAI_API_KEY")
-
-    if anthropic_key:
-        return _call_anthropic(system, user, anthropic_key)
-    elif openai_key:
-        return _call_openai(system, user, openai_key)
+def call_api(system: str, user: str, provider: str) -> str:
+    if provider == "openai":
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY environment variable is not set.")
+        return _call_openai(system, user, api_key)
     else:
-        raise RuntimeError(
-            "No API key found. Set ANTHROPIC_API_KEY or OPENAI_API_KEY."
-        )
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise RuntimeError("ANTHROPIC_API_KEY environment variable is not set.")
+        return _call_anthropic(system, user, api_key)
 
 
 def _call_anthropic(system: str, user: str, api_key: str) -> str:
@@ -326,7 +325,7 @@ def generate(args):
             user_prompt = build_user_prompt(comp, level, caps, placeholder)
 
             try:
-                raw   = call_api(system, user_prompt)
+                raw   = call_api(system, user_prompt, args.provider)
                 cards = parse_cards(raw, comp["id"], level, track, placeholder)
                 new_cards.extend(cards)
                 print(f"✓ {len(cards)} cards")
@@ -352,5 +351,11 @@ if __name__ == "__main__":
     parser.add_argument("--competency", help="Generate for a single competency ID only")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview prompts without calling the API")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--anthropic", dest="provider", action="store_const", const="anthropic",
+                       help="Use Anthropic API with ANTHROPIC_API_KEY (default)")
+    group.add_argument("--openai", dest="provider", action="store_const", const="openai",
+                       help="Use OpenAI API with OPENAI_API_KEY")
+    parser.set_defaults(provider="anthropic")
     args = parser.parse_args()
     generate(args)
