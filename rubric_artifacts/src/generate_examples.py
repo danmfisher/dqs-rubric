@@ -58,10 +58,15 @@ Session 3 — post-review prompt hardening
   - Duplicate scenarios at adjacent levels: added SCENARIO VARIETY section.
 
 Session 4 — bold markers
-  - BOLD MARKERS added to SYSTEM_PROMPT: 1–3 key behavioral phrases wrapped
-    in **double asterisks** so the evaluative signal is scannable on the card.
-  - Bold is part of the default generation flow. Existing cards were retrofitted
-    in a one-time pass; the standalone --add-bold flag has been removed.
+  - BOLD MARKERS added to SYSTEM_PROMPT: 1–3 phrases bolded per card.
+  - Mental model refined across two prompt iterations: bold = evaluative
+    evidence, not just the action verb. Three evidentiary purposes in
+    priority order: (1) the action, (2) the autonomy/agency signal
+    ("without needing additional support"), (3) the scope signal
+    ("cross-team") when scale is the level indicator. Level signal words
+    (consistently, proactively, etc.) must sit inside the bold span.
+  - Bold is part of the default generation flow. Existing cards were
+    retrofitted in a one-time pass; the standalone --add-bold flag removed.
 
 ──────────────────────────────────────────────────────────────────────────────
 """
@@ -180,24 +185,40 @@ SCENARIO VARIETY — cards within the same competency must use distinct situatio
   different type of situation, even if both sit at adjacent levels.
 
 BOLD MARKERS
-Wrap exactly 1–3 key behavioral phrases in **double asterisks**.
+Wrap 1–3 phrases in **double asterisks**. Each bolded phrase should serve a distinct
+evidentiary purpose — together they should answer: what did they do, how autonomously,
+and at what scope? Someone reading only the bolded text should understand what level
+this person is demonstrating and why.
 
-The bold must ALWAYS include the main verb of the clause — never bold a noun phrase
-or object alone. Level signal words (consistently, proactively, etc.) belong INSIDE
-the bold, not outside it. Bold the action; not the domain it acts on, not the outcome.
-Participial phrases (–ing clauses) can be bolded separately as secondary behaviors.
+Bold one or more of these, in priority order:
+
+  1. THE ACTION — the verb phrase describing what the person did
+  2. THE AUTONOMY SIGNAL — how self-directed they were ("without needing additional
+     support", "without being asked", "on their own initiative"). This is often
+     where the level evidence lives — do not leave it outside the bold.
+  3. THE SCOPE SIGNAL — when scale is the point ("cross-team", "org-wide",
+     "across the company"). Bold it as part of the action phrase or on its own
+     if it's the key level indicator.
+
+Rules:
+  - Bold MUST include the main verb — never bold a noun phrase or object alone
+  - Level signal words (consistently, proactively, etc.) belong INSIDE the bold
+  - Do not bold the outcome or the domain being worked on
+
+  ✓ "{{name}} **took charge of the investigation without needing additional support**,
+     diving into the codebase to identify the root cause."
+  ✗ "{{name}} **took charge of the investigation**, diving into the codebase to
+     identify the root cause without needing additional support."
+     → autonomy signal left outside the bold; reader misses the level evidence
+
+  ✓ "In a **cross-team** initiative, {{name}} **proactively identified communication
+     gaps** between front-end and back-end developers."
+  ✗ "In a cross-team meeting, {{name}} **proactively identified communication gaps**."
+     → scope signal ("cross-team") left unbolded; it's the point at L4
 
   ✓ "{{name}} **consistently incorporates feedback from peers** to refine a new feature."
   ✗ "{{name}} consistently incorporates **feedback from peers** to **refine a new feature**."
      → bolded verb-free fragments; level signal word left outside the bold
-
-  ✓ "She **took the initiative to host** a series of lunch-and-learns, **sharing insights** from recent conferences."
-  ✗ "She took the initiative to host a series of lunch-and-learns, **sharing insights from recent conferences** she attended."
-     → bolded a dependent clause, missed the main action entirely
-
-  ✓ "{{name}} **fostered a culture of learning** across the team."
-  ✗ "{{name}} fostered a culture of **learning and continuous enhancement**."
-     → bolded the object domain, not the action verb phrase
 
 Do not exceed 3 bolded phrases per card.
 
