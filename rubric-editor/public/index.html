@@ -2206,6 +2206,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
   const dims = rubric.dimensions;
   const currentDim = dims[dimIdx];
+  const declaredIdx = LEVELS.indexOf(setup.level); // used for color-coding throughout
 
   // Export CSV
   const exportCSV = () => {
@@ -2244,12 +2245,17 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
       <div className="dim-nav-strip">
         {dims.map((dim, i) => {
           const pct = dimComplete(dim);
+          const dl = dimLevel(dim);
+          const dlIdx = LEVELS.indexOf(dl);
+          const dimLevelColor = dlIdx > declaredIdx ? '#166534'
+            : dlIdx < declaredIdx ? '#b91c1c'
+            : 'var(--primary)';
           return (
             <div key={dim.id}
               className={`dim-nav-chip ${i === dimIdx ? 'active' : ''}`}
               onClick={() => setDimIdx(i)}>
               <div className="dim-chip-label">{dim.name}</div>
-              <div className="dim-chip-level">{dimLevel(dim)}</div>
+              <div className="dim-chip-level" style={{ color: dimLevelColor }}>{dl}</div>
               <div className="dim-chip-bar">
                 <div className="dim-chip-fill" style={{ width: `${pct * 100}%` }} />
               </div>
@@ -2312,7 +2318,6 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
           // Color-code level badge relative to declared level
           const effIdx = LEVELS.indexOf(eff);
-          const declaredIdx = LEVELS.indexOf(setup.level);
           const levelColor = effIdx > declaredIdx ? '#166534'
             : effIdx < declaredIdx ? '#b91c1c'
             : 'var(--primary)';
