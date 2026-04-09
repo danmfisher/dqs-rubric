@@ -637,12 +637,12 @@
     .wiz-start-btn:hover { background: var(--primary-hover); }
 
     /* Card exercise */
-    .card-exercise { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; gap: 28px; overflow: hidden; }
-    .card-scene { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 680px; }
-    .card-nav-btn { flex-shrink: 0; width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
+    .card-exercise { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 32px 24px; gap: 28px; overflow-y: auto; }
+    .card-scene { display: flex; align-items: stretch; gap: 16px; width: 100%; max-width: 680px; height: 240px; }
+    .card-nav-btn { flex-shrink: 0; width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: border-color 0.15s, color 0.15s; align-self: center; }
     .card-nav-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
     .card-nav-btn:disabled { opacity: 0.3; cursor: default; }
-    .eval-card { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 40px; min-height: 160px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; }
+    .eval-card { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; overflow-y: auto; }
     .eval-card-text { font-size: 16px; line-height: 1.7; text-align: center; color: var(--text); }
     .eval-card-badge { position: absolute; top: 12px; right: 14px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
     .badge-easy { background: #dcfce7; color: #166534; }
