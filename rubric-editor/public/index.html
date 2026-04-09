@@ -637,12 +637,12 @@
     .wiz-start-btn:hover { background: var(--primary-hover); }
 
     /* Card exercise */
-    .card-exercise { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; gap: 28px; overflow: hidden; }
+    .card-exercise { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 32px 24px; gap: 20px; overflow-y: auto; }
     .card-scene { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 680px; }
     .card-nav-btn { flex-shrink: 0; width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
     .card-nav-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
     .card-nav-btn:disabled { opacity: 0.3; cursor: default; }
-    .eval-card { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 40px; min-height: 160px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; }
+    .eval-card { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 40px; min-height: 120px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; }
     .eval-card-text { font-size: 16px; line-height: 1.7; text-align: center; color: var(--text); }
     .eval-card-badge { position: absolute; top: 12px; right: 14px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
     .badge-easy { background: #dcfce7; color: #166534; }
@@ -1797,7 +1797,7 @@ function UnlockedIcon() {
 const ALL_TRACKS = [
   { id: 'swe-ic',  name: 'Software Engineering (IC)',  available: true  },
   { id: 'em',      name: 'Engineering Management',      available: false },
-  { id: 'data-ml', name: 'Data / ML / AI',              available: true  },
+  { id: 'data-ml', name: 'Data Science/Machine Learning', available: true  },
 ];
 
 function TrackSelector({ currentTrack, onTrackChange }) {
@@ -1969,8 +1969,20 @@ function inferCompLevel(compCards, ratings, window, declaredLevel) {
 
 // Abridged card text for the results columns (~80 chars)
 function abridgeText(text, max = 90) {
-  if (text.length <= max) return text;
-  return text.slice(0, max).replace(/\s\S*$/, '') + '…';
+  const stripped = text.replace(/\*\*/g, '');
+  if (stripped.length <= max) return stripped;
+  return stripped.slice(0, max).replace(/\s\S*$/, '') + '…';
+}
+
+// Renders **bold** markers in card scenario text as <strong> spans.
+// Cards without markers render as plain text — safe fallback for unprocessed cards.
+function renderBold(text) {
+  const parts = text.split(/\*\*(.+?)\*\*/);
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? <strong key={i} style={{ fontWeight: 700, color: 'inherit' }}>{part}</strong>
+      : part
+  );
 }
 
 // ── Setup Screen ──────────────────────────────────────────
@@ -1978,7 +1990,7 @@ function SetupScreen({ onStart, rubric }) {
   const [name, setName] = useState('Danielle');
   const [level, setLevel] = useState('L3');
   const [pronouns, setPronouns] = useState('she/her');
-  const [track, setTrack] = useState('swe-ic');
+  const [track, setTrack] = useState('data-ml');
 
   const tracks = (rubric?.meta?.tracks || []).filter(t => t.available);
   const levels = rubric?.meta?.levels || LEVELS;
@@ -2111,7 +2123,23 @@ function CardExerciseScreen({ setup, onComplete }) {
 
   return (
     <div className="card-exercise">
-      <div style={{ textAlign: 'center', maxWidth: 520 }}>
+      {/* 1. Note on context */}
+      <div style={{ maxWidth: 680, width: '100%' }}>
+        <div style={{
+          background: '#fffbeb', border: '1px solid #fde68a',
+          borderLeft: '4px solid #f59e0b', borderRadius: 10,
+          padding: '12px 16px',
+          fontSize: 13, color: '#78350f', lineHeight: 1.6,
+        }}>
+          <div style={{ fontWeight: 700, fontSize: 11, letterSpacing: '0.8px', textTransform: 'uppercase', color: '#b45309', marginBottom: 4 }}>
+            A note on context
+          </div>
+          Scenarios may reference tech outside your stack — rate the underlying behavior, not the technology. Translate the situation to your own context.
+        </div>
+      </div>
+
+      {/* 2. How does this feel */}
+      <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
           How does this feel relative to your day-to-day work?
         </div>
@@ -2120,25 +2148,7 @@ function CardExerciseScreen({ setup, onComplete }) {
         </div>
       </div>
 
-      <div className="card-scene">
-        <button className="card-nav-btn" onClick={() => setIdx(i => Math.max(0, i - 1))}
-          disabled={idx === 0}>‹</button>
-
-        <div className="eval-card">
-          {badgeLabel && (
-            <span className={`eval-card-badge ${badgeClass}`}>{badgeLabel}</span>
-          )}
-          <div className="eval-card-text">
-            {sentences.map((s, i) => (
-              <p key={i} style={{ marginBottom: i < sentences.length - 1 ? '0.65em' : 0 }}>{s}</p>
-            ))}
-          </div>
-        </div>
-
-        <button className="card-nav-btn" onClick={() => setIdx(i => Math.min(cards.length - 1, i + 1))}
-          disabled={idx === cards.length - 1}>›</button>
-      </div>
-
+      {/* 3. Rating buttons */}
       <div className="rating-buttons">
         <button className={`rating-btn easy ${currentRating === 'easy' ? 'active' : ''}`}
           onClick={() => rate('easy')}>Easy</button>
@@ -2149,6 +2159,27 @@ function CardExerciseScreen({ setup, onComplete }) {
         <button className="rating-btn skip-btn" onClick={() => rate('skip')}>Skip</button>
       </div>
 
+      {/* 4. Card */}
+      <div className="card-scene">
+        <button className="card-nav-btn" onClick={() => setIdx(i => Math.max(0, i - 1))}
+          disabled={idx === 0}>‹</button>
+
+        <div className="eval-card">
+          {badgeLabel && (
+            <span className={`eval-card-badge ${badgeClass}`}>{badgeLabel}</span>
+          )}
+          <div className="eval-card-text">
+            {sentences.map((s, i) => (
+              <p key={i} style={{ marginBottom: i < sentences.length - 1 ? '0.65em' : 0 }}>{renderBold(s)}</p>
+            ))}
+          </div>
+        </div>
+
+        <button className="card-nav-btn" onClick={() => setIdx(i => Math.min(cards.length - 1, i + 1))}
+          disabled={idx === cards.length - 1}>›</button>
+      </div>
+
+      {/* 5. Footer */}
       {showSkipConfirm ? (
         <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 20px', maxWidth: 520, textAlign: 'center' }}>
           <div style={{ fontSize: 13, color: 'var(--text)', marginBottom: 10 }}>

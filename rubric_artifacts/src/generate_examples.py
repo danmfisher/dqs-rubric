@@ -4,99 +4,100 @@ generate_examples.py — Generates real-world behavior example cards for the
 Evaluation Wizard from rubric.json, using the Anthropic or OpenAI API.
 
 Usage:
-    python3 generate_examples.py                              # all competencies
-    python3 generate_examples.py --competency ownership-autonomy  # one competency
-    python3 generate_examples.py --dry-run                    # preview prompts only
+    python3 generate_examples.py                                   # all competencies, all levels
+    python3 generate_examples.py --competency ownership-autonomy   # one competency
+    python3 generate_examples.py --competency ownership-autonomy --level L4
+    python3 generate_examples.py --force                           # regenerate existing cards
+    python3 generate_examples.py --dry-run                         # preview prompts, no API calls
 
 Output:
-    examples.json  (same directory as this script)
+    rubric_artifacts/examples.json
 
 Requirements:
-    Set the corresponding environment variable and pass the provider flag:
-      --anthropic  uses ANTHROPIC_API_KEY  with claude-opus-4-5
-      --openai     uses OPENAI_API_KEY     with gpt-4o
-    Defaults to --anthropic if neither flag is passed.
+    Set ANTHROPIC_API_KEY (default) or OPENAI_API_KEY and pass --openai.
 
-Re-run whenever rubric.json is updated to refresh examples. Any guidance or
-redirects from review sessions should be captured in GENERATION_NOTES below
-so that a future re-run reproduces the same quality without repeating the
-conversation.
+Re-run whenever rubric.json is updated. Incremental by default — already-generated
+(competency, level, track) triples are skipped unless --force is passed.
+
+Any guidance or redirects from review sessions should be captured in
+GENERATION_NOTES below so that a future re-run reproduces the same quality
+without repeating the conversation.
 
 ──────────────────────────────────────────────────────────────────────────────
 GENERATION NOTES  (updated after each review session)
 ──────────────────────────────────────────────────────────────────────────────
 
 Session 1 — initial generation
-  - Cards should be grounded in tech company contexts: PRs, incidents,
-    design reviews, planning meetings, postmortems, oncall, mentoring
-  - Use {{name}}, {{they}}, {{their}}, {{them}} as pronouns — substituted
-    at render time by the wizard based on evaluator input
-  - Level signal words must be embedded in behavior, not stated explicitly
-  - Domain-Specific cards are placeholders: flagged placeholder=true,
-    reviewed and refined after track content is finalized
-  - Scope: generate for all 6 levels per competency; wizard applies
-    the +/- 1 window at runtime based on declared starting level
+  - Cards grounded in tech company contexts: PRs, incidents, design reviews,
+    planning meetings, postmortems, oncall, mentoring
+  - Use {{name}}, {{they}}, {{their}}, {{them}} — substituted at render time
+  - Level signal words embedded in behavior, not stated explicitly
+  - Domain-Specific cards are placeholders (placeholder=true), to be refined
+    once track-specific content is finalized
+  - Scope: all 6 levels per competency; wizard applies ±1 window at runtime
 
-Session 2 — card action and framing revision
-  - Card action in UI changed to: "Easy" / "Comfortable" / "Stretch"
-    This replaces the earlier "More junior / Sounds like me / More senior"
-    framing, which didn't account for the "I do that AND more" dynamic
-    of level progression. An L4 should be able to mark L2 behaviors as
-    "Easy" — that's useful signal, not noise.
-  - Easy     → below where they reliably operate; internalized
-  - Comfortable → their home base; the level they're at
-  - Stretch  → above where they reliably operate; aspirational
-  - Triangulation logic: highest level where "Comfortable" is dominant
-    response is the inferred level. Consecutive "Easy" responses shift
-    the window up; "Stretch" responses shift it down.
-  - Cards should capture the TEXTURE of effort, not just the behavior:
-    the difference between an L2 and an L4 fixing a bug isn't what they
-    did, it's that the L2 spent a day on it with one check-in while the
-    L4 did it in twenty minutes before a meeting. Write cards that make
-    the evaluator feel the weight of the task for the person described.
-  - Cards no longer need to be maximally ambiguous — the classification
-    (easy/comfortable/stretch) does the discriminating work. Cards should
-    be clear and recognizable; the evaluator's reaction to them is the signal.
-  - Avoid ending cards with evaluative summary sentences ("demonstrating
-    their ability to...", "showing initiative in...") — show, don't tell.
-  - Avoid specific metrics ("reduced time by 30%") — qualitative impact
-    descriptions are more recognizable and less fabricated-feeling.
+Session 2 — card action framing revision
+  - Ratings changed to: Easy / Comfortable / Stretch (replaces More junior /
+    Sounds like me / More senior — old framing didn't capture the "I do that
+    AND more" dynamic of level progression)
+  - Easy = internalized, below current operating level
+  - Comfortable = home base
+  - Stretch = aspirational, above current operating level
+  - Cards should capture TEXTURE of effort, not just behavior — the difference
+    between L2 and L4 on the same task is weight and context, not just action
+  - Avoid evaluative endings ("demonstrating their ability to...") — show, don't tell
+  - Avoid specific metrics ("reduced time by 30%") — qualitative reads more authentic
 
-Session 3 — post-review fixes and prompt hardening
-  - {{Name}} capitalization bug: model occasionally starts a mid-sentence
-    reference with {{Name}} (capital N) instead of {{name}}. Fixed by
-    post-processing regex in parse_cards — no prompt change needed.
-  - Arc word leakage: "systematically" (L5 signal) appeared in L2 cards;
-    "proactively" (L4 signal) leaked into L3 narrative text. Prompt now
-    includes an explicit FORBIDDEN WORDS table per level.
-  - L6 theme clichés: sustainability/green tech, data privacy, and
-    diversity/inclusion were overused as default L6 themes across multiple
-    competencies. Prompt now explicitly calls these out as clichés to avoid.
-  - Duplicate themes at adjacent levels: team-multiplier L5 and L6 both
-    generated onboarding-redesign scenarios. Prompt now instructs that
-    cards within the same competency must use distinct concrete scenarios —
-    no two cards should be about the same situation.
-  - delivery-execution L6 card 3 used "sustainable technology / green
-    objectives" framing — another instance of the L6 cliché pattern.
-  - problem-structuring L4 card 1 used "50% reduction in incident
-    frequency" — specific invented metric. Already covered by Session 2
-    guidance but reinforced in FORBIDDEN PATTERNS.
+Session 3 — post-review prompt hardening
+  - {{Name}} capitalization: post-processing regex in parse_cards normalizes
+    {{Name}}/{{They}}/{{Their}}/{{Them}} → lowercase variants
+  - Arc word leakage: level signal words appearing at wrong levels. Added
+    explicit FORBIDDEN WORDS table to prompt.
+  - L6 theme clichés: sustainability, data privacy, DEI overused as defaults.
+    Added L6 THEME VARIETY section to prompt.
+  - Duplicate scenarios at adjacent levels: added SCENARIO VARIETY section.
+
+Session 4 — bold markers
+  - BOLD MARKERS added to SYSTEM_PROMPT: one bold per sentence, three
+    signal types must be represented across the card.
+  - Key mental model: bold phrases have "direct lineage from the rubric."
+    They are not general praise — they surface the exact vocabulary of the
+    LEVEL SIGNALS table: frequency words (consistently, proactively, etc.),
+    agency phrases (without waiting for specific direction, with minimal
+    guidance, without prompting), and scope phrases (cross-team, org-wide).
+  - Frequency word MUST be inside the bold span, not left outside it.
+  - Agency phrase must be bolded in full — the whole phrase carries the
+    signal ("without waiting for specific direction"), not just the verb.
+  - Scope is most critical at L4+ where scale is the primary differentiator.
+  - Bold is part of the default generation flow. Existing cards were
+    retrofitted in a one-time pass; the standalone --add-bold flag removed.
 
 ──────────────────────────────────────────────────────────────────────────────
 """
 
-import json, os, re, sys, time, uuid, argparse, urllib.request, urllib.error
+import json
+import os
+import re
+import sys
+import time
+import uuid
+import argparse
+import urllib.request
+import urllib.error
 from pathlib import Path
+from typing import Optional
 
-BASE          = Path(__file__).parent          # rubric_artifacts/src/
-ARTIFACTS     = BASE.parent                    # rubric_artifacts/
+# ── Paths and constants ───────────────────────────────────────────────────────
+
+BASE          = Path(__file__).parent   # rubric_artifacts/src/
+ARTIFACTS     = BASE.parent             # rubric_artifacts/
 RUBRIC_PATH   = ARTIFACTS / "rubric.json"
 OUTPUT_PATH   = ARTIFACTS / "examples.json"
+
 ANTHROPIC_MODEL = "claude-opus-4-5"
 OPENAI_MODEL    = "gpt-4o"
-CARDS_PER_LEVEL = 3   # number of example cards generated per competency × level
+CARDS_PER_LEVEL = 3
 
-# ── Level signal vocabulary (mirrors philosophy §15) ─────────────────────────
 LEVEL_SIGNALS = {
     "L1": "acting with guidance, task-scoped; the behavior is just beginning to form",
     "L2": "acting with minimal guidance, own-work-scoped; doing this regularly",
@@ -106,7 +107,8 @@ LEVEL_SIGNALS = {
     "L6": "defining the philosophy, company/industry-scoped; rare and sustained",
 }
 
-# ── System prompt ─────────────────────────────────────────────────────────────
+# ── Prompts ───────────────────────────────────────────────────────────────────
+
 SYSTEM_PROMPT = """You are generating real-world behavior example cards for a performance \
 evaluation wizard used at a tech company. Each card describes a concrete, observable \
 situation that illustrates what a specific competency looks like at a specific level — \
@@ -186,33 +188,87 @@ SCENARIO VARIETY — cards within the same competency must use distinct situatio
   at two different levels within the same competency. Each card should describe a
   different type of situation, even if both sit at adjacent levels.
 
+BOLD MARKERS
+Bold is how the reader recognizes the level. Every bolded phrase must have direct lineage
+from the LEVEL SIGNALS table — it should surface one of the three rubric signal dimensions.
+Bolded phrases are not general praise; they are the specific words that tell a calibrated
+evaluator what level they are looking at.
+
+Every sentence must contain at least one bolded phrase. Across the card, the bolded phrases
+must collectively surface all three signal types:
+
+  1. ACTION — the verb phrase for what the person did. The sentence's frequency signal word
+     (consistently, proactively, regularly, etc.) MUST be inside the bold span.
+       ✓ "**consistently drove** the refactoring..."
+       ✗ "consistently **drove** the refactoring..."  ← frequency word left outside
+
+  2. AGENCY — the phrase that shows how self-directed they were. These come directly from
+     the agency column of the LEVEL SIGNALS table. Bold the whole agency phrase:
+       L1: "**with guidance**", "**with help from their manager**"
+       L2: "**with minimal guidance**", "**starting with minimal input**"
+       L3: "**independently**", "**without waiting for specific direction**"
+       L4: "**without prompting**", "**without being asked**", "**on their own initiative**"
+       L5: "**without direction**", "**setting the direction for the team**"
+     The agency phrase must be bolded in full, whether it opens the sentence or is embedded mid-sentence.
+       ✓ "**Without waiting for specific direction**, {{name}} refactored the module."
+       ✓ "{{name}} refactored the module **without waiting for specific direction**."
+       ✗ "without waiting for **specific direction**"  ← partial — the signal is in the full phrase
+
+  3. SCOPE — the scale of impact, from the scope column of the LEVEL SIGNALS table.
+     Scope is most critical at L4+, where it is the primary level differentiator.
+       L3: "**across the feature**", "**for the project**"
+       L4: "**across the team**", "**cross-team**", "**two teams**"
+       L5: "**org-wide**", "**across the org**"
+       L6: "**company-wide**", "**across the industry**"
+
+In a 3-sentence card, aim for one signal type per sentence. In a 2-sentence card,
+combine agency and scope into the same bold span when both are present.
+
+Additional rules:
+  - Bold MUST include the main verb — never bold a noun phrase or object alone
+  - Do not bold outcomes or domains — bold the behavior, not what it produced
+
+  ✓ "{{name}} **consistently drove the refactoring effort**."             ← action (freq inside)
+     "**Without waiting for specific direction**, she caught the gaps."   ← agency (full phrase)
+     "The fix **rolled out across three downstream teams**."              ← scope
+
+  ✗ "{{name}} **consistently drove the refactoring effort**,
+     without waiting for specific direction across three downstream teams."
+     → agency phrase and scope left unbolded — only action represented
+
+  ✓ "{{name}} **proactively coordinated a cross-team effort** to resolve the outage."
+     (combines action + agency + scope in one span when card is tightly written)
+
+  ✗ "{{name}} proactively coordinated **a cross-team effort** to resolve the outage."
+     → "proactively" (the agency signal) left outside the bold span
+
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
-Each object: {{"scenario": "<2-3 sentence card text using {{name}} etc.>"}}
+Each object: {{"scenario": "<2-3 sentence card text with **bold** markers on key behaviors>"}}
 """
 
-# ── API call ──────────────────────────────────────────────────────────────────
-def call_api(system: str, user: str, provider: str) -> str:
+# ── API layer ─────────────────────────────────────────────────────────────────
+
+def call_api(system: str, user: str, provider: str, max_tokens: int = 1024) -> str:
     if provider == "openai":
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
             raise RuntimeError("OPENAI_API_KEY environment variable is not set.")
-        return _call_openai(system, user, api_key)
+        return _call_openai(system, user, api_key, max_tokens)
     else:
         api_key = os.environ.get("ANTHROPIC_API_KEY")
         if not api_key:
             raise RuntimeError("ANTHROPIC_API_KEY environment variable is not set.")
-        return _call_anthropic(system, user, api_key)
+        return _call_anthropic(system, user, api_key, max_tokens)
 
 
-def _call_anthropic(system: str, user: str, api_key: str) -> str:
+def _call_anthropic(system: str, user: str, api_key: str, max_tokens: int) -> str:
     payload = json.dumps({
         "model":      ANTHROPIC_MODEL,
-        "max_tokens": 1024,
+        "max_tokens": max_tokens,
         "system":     system,
         "messages":   [{"role": "user", "content": user}],
     }).encode()
-
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
         data=payload,
@@ -230,16 +286,15 @@ def _call_anthropic(system: str, user: str, api_key: str) -> str:
         raise RuntimeError(f"Anthropic API error {e.code}: {e.read().decode()}") from e
 
 
-def _call_openai(system: str, user: str, api_key: str) -> str:
+def _call_openai(system: str, user: str, api_key: str, max_tokens: int) -> str:
     payload = json.dumps({
         "model":      OPENAI_MODEL,
-        "max_tokens": 1024,
+        "max_tokens": max_tokens,
         "messages": [
             {"role": "system", "content": system},
             {"role": "user",   "content": user},
         ],
     }).encode()
-
     req = urllib.request.Request(
         "https://api.openai.com/v1/chat/completions",
         data=payload,
@@ -255,11 +310,11 @@ def _call_openai(system: str, user: str, api_key: str) -> str:
     except urllib.error.HTTPError as e:
         raise RuntimeError(f"OpenAI API error {e.code}: {e.read().decode()}") from e
 
+# ── Prompt builder ────────────────────────────────────────────────────────────
 
-# ── User prompt builder ───────────────────────────────────────────────────────
 def build_user_prompt(competency: dict, level: str, capabilities: list,
                       is_placeholder: bool) -> str:
-    cap_context = "\n".join(
+    cap_lines = "\n".join(
         f"  - {c['name']}: {c.get('intent', '')}" for c in capabilities
     )
     placeholder_note = (
@@ -269,42 +324,35 @@ def build_user_prompt(competency: dict, level: str, capabilities: list,
         "word PLACEHOLDER in a comment — do not include it in the scenario text.\n"
         if is_placeholder else ""
     )
+    return (
+        f"Generate {CARDS_PER_LEVEL} example cards for:\n\n"
+        f"COMPETENCY: {competency['name']}\n"
+        f"Competency intent: {competency.get('intent', '')}\n\n"
+        f"CAPABILITIES IN THIS COMPETENCY (use as context, do not reference directly):\n"
+        f"{cap_lines}\n\n"
+        f"TARGET LEVEL: {level}\n"
+        f"Level signal to embed: {LEVEL_SIGNALS[level]}\n"
+        f"{placeholder_note}"
+        f"Return a JSON array of {CARDS_PER_LEVEL} objects: [{{\"scenario\": \"...\"}}]\n"
+    )
 
-    return f"""Generate {CARDS_PER_LEVEL} example cards for:
+# ── Parser ────────────────────────────────────────────────────────────────────
 
-COMPETENCY: {competency['name']}
-Competency intent: {competency.get('intent', '')}
-
-CAPABILITIES IN THIS COMPETENCY (use as context, do not reference directly):
-{cap_context}
-
-TARGET LEVEL: {level}
-Level signal to embed: {LEVEL_SIGNALS[level]}
-{placeholder_note}
-Return a JSON array of {CARDS_PER_LEVEL} objects: [{{"scenario": "..."}}]
-"""
-
-
-# ── Parse API response ────────────────────────────────────────────────────────
 def parse_cards(raw: str, competency_id: str, level: str,
-                track: str | None, is_placeholder: bool) -> list[dict]:
-    # Strip markdown code fences if present
+                track: Optional[str], is_placeholder: bool) -> list:
     text = raw.strip()
     if text.startswith("```"):
         text = "\n".join(text.split("\n")[1:])
         if text.endswith("```"):
             text = text[:-3].strip()
-
     try:
         items = json.loads(text)
     except json.JSONDecodeError:
-        # Attempt to extract first JSON array from response
         match = re.search(r'\[.*\]', text, re.DOTALL)
         if match:
             items = json.loads(match.group())
         else:
-            print(f"    ⚠ Could not parse response for {competency_id}/{level}:")
-            print(f"    {raw[:200]}")
+            print(f"    ⚠ Could not parse response for {competency_id}/{level}: {raw[:200]}")
             return []
 
     cards = []
@@ -312,8 +360,8 @@ def parse_cards(raw: str, competency_id: str, level: str,
         if not isinstance(item, dict) or "scenario" not in item:
             continue
         scenario = item["scenario"]
-        # Normalize {{Name}} → {{name}} (model occasionally capitalizes mid-sentence)
-        scenario = re.sub(r'\{\{Name\}\}', '{{name}}', scenario)
+        # Normalize token capitalization (model occasionally capitalizes mid-sentence)
+        scenario = re.sub(r'\{\{Name\}\}',  '{{name}}',  scenario)
         scenario = re.sub(r'\{\{They\}\}',  '{{they}}',  scenario)
         scenario = re.sub(r'\{\{Their\}\}', '{{their}}', scenario)
         scenario = re.sub(r'\{\{Them\}\}',  '{{them}}',  scenario)
@@ -327,11 +375,27 @@ def parse_cards(raw: str, competency_id: str, level: str,
         })
     return cards
 
+# ── Data helpers ──────────────────────────────────────────────────────────────
 
-# ── Main generation logic ─────────────────────────────────────────────────────
-def collect_competencies(rubric: dict) -> list[dict]:
+def load_existing() -> tuple:
+    """Returns (cards, existing_keys) from examples.json, or ([], set()) if absent."""
+    if not OUTPUT_PATH.exists():
+        return [], set()
+    with open(OUTPUT_PATH, encoding="utf-8") as f:
+        cards = json.load(f)
+    keys = {(c["competency_id"], c["level"], c["track"]) for c in cards}
+    return cards, keys
+
+
+def save_cards(cards: list) -> None:
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(cards, f, indent=2, ensure_ascii=False)
+
+# ── Competency collection ─────────────────────────────────────────────────────
+
+def collect_specs(rubric: dict) -> list:
     """
-    Returns a flat list of competency specs to generate:
+    Returns a flat list of generation specs:
       { competency, capabilities, track, is_placeholder }
     Domain-Specific gets one entry per available track.
     """
@@ -341,9 +405,7 @@ def collect_competencies(rubric: dict) -> list[dict]:
     for dim in rubric["dimensions"]:
         for comp in dim["competencies"]:
             if comp["id"] == "domain-specific":
-                # One entry per track, flagged as placeholder
                 for track in available_tracks:
-                    # Resolve track-specific capabilities if present
                     caps = []
                     for cap in comp["capabilities"]:
                         if cap.get("track_specific") and isinstance(
@@ -354,121 +416,110 @@ def collect_competencies(rubric: dict) -> list[dict]:
                             descs = cap.get("descriptions", {})
                         caps.append({**cap, "descriptions": descs})
                     specs.append({
-                        "competency":   comp,
-                        "capabilities": caps,
-                        "track":        track,
+                        "competency":     comp,
+                        "capabilities":   caps,
+                        "track":          track,
                         "is_placeholder": True,
                     })
             else:
                 specs.append({
-                    "competency":   comp,
-                    "capabilities": comp["capabilities"],
-                    "track":        None,
+                    "competency":     comp,
+                    "capabilities":   comp["capabilities"],
+                    "track":          None,
                     "is_placeholder": False,
                 })
     return specs
 
+# ── Main logic ────────────────────────────────────────────────────────────────
 
 def generate(args):
-    rubric = json.load(open(RUBRIC_PATH, encoding="utf-8"))
-    levels = rubric["meta"]["levels"]  # ['L1', 'L2', 'L3', 'L4', 'L5', 'L6']
+    with open(RUBRIC_PATH, encoding="utf-8") as f:
+        rubric = json.load(f)
+    levels = rubric["meta"]["levels"]
 
-    # Load existing examples to support incremental re-runs
-    if OUTPUT_PATH.exists():
-        existing = json.load(open(OUTPUT_PATH, encoding="utf-8"))
-        existing_keys = {
-            (e["competency_id"], e["level"], e["track"]) for e in existing
-        }
-    else:
-        existing, existing_keys = [], set()
+    existing, existing_keys = load_existing()
+    specs = collect_specs(rubric)
 
-    specs = collect_competencies(rubric)
-
-    # Filter to a single competency if requested
     if args.competency:
         specs = [s for s in specs if s["competency"]["id"] == args.competency]
         if not specs:
-            print(f"Competency '{args.competency}' not found.")
-            print("Available:", [s["competency"]["id"] for s in collect_competencies(rubric)])
+            all_ids = [s["competency"]["id"] for s in collect_specs(rubric)]
+            print(f"Competency '{args.competency}' not found. Available:\n  " + "\n  ".join(all_ids))
             sys.exit(1)
 
-    # Filter to a single level if requested
     if args.level:
         if args.level not in levels:
             print(f"Level '{args.level}' not found. Available: {levels}")
             sys.exit(1)
         levels = [args.level]
 
-    # --force: drop matching existing cards so they get regenerated
     if args.force:
-        force_keys = set()
-        for spec in specs:
-            for level in levels:
-                force_keys.add((spec["competency"]["id"], level, spec["track"]))
-        existing = [e for e in existing if (e["competency_id"], e["level"], e["track"]) not in force_keys]
+        force_keys = {
+            (s["competency"]["id"], lvl, s["track"])
+            for s in specs for lvl in levels
+        }
+        existing = [c for c in existing if (c["competency_id"], c["level"], c["track"]) not in force_keys]
         existing_keys -= force_keys
-        print(f"  ⚠ --force: dropping {len(force_keys)} existing card set(s) for regeneration")
+        print(f"  ⚠ --force: dropping {len(force_keys)} card set(s) for regeneration")
 
     system = SYSTEM_PROMPT.replace("{n}", str(CARDS_PER_LEVEL))
     new_cards = []
 
     for spec in specs:
-        comp        = spec["competency"]
-        caps        = spec["capabilities"]
-        track       = spec["track"]
-        placeholder = spec["is_placeholder"]
-        label       = f"{comp['id']} [{track or 'shared'}]"
+        comp, caps, track, placeholder = (
+            spec["competency"], spec["capabilities"],
+            spec["track"], spec["is_placeholder"]
+        )
+        label = f"{comp['id']} [{track or 'shared'}]"
 
         for level in levels:
-            key = (comp["id"], level, track)
-            if key in existing_keys:
-                print(f"  ↷ skip  {label} / {level}  (already generated)")
+            if (comp["id"], level, track) in existing_keys:
+                print(f"  ↷ skip      {label} / {level}")
                 continue
 
             if args.dry_run:
-                print(f"  ○ would generate  {label} / {level}")
+                print(f"  ○ would gen {label} / {level}")
                 print(build_user_prompt(comp, level, caps, placeholder)[:300])
                 print()
                 continue
 
-            print(f"  ⟳ generating  {label} / {level} ...", end=" ", flush=True)
-            user_prompt = build_user_prompt(comp, level, caps, placeholder)
-
+            print(f"  ⟳ generating {label} / {level} ...", end=" ", flush=True)
             try:
-                raw   = call_api(system, user_prompt, args.provider)
+                raw   = call_api(system, build_user_prompt(comp, level, caps, placeholder), args.provider)
                 cards = parse_cards(raw, comp["id"], level, track, placeholder)
                 new_cards.extend(cards)
                 print(f"✓ {len(cards)} cards")
             except Exception as e:
                 print(f"✗ {e}")
 
-            time.sleep(0.5)  # gentle rate limiting
+            time.sleep(0.5)
 
-    if not args.dry_run:
-        all_cards = existing + new_cards
-        OUTPUT_PATH.write_text(
-            json.dumps(all_cards, indent=2, ensure_ascii=False),
-            encoding="utf-8"
-        )
-        print(f"\n✓ Written: {OUTPUT_PATH.name}  ({len(all_cards)} total cards, {len(new_cards)} new)")
-    else:
-        print(f"\n(dry-run complete — {OUTPUT_PATH.name} not written)")
+    if args.dry_run:
+        print(f"\n(dry-run — {OUTPUT_PATH.name} not written)")
+        return
 
+    all_cards = existing + new_cards
+    save_cards(all_cards)
+    print(f"\n✓ {OUTPUT_PATH.name}  ({len(all_cards)} total, {len(new_cards)} new)")
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate evaluation wizard example cards")
-    parser.add_argument("--competency", help="Generate for a single competency ID only")
-    parser.add_argument("--level", help="Generate for a single level only (e.g. L4). Use with --competency.")
+    parser = argparse.ArgumentParser(
+        description="Generate evaluation wizard example cards from rubric.json."
+    )
+    parser.add_argument("--competency", metavar="ID",
+                        help="Limit to one competency (e.g. ownership-autonomy)")
+    parser.add_argument("--level", metavar="LN",
+                        help="Limit to one level (e.g. L4); use with --competency")
     parser.add_argument("--force", action="store_true",
-                        help="Regenerate even if cards already exist (drops and replaces matching entries)")
+                        help="Drop and regenerate matching existing cards")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview prompts without calling the API")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--anthropic", dest="provider", action="store_const", const="anthropic",
-                       help="Use Anthropic API with ANTHROPIC_API_KEY (default)")
-    group.add_argument("--openai", dest="provider", action="store_const", const="openai",
-                       help="Use OpenAI API with OPENAI_API_KEY")
+    provider = parser.add_mutually_exclusive_group()
+    provider.add_argument("--anthropic", dest="provider", action="store_const", const="anthropic",
+                          help="Use Anthropic API / ANTHROPIC_API_KEY (default)")
+    provider.add_argument("--openai",    dest="provider", action="store_const", const="openai",
+                          help="Use OpenAI API / OPENAI_API_KEY")
     parser.set_defaults(provider="anthropic")
-    args = parser.parse_args()
-    generate(args)
+    generate(parser.parse_args())
