@@ -7,6 +7,7 @@
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -729,8 +730,21 @@
     .results-footer { padding: 14px 32px; border-top: 1px solid var(--border); background: #fff; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
     .export-csv-btn { padding: 9px 18px; background: var(--text); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
     .export-csv-btn:hover { opacity: 0.85; }
+    .export-pdf-btn { padding: 9px 18px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .export-pdf-btn:hover { opacity: 0.85; }
     .wiz-restart-btn { padding: 9px 18px; background: #fff; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; cursor: pointer; }
     .wiz-restart-btn:hover { border-color: var(--muted); color: var(--text); }
+
+    /* Print mode — applied via printMode state, captured by html2pdf */
+    .pdf-hide { display: none !important; }
+    .pdf-results-body { max-width: 760px; padding: 0 !important; overflow: visible !important; }
+    .pdf-results-body .comp-result-card { box-shadow: none; }
+    .pdf-results-body .results-dim-header { border-bottom: 2px solid var(--primary); margin-bottom: 16px; padding-bottom: 8px; }
+    .pdf-results-body .print-dim-section { margin-top: 32px; }
+    .pdf-results-body .print-dim-section:first-child { margin-top: 0; }
+    .pdf-print-header { padding: 0 0 16px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; }
+    .pdf-print-header h2 { font-size: 18px; font-weight: 800; color: var(--text); }
+    .pdf-print-header .pdf-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -2277,6 +2291,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
   const toggleCardsCollapsed = (compId) => setCardsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
   const [capsCollapsed, setCapsCollapsed] = useState({}); // { compId: bool } — true = open (default collapsed)
   const toggleCapsCollapsed = (compId) => setCapsCollapsed(prev => ({ ...prev, [compId]: !prev[compId] }));
+  const [printMode, setPrintMode] = useState(false);
 
   const levelWindow = getLevelWindow(setup.level);
   const levelNames = rubric.meta.level_names || {};
@@ -2373,6 +2388,28 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
     URL.revokeObjectURL(url);
   };
 
+  const pdfContentRef = useRef(null);
+
+  const exportPDF = () => {
+    setPrintMode(true);
+    setTimeout(() => {
+      const el = pdfContentRef.current;
+      if (!el) { setPrintMode(false); return; }
+      html2pdf()
+        .set({
+          margin:      [12, 12, 12, 12],
+          filename:    `evaluation-${setup.name || 'results'}.pdf`,
+          image:       { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+          jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak:   { mode: ['avoid-all', 'css'], before: '.print-dim-section' },
+        })
+        .from(el)
+        .save()
+        .then(() => setPrintMode(false));
+    }, 80);
+  };
+
   return (
     <div className="results-wrap">
       {/* Dimension navigation strip */}
@@ -2399,9 +2436,16 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
       </div>
 
       {/* Dimension body */}
-      <div className="results-body">
+      <div className={`results-body${printMode ? ' pdf-results-body' : ''}`} ref={pdfContentRef}>
+        {/* PDF-only header */}
+        {printMode && (
+          <div className="pdf-print-header">
+            <h2>Performance Evaluation — {setup.name}</h2>
+            <div className="pdf-meta">Level: {setup.level} · Track: {setup.track} · Pronouns: {setup.pronouns}</div>
+          </div>
+        )}
         {/* Setup summary */}
-        <div className="setup-summary-bar">
+        <div className={`setup-summary-bar${printMode ? ' pdf-hide' : ''}`}>
           <span className="ss-label">Evaluation for</span>
           <span className="ss-val">{setup.name}</span>
           <span className="ss-sep">|</span>
@@ -2415,7 +2459,7 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
           <span className="ss-val">{setup.track}</span>
         </div>
 
-        <div className="results-intro">
+        <div className={`results-intro${printMode ? ' pdf-hide' : ''}`}>
           <strong>Here are your inferred levels</strong> based on how you rated the scenarios.
           Navigate between dimensions using the tabs above. For each competency, review the inferred
           level, override it if needed, and add a specific example that supports your assessment.
@@ -2423,17 +2467,25 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
           Export to CSV at any time.
         </div>
 
-        <div className="results-dim-header">
-          <div className="results-dim-title">{currentDim.name}</div>
-          <div className="results-dim-arrows">
-            <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i - 1)}
-              disabled={dimIdx === 0}>‹</button>
-            <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i + 1)}
-              disabled={dimIdx === dims.length - 1}>›</button>
+        {!printMode && (
+          <div className="results-dim-header">
+            <div className="results-dim-title">{currentDim.name}</div>
+            <div className="results-dim-arrows">
+              <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i - 1)}
+                disabled={dimIdx === 0}>‹</button>
+              <button className="dim-arrow-btn" onClick={() => setDimIdx(i => i + 1)}
+                disabled={dimIdx === dims.length - 1}>›</button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {currentDim.competencies.map(comp => {
+        {(printMode ? dims : [currentDim]).map((dim, dimI) => (<div key={dim.id} className={printMode ? 'print-dim-section' : ''}>
+          {printMode && (
+            <div className="results-dim-header">
+              <div className="results-dim-title">{dim.name}</div>
+            </div>
+          )}
+          {dim.competencies.map(comp => {
           const compKey = getCompKey({ competency_id: comp.id, track: comp.id === 'domain-specific' ? setup.track : null });
           const compCards = (cards || []).filter(c => c.competency_id === comp.id &&
             (comp.id !== 'domain-specific' || c.track === setup.track));
@@ -2456,13 +2508,14 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
             : effIdx < declaredIdx ? '#b91c1c'
             : 'var(--primary)';
 
-          const isOpen = !collapsed[comp.id];
-          const isCardsOpen = !!cardsCollapsed[comp.id]; // default collapsed; toggled open by click
+          const isOpen = printMode || !collapsed[comp.id];
+          const isCardsOpen = printMode || !!cardsCollapsed[comp.id];
+          const isCapsOpen = printMode || !!capsCollapsed[comp.id];
           return (
             <div key={comp.id} className="comp-result-card">
               {/* Collapsible header */}
               <div className="comp-result-header" onClick={() => toggleCollapsed(comp.id)}>
-                <span className={`comp-collapse-arrow ${isOpen ? 'open' : ''}`}>▶</span>
+                {!printMode && <span className={`comp-collapse-arrow ${isOpen ? 'open' : ''}`}>▶</span>}
                 <div className="comp-inferred-level" style={{ fontSize: 22, fontWeight: 800, color: levelColor, lineHeight: 1 }}>{eff}</div>
                 <div>
                   <div className="comp-result-name">{comp.name}</div>
@@ -2539,11 +2592,11 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
 
                   {/* Capabilities */}
                   <div className="comp-caps-section">
-                    <div className="cards-section-toggle" onClick={() => toggleCapsCollapsed(comp.id)}>
-                      <span className={`cards-section-arrow ${capsCollapsed[comp.id] ? 'open' : ''}`}>▶</span>
+                    {!printMode && <div className="cards-section-toggle" onClick={() => toggleCapsCollapsed(comp.id)}>
+                      <span className={`cards-section-arrow ${isCapsOpen ? 'open' : ''}`}>▶</span>
                       Capabilities
-                    </div>
-                    {capsCollapsed[comp.id] && comp.capabilities.map(cap => {
+                    </div>}
+                    {isCapsOpen && comp.capabilities.map(cap => {
                       const capDescs = cap.descriptions || {};
                       const capEffDesc  = capDescs[eff];
                       const capInfDesc  = inf && inf !== eff ? capDescs[inf] : null;
@@ -2589,13 +2642,13 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
                   {/* Card columns — collapsible */}
                   {compCards.length > 0 && (
                     <>
-                      <div className="cards-section-toggle" onClick={() => toggleCardsCollapsed(comp.id)}>
+                      {!printMode && <div className="cards-section-toggle" onClick={() => toggleCardsCollapsed(comp.id)}>
                         <span className={`cards-section-arrow ${isCardsOpen ? 'open' : ''}`}>▶</span>
                         Scenario Cards
                         <span style={{ fontWeight: 500, textTransform: 'none', letterSpacing: 0, fontSize: 10, color: 'var(--muted)', opacity: 0.8 }}>
                           ({totalCards} total)
                         </span>
-                      </div>
+                      </div>}
                       <div className="card-columns">
                         {[
                           { key: 'easy',        label: 'Easy' },
@@ -2654,12 +2707,14 @@ function ResultsScreen({ setup, rubric, cards, ratings, onRestart }) {
             </div>
           );
         })}
+        </div>))}
       </div>
 
       {/* Footer */}
       <div className="results-footer">
         <button className="wiz-restart-btn" onClick={onRestart}>Clear results &amp; restart</button>
         <button className="export-csv-btn" onClick={exportCSV}>Export CSV</button>
+        <button className="export-pdf-btn" onClick={exportPDF}>Export PDF</button>
       </div>
     </div>
   );
