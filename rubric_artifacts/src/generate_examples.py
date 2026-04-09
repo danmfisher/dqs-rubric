@@ -180,17 +180,26 @@ SCENARIO VARIETY — cards within the same competency must use distinct situatio
   different type of situation, even if both sit at adjacent levels.
 
 BOLD MARKERS
-Wrap exactly 1–3 key behavioral phrases in **double asterisks** — the specific
-actions or behaviors that are the core of what is being evaluated. Bold the behavior,
-not the context setup or the outcome. Do not bold single generic words; bold the
-meaningful phrase.
+Wrap exactly 1–3 key behavioral phrases in **double asterisks**.
 
-  Good: "{{name}} **pushed back on the proposed approach** and drafted an alternative
-        that the team adopted without significant rework."
-  Bad:  "{{name}} **pushed** back on the proposed **approach** and drafted an alternative."
+The bold must ALWAYS include the main verb of the clause — never bold a noun phrase
+or object alone. Level signal words (consistently, proactively, etc.) belong INSIDE
+the bold, not outside it. Bold the action; not the domain it acts on, not the outcome.
+Participial phrases (–ing clauses) can be bolded separately as secondary behaviors.
 
-Do not exceed 3 bolded phrases per card. The bolding should make the evaluative
-signal immediately visible to someone skimming the card.
+  ✓ "{{name}} **consistently incorporates feedback from peers** to refine a new feature."
+  ✗ "{{name}} consistently incorporates **feedback from peers** to **refine a new feature**."
+     → bolded verb-free fragments; level signal word left outside the bold
+
+  ✓ "She **took the initiative to host** a series of lunch-and-learns, **sharing insights** from recent conferences."
+  ✗ "She took the initiative to host a series of lunch-and-learns, **sharing insights from recent conferences** she attended."
+     → bolded a dependent clause, missed the main action entirely
+
+  ✓ "{{name}} **fostered a culture of learning** across the team."
+  ✗ "{{name}} fostered a culture of **learning and continuous enhancement**."
+     → bolded the object domain, not the action verb phrase
+
+Do not exceed 3 bolded phrases per card.
 
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
