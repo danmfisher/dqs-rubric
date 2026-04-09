@@ -121,12 +121,17 @@ WHAT MAKES A GOOD CARD
   as more authentic and recognizable than invented numbers.
 
 LEVEL SIGNALS TO EMBED (do not state these explicitly in the card text):
-  L1: beginning to develop habits, task-scoped, acting with guidance
-  L2: regularly doing, own-work-scoped, minimal guidance needed
-  L3: consistently delivering, feature/project-scoped, independently
-  L4: proactively, team/cross-team-scoped, without being asked
-  L5: systematically, org-scoped, setting the standard
-  L6: defining the philosophy, company/industry-scoped, rare and sustained
+These signal words are reserved — each word belongs to exactly one level.
+Using "proactively" in an L2 card, or "regularly" in an L4 card, is an error.
+
+  Signal      | L1              | L2                   | L3             | L4                  | L5             | L6
+  ------------|-----------------|----------------------|----------------|---------------------|----------------|--------------------
+  Frequency   | beginning to    | regularly            | consistently   | proactively         | systematically | defines the standard
+  Agency      | with guidance   | with minimal guidance| independently  | without prompting   | without direction | sets the philosophy
+  Scope       | task            | own work             | feature/project| team / cross-team   | org-wide       | company / industry
+
+Embed the signal through the texture of the scenario — the size of the problem,
+how much direction the person needed, and whether they were asked or self-directed.
 
 OUTPUT FORMAT
 Return a JSON array of exactly {n} card objects. No prose, no markdown — raw JSON only.
