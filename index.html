@@ -298,6 +298,103 @@
     .phil-back-content ul { padding-left: 16px; margin: 4px 0 8px; }
     .phil-back-content li { margin-bottom: 3px; }
 
+    /* ── Scrollytelling Philosophy ─────────────────────────── */
+    .scrolly-layout {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      margin-top: 8px;
+    }
+    .scrolly-text-col {
+      width: 44%;
+      flex-shrink: 0;
+    }
+    .scrolly-stage-col {
+      flex: 1;
+      position: sticky;
+      top: 0;
+      height: 76vh;
+      min-height: 420px;
+      max-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .scrolly-stage-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .scrolly-scene-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    .scrolly-principle {
+      padding: 36px 0 36px 20px;
+      border-left: 3px solid var(--border);
+      margin-bottom: 4px;
+      transition: border-color 0.3s;
+    }
+    .scrolly-principle.active-principle {
+      border-left-color: var(--primary);
+    }
+    .scrolly-group-hdr {
+      display: flex; align-items: center; gap: 10px;
+      margin: 24px 0 4px;
+      padding-top: 8px;
+    }
+    .scrolly-group-hdr:first-child { margin-top: 0; }
+    .scrolly-group-name {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .scrolly-group-rule { flex: 1; height: 1px; background: var(--border); }
+    .scrolly-p-num {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.7px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .scrolly-punchy {
+      font-size: 14px; font-weight: 700; line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .scrolly-body {
+      font-size: 12.5px; line-height: 1.75; color: var(--text);
+    }
+    .scrolly-body p { margin: 0 0 8px; }
+    .scrolly-body p:last-child { margin-bottom: 0; }
+    .scrolly-body ul { padding-left: 18px; margin: 4px 0 8px; }
+    .scrolly-body li { margin-bottom: 3px; }
+    .scrolly-body table {
+      border-collapse: collapse; width: 100%;
+      font-size: 11.5px; margin: 8px 0; line-height: 1.4;
+    }
+    .scrolly-body th {
+      text-align: left; padding: 5px 8px;
+      border-bottom: 2px solid #d1d5db;
+      font-weight: 600; color: #374151;
+    }
+    .scrolly-body td {
+      padding: 5px 8px; vertical-align: top;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .scrolly-dl-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: var(--primary);
+      background: transparent; padding: 4px 10px;
+      border: 1px solid var(--primary); border-radius: 12px;
+      cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+    }
+    .scrolly-dl-btn:hover { background: #eef0fb; }
+
     .breadcrumb {
       display: flex; align-items: center; gap: 6px;
       font-size: 12px; color: var(--muted); margin-bottom: 20px;
@@ -1628,6 +1725,764 @@ function PhilosophyCards({ sections }) {
 }
 
 // ──────────────────────────────────────────────────────────
+// SCROLLYTELLING PHILOSOPHY — Scene Components
+// ──────────────────────────────────────────────────────────
+
+// Geometry helpers
+const toRad = d => d * Math.PI / 180;
+const polar = (cx, cy, deg, r) => ({ x: cx + r * Math.cos(toRad(deg)), y: cy + r * Math.sin(toRad(deg)) });
+
+// Step-timer hook: advances step 1→total when isActive, resets when inactive
+function useAnimStep(isActive, total, ms) {
+  const [step, setStep] = React.useState(0);
+  React.useEffect(() => {
+    if (!isActive) { setStep(0); return; }
+    const ts = Array.from({ length: total }, (_, i) => setTimeout(() => setStep(i + 1), (i + 1) * ms));
+    return () => ts.forEach(clearTimeout);
+  }, [isActive]);
+  return step;
+}
+
+// SVG line that grows from start to end via stroke-dashoffset animation
+function AnimLine({ x1, y1, x2, y2, grow, ms = 220, ...rest }) {
+  const len = Math.hypot(x2 - x1, y2 - y1);
+  return (
+    <line x1={x1} y1={y1} x2={x2} y2={y2}
+      strokeDasharray={`${len} ${len}`} strokeDashoffset={grow ? 0 : len}
+      style={{ transition: `stroke-dashoffset ${ms}ms ease-out` }} {...rest} />
+  );
+}
+
+// Radar geometry constants
+const RCX = 220, RCY = 220, RR = 148;
+const RDIMS = [
+  { name: 'Impact & Scope',      short: 'Impact',    angle: -90,  color: '#6366f1' },
+  { name: 'Reasoning & Framing', short: 'Reasoning', angle: 0,    color: '#0891b2' },
+  { name: 'Communication',       short: 'Comm',      angle: 90,   color: '#059669' },
+  { name: 'Technical',           short: 'Technical', angle: 180,  color: '#d97706' },
+];
+const rPt   = (di, score) => polar(RCX, RCY, RDIMS[di].angle, (score / 5) * RR);
+const rPoly = scores => scores.map((s, i) => { const p = rPt(i, s); return `${p.x},${p.y}`; }).join(' ');
+
+// Shared radar background
+function RadarGrid({ showRings = true, showLabels = true, dimOpacity = 0.35 }) {
+  return (
+    <>
+      {showRings && [1,2,3,4,5].map(l => (
+        <circle key={l} cx={RCX} cy={RCY} r={(l/5)*RR}
+          fill="none" stroke="#e2e8f0" strokeWidth={l===3?1.5:0.8} />
+      ))}
+      {RDIMS.map((d, i) => {
+        const e = polar(RCX, RCY, d.angle, RR);
+        return <line key={i} x1={RCX} y1={RCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="1.5" opacity={dimOpacity} />;
+      })}
+      {showLabels && RDIMS.map((d, i) => {
+        const lp = polar(RCX, RCY, d.angle, RR + 22);
+        return <text key={i} x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
+          textAnchor="middle" dominantBaseline="middle">{d.short}</text>;
+      })}
+    </>
+  );
+}
+
+// ── P1: axes grow → level rings → archetype polygon ──────────
+function SceneRadarBuild({ isActive }) {
+  const step = useAnimStep(isActive, 11, 270);
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      {[1,2,3,4,5].map(l => (
+        <circle key={l} cx={RCX} cy={RCY} r={(l/5)*RR}
+          fill="none" stroke="#e2e8f0" strokeWidth={l===3?1.5:0.8}
+          opacity={step>=5?1:0} style={{ transition: 'opacity 0.5s' }} />
+      ))}
+      {step>=6 && [1,2,3,4,5].map(l => {
+        const lp = polar(RCX, RCY, -90, (l/5)*RR);
+        return <text key={l} x={lp.x-12} y={lp.y} fontSize="9" fill="#94a3b8" textAnchor="end" dominantBaseline="middle">{l}</text>;
+      })}
+      {RDIMS.map((d, i) => {
+        const e = polar(RCX, RCY, d.angle, RR);
+        const lp = polar(RCX, RCY, d.angle, RR + 22);
+        return (
+          <g key={i}>
+            <AnimLine x1={RCX} y1={RCY} x2={e.x} y2={e.y} grow={step>i} ms={300}
+              stroke={d.color} strokeWidth="2" opacity="0.5" />
+            <text x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
+              textAnchor="middle" dominantBaseline="middle"
+              opacity={step>i?1:0} style={{ transition: 'opacity 0.3s' }}>{d.short}</text>
+          </g>
+        );
+      })}
+      <polygon points={rPoly([3,3,3,3])} fill="#6366f118" stroke="#6366f1" strokeWidth="2.5"
+        opacity={step>=7?1:0} style={{ transition: 'opacity 0.6s' }} />
+      {step>=7 && RDIMS.map((d, i) => {
+        const p = rPt(i, 3);
+        return <circle key={i} cx={p.x} cy={p.y} r="4" fill={d.color} opacity="0.85" />;
+      })}
+      <circle cx={RCX} cy={RCY} r="4" fill="#6366f1" opacity="0.5" />
+      <text x={RCX} y={58} textAnchor="middle" fontSize="14" fontWeight="800" fill="#6366f1"
+        opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Archetype Profile · L3</text>
+      <text x={RCX} y={76} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=10?1:0} style={{ transition: 'opacity 0.4s' }}>Where do you want to go?</text>
+    </svg>
+  );
+}
+
+// ── P2: "you" built axis-by-axis → uncertainty growth arcs ───
+function SceneRadarGrowth({ isActive }) {
+  const step = useAnimStep(isActive, 12, 260);
+  const YOU = [4, 3, 2, 4];
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <RadarGrid dimOpacity={0.28} />
+      <polygon points={rPoly([3,3,3,3])} fill="none" stroke="#6366f155" strokeWidth="1.5" strokeDasharray="5 3" />
+      <polygon points={rPoly(YOU)} fill="#0891b218" stroke="#0891b2" strokeWidth="2.5"
+        opacity={step>=6?1:0} style={{ transition: 'opacity 0.5s' }} />
+      {RDIMS.map((d, i) => {
+        const show = step > i;
+        const p = rPt(i, YOU[i]);
+        const lp = polar(RCX, RCY, d.angle, (YOU[i]/5)*RR + 18);
+        return (
+          <g key={i} opacity={show?1:0} style={{ transition: 'opacity 0.35s' }}>
+            <line x1={RCX} y1={RCY} x2={p.x} y2={p.y}
+              stroke={d.color} strokeWidth="1.5" opacity="0.35" strokeDasharray="4 3" />
+            <circle cx={p.x} cy={p.y} r="6" fill={d.color} opacity="0.9" />
+            <text x={lp.x} y={lp.y} fontSize="10" fontWeight="700" fill={d.color}
+              textAnchor="middle" dominantBaseline="middle"
+              opacity={step<7?1:0} style={{ transition: 'opacity 0.3s' }}>{YOU[i]}</text>
+          </g>
+        );
+      })}
+      {step>=8 && [[-22,8],[-10,18],[0,12],[10,20],[22,6]].map(([dx,dy], i) => {
+        const sx = YOU.reduce((s,sc,di) => s+rPt(di,sc).x, 0)/4;
+        const sy = YOU.reduce((s,sc,di) => s+rPt(di,sc).y, 0)/4;
+        return (
+          <path key={i} fill="none"
+            d={`M${sx},${sy} Q${(sx+RCX)/2+dx},${(sy+RCY)/2+dy} ${RCX},${RCY}`}
+            stroke="#6366f1" strokeWidth={i===2?2:1}
+            opacity={i===2?0.5:0.13} strokeDasharray={i===2?'6 4':'4 6'} />
+        );
+      })}
+      <text x={RCX} y={58} textAnchor="middle" fontSize="14" fontWeight="800" fill="#0891b2"
+        opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>Your Current Profile</text>
+      <text x={RCX} y={76} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Multiple paths toward the archetype</text>
+      {step>=9 && (
+        <>
+          <circle cx={RCX} cy={RCY} r="6" fill="#6366f1" opacity="0.7" />
+          <text x={RCX+12} y={RCY+4} fontSize="10" fill="#6366f1" fontWeight="600">Archetype</text>
+        </>
+      )}
+    </svg>
+  );
+}
+
+// ── P3: same rating, different level ─────────────────────────
+function SceneRadarRelative({ isActive }) {
+  const step = useAnimStep(isActive, 5, 370);
+  const cx1=120, cy1=240, cx2=320, cy2=240, rv=88;
+  const miniGrid = (cx, cy, color) => (
+    <>
+      {[1,2,3,4,5].map(l => (
+        <circle key={l} cx={cx} cy={cy} r={(l/5)*rv} fill="none"
+          stroke={l===3?'#cbd5e1':'#e2e8f0'} strokeWidth={l===3?1.2:0.7} />
+      ))}
+      {RDIMS.map((d,i) => {
+        const e=polar(cx,cy,d.angle,rv);
+        return <line key={i} x1={cx} y1={cy} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="1" opacity="0.3"/>;
+      })}
+      <polygon
+        points={RDIMS.map((d,i)=>{ const p=polar(cx,cy,d.angle,(3/5)*rv); return `${p.x},${p.y}`; }).join(' ')}
+        fill={color+'22'} stroke={color} strokeWidth="2"/>
+      {RDIMS.map((d,i)=>{ const p=polar(cx,cy,d.angle,(3/5)*rv); return <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={color} opacity="0.85"/>; })}
+    </>
+  );
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <text x={220} y={50} textAnchor="middle" fontSize="13" fontWeight="700" fill="#374151">
+        Rating 3/5 — at two different levels
+      </text>
+      <g opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}>
+        {miniGrid(cx1,cy1,'#0891b2')}
+        <text x={cx1} y={cy1-rv-18} textAnchor="middle" fontSize="14" fontWeight="800" fill="#0891b2">L2</text>
+        <text x={cx1} y={cy1+rv+20} textAnchor="middle" fontSize="11" fill="#64748b">Meets expectations</text>
+        <text x={cx1} y={cy1+rv+36} textAnchor="middle" fontSize="10" fill="#94a3b8">for this level</text>
+      </g>
+      <g opacity={step>=2?1:0} style={{ transition: 'opacity 0.5s' }}>
+        {miniGrid(cx2,cy2,'#6366f1')}
+        <text x={cx2} y={cy2-rv-18} textAnchor="middle" fontSize="14" fontWeight="800" fill="#6366f1">L4</text>
+        <text x={cx2} y={cy2+rv+20} textAnchor="middle" fontSize="11" fill="#64748b">Meets expectations</text>
+        <text x={cx2} y={cy2+rv+36} textAnchor="middle" fontSize="10" fill="#94a3b8">for this level</text>
+      </g>
+      {step>=3 && (
+        <>
+          <line x1={cx1+rv+8} y1={cy1} x2={cx2-rv-8} y2={cy2} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="4 4"/>
+          <text x={220} y={cy1-5} textAnchor="middle" fontSize="10" fill="#94a3b8">same polygon shape</text>
+        </>
+      )}
+      <rect x={44} y={372} width={352} height={48} rx="8" fill="#f8fafc" stroke="#e2e8f0"
+        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}/>
+      <text x={220} y={392} textAnchor="middle" fontSize="12" fontWeight="700" fill="#374151"
+        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}>A 3 at L4 ≠ A 3 at L2 — ratings are relative to level</text>
+      <text x={220} y={410} textAnchor="middle" fontSize="10" fill="#64748b"
+        opacity={step>=5?1:0} style={{ transition: 'opacity 0.4s' }}>A 5 here is roughly a 2 at the next level up</text>
+    </svg>
+  );
+}
+
+// ── P4: center-of-mass violator ───────────────────────────────
+function SceneRadarCenterOfMass({ isActive }) {
+  const step = useAnimStep(isActive, 7, 320);
+  const good=[4,4,4,4], viol=[4,4,1,4];
+  const comPt = scores => ({
+    x: scores.reduce((s,sc,i) => s+rPt(i,sc).x, 0)/4,
+    y: scores.reduce((s,sc,i) => s+rPt(i,sc).y, 0)/4,
+  });
+  const goodC=comPt(good), violC=comPt(viol);
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <RadarGrid dimOpacity={0.28} />
+      <polygon points={rPoly(good)} fill="#6366f115" stroke="#6366f175" strokeWidth="1.5" strokeDasharray="5 3"
+        opacity={step>=1&&step<4?1:0} style={{ transition: 'opacity 0.5s' }} />
+      {step>=1&&step<4&&<circle cx={goodC.x} cy={goodC.y} r="7" fill="#6366f1" opacity="0.7"/>}
+      {step>=1&&step<4&&<text x={goodC.x+12} y={goodC.y-4} fontSize="10" fill="#6366f1" fontWeight="600">Center of mass</text>}
+      <polygon points={rPoly(viol)} fill="#ef444415" stroke="#ef4444" strokeWidth="2.5"
+        opacity={step>=3?1:0} style={{ transition: 'opacity 0.5s' }} />
+      {step>=3 && viol.map((sc,i) => {
+        const p=rPt(i,sc); const bad=i===2;
+        return <circle key={i} cx={p.x} cy={p.y} r={bad?9:5} fill={bad?'#ef4444':RDIMS[i].color} opacity="0.9"/>;
+      })}
+      {step>=4 && (
+        <>
+          <circle cx={violC.x} cy={violC.y} r="8" fill="#ef4444" opacity="0.85"/>
+          <line x1={RCX} y1={RCY} x2={violC.x} y2={violC.y}
+            stroke="#ef4444" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.5"/>
+          <text x={violC.x-14} y={violC.y-12} fontSize="9" fill="#ef4444" fontWeight="600">center of mass</text>
+        </>
+      )}
+      {step>=3 && (() => {
+        const cp=rPt(2,1);
+        return (
+          <>
+            <circle cx={cp.x} cy={cp.y} r="11" fill="none" stroke="#ef4444" strokeWidth="1.5" opacity="0.55"/>
+            <text x={cp.x} y={cp.y+26} textAnchor="middle" fontSize="10" fontWeight="700" fill="#ef4444">Communication: 1</text>
+          </>
+        );
+      })()}
+      <text x={220} y={56} textAnchor="middle" fontSize="13" fontWeight="800" fill="#ef4444"
+        opacity={step>=5?1:0} style={{ transition: 'opacity 0.4s' }}>A 1 overrides the center of mass</text>
+      <text x={220} y={74} textAnchor="middle" fontSize="10" fill="#64748b"
+        opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>Offsetting 4s don't compensate for a critical gap</text>
+    </svg>
+  );
+}
+
+// ── P5/P9: dimension cone — builds one, then reveals all four ─
+function SceneDimensionCone({ isActive, transfer }) {
+  const TOTAL = 22;
+  const step = useAnimStep(isActive, TOTAL, 170);
+  const CCX=220, CCY=368, RDIM=190, RCOMP=152, RCAP=112;
+  const DA=-90;
+  const COMP_ANG=[-90-20, -90, -90+20];
+  const CAP_ANG=COMP_ANG.map(ca=>[ca-7, ca, ca+7]);
+  const compNames=['Problem Structuring','Solution Crafting','Realizing Success'];
+  const capNames=[['Define','Tradeoffs','Frame'],['Evaluate','Design','Validate'],['Anticipate','Adapt','Drive']];
+  const capStep=[[1,2,3],[6,7,8],[11,12,13]];
+  const compStep=[4,9,14], compLabelStep=[5,10,15], dimStep=16, dimLabelStep=17, quadStep=18;
+  const showSingle=step<quadStep, showQuad=step>=quadStep;
+  const QDIMS=[
+    { name:'Impact & Scope',      angle:-90, color:'#6366f1', shared:true  },
+    { name:'Reasoning & Framing', angle:0,   color:'#0891b2', shared:true  },
+    { name:'Communication',       angle:90,  color:'#059669', shared:true  },
+    { name:'Technical',           angle:180, color:'#d97706', shared:false },
+  ];
+  const QCX=220, QCY=220, QDIM=148, QCOMP=115;
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      {/* ── Single-cone phase ── */}
+      <g opacity={showSingle?1:0} style={{ transition: 'opacity 0.7s' }}>
+        {[0,1,2].map(ci => CAP_ANG[ci].map((ca,ki) => {
+          const e=polar(CCX,CCY,ca,RCAP);
+          return <AnimLine key={`c${ci}k${ki}`} x1={CCX} y1={CCY} x2={e.x} y2={e.y}
+            grow={step>=capStep[ci][ki]} ms={180} stroke="#0891b2" strokeWidth="1.2" opacity="0.5"/>;
+        }))}
+        {[0,1,2].map(ci => CAP_ANG[ci].map((ca,ki) => {
+          const lp=polar(CCX,CCY,ca,RCAP+15);
+          const show=step>=capStep[ci][ki]&&step<compLabelStep[ci];
+          return <text key={`cl${ci}k${ki}`} x={lp.x} y={lp.y} fontSize="8" fill="#94a3b8"
+            textAnchor="middle" dominantBaseline="middle"
+            opacity={show?1:0} style={{ transition: 'opacity 0.22s' }}>{capNames[ci][ki]}</text>;
+        }))}
+        {[0,1,2].map(ci => {
+          const e=polar(CCX,CCY,COMP_ANG[ci],RCOMP);
+          return <AnimLine key={`co${ci}`} x1={CCX} y1={CCY} x2={e.x} y2={e.y}
+            grow={step>=compStep[ci]} ms={200} stroke="#0891b2" strokeWidth="3.5" opacity="0.72"/>;
+        })}
+        {[0,1,2].map(ci => {
+          const lp=polar(CCX,CCY,COMP_ANG[ci],RCOMP+20);
+          const show=step>=compLabelStep[ci]&&step<dimLabelStep;
+          return <text key={`cob${ci}`} x={lp.x} y={lp.y} fontSize="10" fontWeight="600" fill="#0891b2"
+            textAnchor="middle" dominantBaseline="middle"
+            opacity={show?1:0} style={{ transition: 'opacity 0.28s' }}>{compNames[ci]}</text>;
+        })}
+        {(() => {
+          const e=polar(CCX,CCY,DA,RDIM);
+          return <AnimLine x1={CCX} y1={CCY} x2={e.x} y2={e.y}
+            grow={step>=dimStep} ms={320} stroke="#0891b2" strokeWidth="7" opacity="0.9"/>;
+        })()}
+        {(() => {
+          const lp=polar(CCX,CCY,DA,RDIM+26);
+          return <text x={lp.x} y={lp.y} fontSize="13" fontWeight="800" fill="#0891b2" textAnchor="middle"
+            opacity={step>=dimLabelStep?1:0} style={{ transition: 'opacity 0.4s' }}>Reasoning & Framing</text>;
+        })()}
+        <circle cx={CCX} cy={CCY} r="5" fill="#0891b2" opacity="0.65"/>
+        <text x={220} y={32} textAnchor="middle" fontSize="11" fill="#94a3b8"
+          opacity={step>=1&&step<dimStep?1:0} style={{ transition: 'opacity 0.3s' }}>
+          Capabilities → Competencies → Dimension
+        </text>
+      </g>
+      {/* ── Quad-cone phase ── */}
+      <g opacity={showQuad?1:0} style={{ transition: 'opacity 0.85s' }}>
+        {QDIMS.map((d,i) => {
+          const e=polar(QCX,QCY,d.angle,QDIM);
+          return (
+            <g key={i}>
+              {[-20,20].map((sp,j) => {
+                const ce=polar(QCX,QCY,d.angle+sp,QCOMP);
+                return <line key={j} x1={QCX} y1={QCY} x2={ce.x} y2={ce.y}
+                  stroke={d.color} strokeWidth="2.5" opacity="0.42"/>;
+              })}
+              <line x1={QCX} y1={QCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="6.5" opacity="0.86"/>
+              {(() => {
+                const lp=polar(QCX,QCY,d.angle,QDIM+26);
+                return <text x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
+                  textAnchor="middle" dominantBaseline="middle">{d.name}</text>;
+              })()}
+              {transfer && (() => {
+                const lp=polar(QCX,QCY,d.angle,QDIM+44);
+                return <text x={lp.x} y={lp.y} fontSize="9" fontWeight="600"
+                  fill={d.shared?'#059669':'#d97706'} textAnchor="middle" dominantBaseline="middle">
+                  {d.shared?'✓ shared':'⚙ track-specific'}
+                </text>;
+              })()}
+            </g>
+          );
+        })}
+        <circle cx={QCX} cy={QCY} r="5" fill="#374151" opacity="0.6"/>
+        <text x={QCX} y={52} textAnchor="middle" fontSize="13" fontWeight="800" fill="#374151">
+          {transfer?'Shared vs Track-Specific Dimensions':'Four Dimensions of the Rubric'}
+        </text>
+        {transfer && (
+          <text x={QCX} y={70} textAnchor="middle" fontSize="10" fill="#64748b">
+            Three shared · one track-specific customization point
+          </text>
+        )}
+      </g>
+    </svg>
+  );
+}
+
+// ── P6: promotion Venn ────────────────────────────────────────
+function SceneVenn({ isActive }) {
+  const step = useAnimStep(isActive, 5, 350);
+  const r=110, gap=62, cx1=220-gap/2, cx2=220+gap/2, cy=215;
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <text x={220} y={54} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion requires both</text>
+      <circle cx={cx1} cy={cy} r={r} fill="#6366f115" stroke="#6366f1" strokeWidth="2"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}/>
+      <circle cx={cx2} cy={cy} r={r} fill="#05966910" stroke="#059669" strokeWidth="2"
+        opacity={step>=2?1:0} style={{ transition: 'opacity 0.5s' }}/>
+      <clipPath id="vc"><circle cx={cx1} cy={cy} r={r}/></clipPath>
+      <circle cx={cx2} cy={cy} r={r} fill="#7c3aed" fillOpacity="0.22" clipPath="url(#vc)"
+        opacity={step>=3?1:0} style={{ transition: 'opacity 0.5s' }}/>
+      <text x={cx1-r/2-4} y={cy} textAnchor="middle" fontSize="12" fontWeight="700" fill="#6366f1"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Rubric</text>
+      <text x={cx1-r/2-4} y={cy+17} textAnchor="middle" fontSize="12" fontWeight="700" fill="#6366f1"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Readiness</text>
+      <text x={cx2+r/2+4} y={cy} textAnchor="middle" fontSize="12" fontWeight="700" fill="#059669"
+        opacity={step>=2?1:0} style={{ transition: 'opacity 0.4s' }}>Business</text>
+      <text x={cx2+r/2+4} y={cy+17} textAnchor="middle" fontSize="12" fontWeight="700" fill="#059669"
+        opacity={step>=2?1:0} style={{ transition: 'opacity 0.4s' }}>Need</text>
+      <text x={220} y={cy-8} textAnchor="middle" fontSize="12" fontWeight="800" fill="#7c3aed"
+        opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion</text>
+      <text x={220} y={cy+10} textAnchor="middle" fontSize="10" fill="#7c3aed"
+        opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>zone</text>
+      <text x={220} y={cy+r+46} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}>
+        Neither alone is sufficient — both gates must open
+      </text>
+    </svg>
+  );
+}
+
+// ── Generic pull-quote scene ──────────────────────────────────
+function ScenePullQuote({ isActive, accent, lines }) {
+  const step = useAnimStep(isActive, lines.length, 330);
+  return (
+    <div style={{ padding: '32px 36px', width: '100%', boxSizing: 'border-box' }}>
+      {lines.map((line, i) => (
+        <div key={i} style={{
+          opacity: step > i ? 1 : 0,
+          transform: step > i ? 'translateY(0)' : 'translateY(10px)',
+          transition: 'opacity 0.4s ease, transform 0.4s ease',
+          marginBottom: i < lines.length - 1 ? 18 : 0,
+        }}>
+          {line.contrast ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {line.before && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, opacity: 0.65 }}>
+                  <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>✗</span>
+                  <span style={{ fontSize: 15, fontStyle: 'italic', color: '#64748b', lineHeight: 1.5 }}>{line.before}</span>
+                </div>
+              )}
+              {line.after && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1, color: accent }}>✓</span>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: '#1e293b', lineHeight: 1.5 }}>{line.after}</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{
+              fontSize: line.big ? 20 : line.small ? 12 : 15,
+              fontWeight: line.big ? 800 : line.small ? 400 : 600,
+              color: line.muted ? '#64748b' : line.big ? accent : '#1e293b',
+              lineHeight: 1.55,
+              borderLeft: line.rule ? `4px solid ${accent}` : 'none',
+              paddingLeft: line.rule ? 16 : 0,
+              fontStyle: line.italic ? 'italic' : 'normal',
+            }}>{line.text}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── P10: scope ladder ─────────────────────────────────────────
+function SceneScopeLadder({ isActive }) {
+  const step = useAnimStep(isActive, 6, 310);
+  const levels = [
+    { lv:'L1', scope:'Task',               desc:'Executes well-defined work',           color:'#94a3b8' },
+    { lv:'L2', scope:'Own Work',            desc:'Owns a feature end-to-end',            color:'#64748b' },
+    { lv:'L3', scope:'Team Process',        desc:'Shapes how the team operates',          color:'#0891b2' },
+    { lv:'L4', scope:'Cross-team',          desc:'Drives alignment across teams',         color:'#6366f1' },
+    { lv:'L5', scope:'Engineering Culture', desc:'Defines how engineering gets done',     color:'#7c3aed' },
+  ];
+  const startY=88, stepH=58;
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <text x={220} y={54} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151">
+        Level = Scope, Not Tenure
+      </text>
+      {levels.map((l, i) => {
+        const y=startY+i*stepH, indent=i*14, show=step>=(levels.length-i);
+        return (
+          <g key={i} opacity={show?1:0} style={{ transition: 'opacity 0.4s' }}>
+            <rect x={60+indent} y={y} width={320-indent*2} height={46} rx="7"
+              fill={l.color} fillOpacity="0.1" stroke={l.color} strokeWidth="1.8"/>
+            <text x={72+indent} y={y+16} fontSize="12" fontWeight="800" fill={l.color}>{l.lv}</text>
+            <text x={72+indent} y={y+33} fontSize="12" fontWeight="600" fill="#374151">{l.scope}</text>
+            <text x={368-indent} y={y+24} fontSize="10" fill="#64748b"
+              textAnchor="end" dominantBaseline="middle">{l.desc}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+// ── P11: four dimensions, none optional ──────────────────────
+function SceneRadarPillars({ isActive }) {
+  const step = useAnimStep(isActive, 6, 300);
+  const descs = [
+    'Outcomes: delivery, ownership, business value',
+    'Thinking: structure, solutions, realization',
+    'Connection: clarity, feedback, alignment',
+    'Craft: technical quality & domain expertise',
+  ];
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <RadarGrid dimOpacity={0.3} />
+      <polygon points={rPoly([3,3,3,3])} fill="#6366f10a" stroke="#6366f135" strokeWidth="1.5"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}/>
+      {RDIMS.map((d, i) => {
+        if (step < i+2) return null;
+        const e=polar(RCX,RCY,d.angle,RR);
+        const lp=polar(RCX,RCY,d.angle,RR+24);
+        const dp=polar(RCX,RCY,d.angle,RR+44);
+        return (
+          <g key={i} opacity={step>=i+2?1:0} style={{ transition: 'opacity 0.4s' }}>
+            <line x1={RCX} y1={RCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="4" opacity="0.8"/>
+            <circle cx={e.x} cy={e.y} r="6" fill={d.color}/>
+            <text x={lp.x} y={lp.y} fontSize="12" fontWeight="800" fill={d.color}
+              textAnchor="middle" dominantBaseline="middle">{d.short}</text>
+            <text x={dp.x} y={dp.y} fontSize="9" fill="#64748b"
+              textAnchor="middle" dominantBaseline="middle">{descs[i]}</text>
+          </g>
+        );
+      })}
+      <text x={220} y={56} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Four dimensions — all load-bearing</text>
+    </svg>
+  );
+}
+
+// ── P12: three-tier detail layer cake ────────────────────────
+function SceneDetailLayers({ isActive }) {
+  const step = useAnimStep(isActive, 4, 370);
+  const layers = [
+    { label:'1 Overall Level',      sub:'For HR & promotions',           color:'#6366f1', y:86,  h:58 },
+    { label:'4 Dimension Scores',   sub:'For calibration conversations',  color:'#0891b2', y:162, h:80 },
+    { label:'N Competency Ratings', sub:'For the actual conversation',    color:'#059669', y:260, h:104 },
+  ];
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <text x={220} y={54} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Three tiers of detail</text>
+      {layers.map((l, i) => {
+        const pad=i*22;
+        return (
+          <g key={i} opacity={step>=i+1?1:0} style={{ transition: 'opacity 0.5s' }}>
+            <rect x={56+pad} y={l.y} width={328-pad*2} height={l.h} rx="8"
+              fill={l.color} fillOpacity="0.1" stroke={l.color} strokeWidth="2"/>
+            <text x={220} y={l.y+26} textAnchor="middle" fontSize="14" fontWeight="800" fill={l.color}>{l.label}</text>
+            <text x={220} y={l.y+45} textAnchor="middle" fontSize="11" fill="#64748b">{l.sub}</text>
+          </g>
+        );
+      })}
+      <text x={220} y={392} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}>
+        Go only as deep as the conversation needs
+      </text>
+    </svg>
+  );
+}
+
+// ── P15: signal-word decoder ──────────────────────────────────
+function SceneSignalWords({ isActive }) {
+  const step = useAnimStep(isActive, 4, 350);
+  const cols = [
+    { head:'Frequency', color:'#6366f1',
+      words:['beginning to','regularly','consistently','proactively','systematically'] },
+    { head:'Agency', color:'#0891b2',
+      words:['with guidance','independently','without prompting','without direction','defines the approach'] },
+    { head:'Scope', color:'#059669',
+      words:['own tasks','own work','feature / project','cross-team','org-wide / company'] },
+  ];
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      <text x={220} y={42} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Signal Word Decoder</text>
+      <text x={220} y={60} textAnchor="middle" fontSize="10" fill="#94a3b8"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Each word is a level signal — learn to read them at a glance</text>
+      {cols.map((col, ci) => {
+        const x=52+ci*132;
+        return (
+          <g key={ci} opacity={step>=ci+1?1:0} style={{ transition: 'opacity 0.45s' }}>
+            <rect x={x} y={76} width={120} height={26} rx="5" fill={col.color} fillOpacity="0.14"/>
+            <text x={x+60} y={93} textAnchor="middle" fontSize="11" fontWeight="800" fill={col.color}>{col.head}</text>
+            {col.words.map((w, wi) => {
+              const wy=112+wi*54;
+              return (
+                <g key={wi}>
+                  <rect x={x} y={wy} width={120} height={44} rx="5"
+                    fill={col.color} fillOpacity={0.03+wi*0.045}
+                    stroke={col.color} strokeWidth="0.8" strokeOpacity="0.35"/>
+                  <text x={x+6} y={wy+13} fontSize="8" fontWeight="700" fill={col.color} opacity="0.65">L{wi+1}</text>
+                  <text x={x+60} y={wy+28} textAnchor="middle" fontSize="9.5" fontWeight="500" fill="#374151">{w}</text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+// ── PhilosophyScrolly — main scrollytelling container ─────────
+function PhilosophyScrolly({ sections }) {
+  if (!sections || sections.length === 0) return null;
+
+  const DISPLAY_ORDER = [1,2,3,4,5,9,6,7,8,10,11,12,13,14,15,16,17];
+  const SCENE_MAP = {
+    1:'radar-build', 2:'radar-growth', 3:'radar-relative', 4:'radar-com',
+    5:'cone', 9:'cone-transfer', 6:'venn', 7:'pull-behaviors', 8:'pull-fairness',
+    10:'scope-ladder', 11:'radar-pillars', 12:'detail-layers',
+    13:'pull-calibration', 14:'pull-self-assess', 15:'signal-words',
+    16:'pull-checklist', 17:'pull-ai',
+  };
+
+  const PULL_DATA = {
+    'pull-behaviors': {
+      accent: '#0891b2',
+      lines: [
+        { text: 'Describe what you experience people DO,', big: true },
+        { text: "not what you've decided they ARE.", big: true },
+        { contrast: true, before: '"She\'s strategic"', after: '"She redesigned our incident process before anyone asked"' },
+        { text: 'Behaviors are citable. Traits invite bias. Write what you\'ve observed.', small: true, muted: true },
+      ],
+    },
+    'pull-fairness': {
+      accent: '#0891b2',
+      lines: [
+        { text: 'No degrees. No tenure. No assumptions.', big: true },
+        { text: 'Only demonstrated behaviors, calibrated across managers.', rule: true },
+        { text: 'The rubric levels the playing field by anchoring to what people do — not who they appear to be.', small: true, muted: true },
+      ],
+    },
+    'pull-calibration': {
+      accent: '#059669',
+      lines: [
+        { text: 'Calibration is per level.', big: true },
+        { text: 'Forced distribution pressure belongs to leadership — not to individual managers.', rule: true },
+        { text: 'Grade on the rubric. Let the aggregate emerge from the system.', small: true, muted: true },
+      ],
+    },
+    'pull-self-assess': {
+      accent: '#059669',
+      lines: [
+        { text: '"I did X in context Z"', big: true, italic: true },
+        { text: 'beats any number alone.', big: true },
+        { text: 'Self-assessment lands when it\'s specific. Anchor every rating to a concrete example.', small: true, muted: true },
+      ],
+    },
+    'pull-checklist': {
+      accent: '#d97706',
+      lines: [
+        { text: 'The rubric is not a checklist.', big: true },
+        { text: "Find the highest-leverage development investments — don't score every row exhaustively.", rule: true },
+        { text: 'Completionism misses the point. Judgment is the skill.', small: true, muted: true },
+      ],
+    },
+    'pull-ai': {
+      accent: '#d97706',
+      lines: [
+        { text: 'No AI dimension.', big: true },
+        { text: 'The outcomes of effective tool use already show up in the capabilities that matter.', rule: true },
+        { text: "If AI helps you ship better, that shows in Impact and Technical. The rubric doesn't need a separate row.", small: true, muted: true },
+      ],
+    },
+  };
+
+  const [activeNum, setActiveNum] = React.useState(1);
+  const refs = React.useRef({});
+  const secByNum = {};
+  sections.forEach(s => { secByNum[s.number] = s; });
+  const ordered = DISPLAY_ORDER.map(n => secByNum[n]).filter(Boolean);
+
+  React.useEffect(() => {
+    const mainEl = document.querySelector('.main');
+    const obs = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) setActiveNum(parseInt(e.target.dataset.num));
+        });
+      },
+      { root: mainEl || null, rootMargin: '-36% 0px -36% 0px', threshold: 0 }
+    );
+    Object.values(refs.current).forEach(el => { if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
+
+  const activeScene = SCENE_MAP[activeNum] || 'radar-build';
+  const allSceneIds = [...new Set(Object.values(SCENE_MAP))];
+
+  const renderScene = sceneId => {
+    const active = sceneId === activeScene;
+    switch(sceneId) {
+      case 'radar-build':    return <SceneRadarBuild    isActive={active}/>;
+      case 'radar-growth':   return <SceneRadarGrowth   isActive={active}/>;
+      case 'radar-relative': return <SceneRadarRelative isActive={active}/>;
+      case 'radar-com':      return <SceneRadarCenterOfMass isActive={active}/>;
+      case 'cone':           return <SceneDimensionCone isActive={active} transfer={false}/>;
+      case 'cone-transfer':  return <SceneDimensionCone isActive={active} transfer={true}/>;
+      case 'venn':           return <SceneVenn          isActive={active}/>;
+      case 'scope-ladder':   return <SceneScopeLadder   isActive={active}/>;
+      case 'radar-pillars':  return <SceneRadarPillars  isActive={active}/>;
+      case 'detail-layers':  return <SceneDetailLayers  isActive={active}/>;
+      case 'signal-words':   return <SceneSignalWords   isActive={active}/>;
+      default: {
+        const pd = PULL_DATA[sceneId];
+        if (!pd) return null;
+        return <ScenePullQuote isActive={active} accent={pd.accent} lines={pd.lines}/>;
+      }
+    }
+  };
+
+  const downloadPhilosophy = () => {
+    let md = '# FlexGen Rubric Design Philosophy\n\n', cg = '';
+    sections.forEach(sec => {
+      if (sec.group !== cg) { cg = sec.group; md += `<!-- group: ${cg} -->\n\n`; }
+      md += `## ${sec.number}. ${sec.title}\n\n${sec.content}\n\n`;
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([md], { type: 'text/markdown' }));
+    a.download = 'FlexGen_Rubric_Philosophy.md'; a.click();
+  };
+
+  let lastGroup = null;
+
+  return (
+    <div className="card">
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
+        <div className="card-title" style={{ marginBottom: 0, flex: 1 }}>
+          Design Philosophy — {sections.length} principles
+        </div>
+        <button className="scrolly-dl-btn" onClick={downloadPhilosophy}>⬇ Download .md</button>
+      </div>
+
+      <div className="scrolly-layout">
+        {/* ── Left: scrollable text ── */}
+        <div className="scrolly-text-col">
+          {ordered.map(sec => {
+            const acc = PHIL_GROUP_COLORS[sec.group] || '#6b7194';
+            const showHdr = sec.group !== lastGroup;
+            if (showHdr) lastGroup = sec.group;
+            return (
+              <div key={sec.number}>
+                {showHdr && (
+                  <div className="scrolly-group-hdr">
+                    <div className="scrolly-group-name" style={{ color: acc }}>{sec.group}</div>
+                    <div className="scrolly-group-rule" style={{ background: `${acc}40` }}/>
+                  </div>
+                )}
+                <div
+                  ref={el => { refs.current[sec.number] = el; }}
+                  data-num={sec.number}
+                  className="scrolly-principle"
+                  style={{ borderLeftColor: activeNum === sec.number ? acc : 'var(--border)' }}
+                >
+                  <div className="scrolly-p-num">Principle {sec.number} · {sec.title}</div>
+                  <div className="scrolly-punchy" style={{ color: acc }}>
+                    {PHIL_PUNCHY[String(sec.number)]}
+                  </div>
+                  <div className="scrolly-body">{renderMd(sec.content)}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ── Right: sticky visual stage ── */}
+        <div className="scrolly-stage-col">
+          <div className="scrolly-stage-inner">
+            {allSceneIds.map(id => (
+              <div key={id} className="scrolly-scene-layer"
+                style={{ opacity: id === activeScene ? 1 : 0, pointerEvents: id === activeScene ? 'auto' : 'none' }}>
+                {renderScene(id)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
 // Meta / Overview panel
 // ──────────────────────────────────────────────────────────
 // ── Dimension flip card ───────────────────────────────────
@@ -1719,7 +2574,7 @@ function MetaPanel({ rubric }) {
       )}
 
       {/* 2. Design Philosophy */}
-      <PhilosophyCards sections={philosophy} />
+      <PhilosophyScrolly sections={philosophy} />
 
       {/* 3. Dimensions */}
       <div className="card">
