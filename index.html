@@ -1785,11 +1785,13 @@ function RadarGrid({ showRings = true, showLabels = true, dimOpacity = 0.35 }) {
   );
 }
 
-// ── P1: axes grow → level rings → archetype polygon ──────────
+// ── P1: axes → rings → archetype → current profile → dev arcs ─
 function SceneRadarBuild({ isActive }) {
-  const step = useAnimStep(isActive, 11, 270);
+  const YOU = [4, 3, 2, 4];
+  const step = useAnimStep(isActive, 14, 260);
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      {/* Level rings */}
       {[1,2,3,4,5].map(l => (
         <circle key={l} cx={RCX} cy={RCY} r={(l/5)*RR}
           fill="none" stroke="#e2e8f0" strokeWidth={l===3?1.5:0.8}
@@ -1797,8 +1799,10 @@ function SceneRadarBuild({ isActive }) {
       ))}
       {step>=6 && [1,2,3,4,5].map(l => {
         const lp = polar(RCX, RCY, -90, (l/5)*RR);
-        return <text key={l} x={lp.x-12} y={lp.y} fontSize="9" fill="#94a3b8" textAnchor="end" dominantBaseline="middle">{l}</text>;
+        return <text key={l} x={lp.x-12} y={lp.y} fontSize="9" fill="#94a3b8"
+          textAnchor="end" dominantBaseline="middle">{l}</text>;
       })}
+      {/* Axis lines + dim labels */}
       {RDIMS.map((d, i) => {
         const e = polar(RCX, RCY, d.angle, RR);
         const lp = polar(RCX, RCY, d.angle, RR + 22);
@@ -1812,6 +1816,7 @@ function SceneRadarBuild({ isActive }) {
           </g>
         );
       })}
+      {/* Archetype polygon */}
       <polygon points={rPoly([3,3,3,3])} fill="#6366f118" stroke="#6366f1" strokeWidth="2.5"
         opacity={step>=7?1:0} style={{ transition: 'opacity 0.6s' }} />
       {step>=7 && RDIMS.map((d, i) => {
@@ -1819,42 +1824,33 @@ function SceneRadarBuild({ isActive }) {
         return <circle key={i} cx={p.x} cy={p.y} r="4" fill={d.color} opacity="0.85" />;
       })}
       <circle cx={RCX} cy={RCY} r="4" fill="#6366f1" opacity="0.5" />
-      <text x={RCX} y={404} textAnchor="middle" fontSize="14" fontWeight="800" fill="#6366f1"
-        opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Archetype Profile · L3</text>
-      <text x={RCX} y={422} textAnchor="middle" fontSize="11" fill="#64748b"
-        opacity={step>=10?1:0} style={{ transition: 'opacity 0.4s' }}>Where do you want to go?</text>
-    </svg>
-  );
-}
-
-// ── P2: "you" built axis-by-axis → uncertainty growth arcs ───
-function SceneRadarGrowth({ isActive }) {
-  const step = useAnimStep(isActive, 12, 260);
-  const YOU = [4, 3, 2, 4];
-  return (
-    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <RadarGrid dimOpacity={0.28} />
-      <polygon points={rPoly([3,3,3,3])} fill="none" stroke="#6366f155" strokeWidth="1.5" strokeDasharray="5 3" />
+      {/* Archetype annotation — near Impact vertex, upper area */}
+      <g opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>
+        <text x={232} y={118} fontSize="12" fontWeight="800" fill="#6366f1" textAnchor="start">Archetype Profile</text>
+        <text x={232} y={133} fontSize="10" fill="#64748b" textAnchor="start">What's expected in this role</text>
+        <line x1={228} y1={131} x2={221} y2={131.2} stroke="#6366f1" strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
+      </g>
+      {/* Current profile polygon */}
       <polygon points={rPoly(YOU)} fill="#0891b218" stroke="#0891b2" strokeWidth="2.5"
-        opacity={step>=6?1:0} style={{ transition: 'opacity 0.5s' }} />
-      {RDIMS.map((d, i) => {
-        const show = step > i;
+        opacity={step>=11?1:0} style={{ transition: 'opacity 0.5s' }} />
+      {step>=11 && RDIMS.map((d, i) => {
         const p = rPt(i, YOU[i]);
-        const lp = polar(RCX, RCY, d.angle, (YOU[i]/5)*RR + 18);
-        return (
-          <g key={i} opacity={show?1:0} style={{ transition: 'opacity 0.35s' }}>
-            <line x1={RCX} y1={RCY} x2={p.x} y2={p.y}
-              stroke={d.color} strokeWidth="1.5" opacity="0.35" strokeDasharray="4 3" />
-            <circle cx={p.x} cy={p.y} r="6" fill={d.color} opacity="0.9" />
-            <text x={lp.x} y={lp.y} fontSize="10" fontWeight="700" fill={d.color}
-              textAnchor="middle" dominantBaseline="middle"
-              opacity={step<7?1:0} style={{ transition: 'opacity 0.3s' }}>{YOU[i]}</text>
-          </g>
-        );
+        return <circle key={i} cx={p.x} cy={p.y} r="5" fill={d.color} opacity="0.85" />;
       })}
-      {step>=8 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
-        const sp = rPt(2, YOU[2]);           // Communication underperforming (score 2)
-        const ep = rPt(2, 3);               // Communication archetype level (score 3)
+      {/* Current profile annotation — near Technical side, left */}
+      <g opacity={step>=11?1:0} style={{ transition: 'opacity 0.4s' }}>
+        <text x={208} y={248} fontSize="12" fontWeight="800" fill="#0891b2" textAnchor="end">Your current profile</text>
+        <line x1={210} y1={247} x2={220} y2={245} stroke="#0891b2" strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
+      </g>
+      {/* Beat — question appears before arcs */}
+      <text x={220} y={410} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=12?1:0} style={{ transition: 'opacity 0.4s' }}>
+        Where do you want to go, and where are you right now?
+      </text>
+      {/* Development arcs — comm 2→3 */}
+      {step>=13 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
+        const sp = rPt(2, YOU[2]);
+        const ep = rPt(2, 3);
         const mx = (sp.x + ep.x) / 2;
         const my = (sp.y + ep.y) / 2;
         return (
@@ -1864,18 +1860,81 @@ function SceneRadarGrowth({ isActive }) {
             opacity={i===2?0.65:0.2} strokeDasharray={i===2?'none':'4 5'} />
         );
       })}
-      <text x={RCX} y={402} textAnchor="middle" fontSize="14" fontWeight="800" fill="#0891b2"
-        opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>Your Current Profile</text>
-      <text x={RCX} y={420} textAnchor="middle" fontSize="11" fill="#64748b"
-        opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Grow Communication 2→3 to reach archetype</text>
-      {step>=9 && (
-        <>
-          <circle cx={rPt(2,3).x} cy={rPt(2,3).y} r="8" fill="none"
-            stroke="#6366f1" strokeWidth="2" strokeDasharray="4 2" opacity="0.85" />
-          <text x={rPt(2,3).x + 14} y={rPt(2,3).y - 4} fontSize="10" fill="#6366f1" fontWeight="700">Archetype</text>
-          <text x={rPt(2,3).x + 14} y={rPt(2,3).y + 10} fontSize="10" fill="#6366f1" opacity="0.75">Comm: 3</text>
-        </>
-      )}
+      {/* Dev paths annotation */}
+      <g opacity={step>=14?1:0} style={{ transition: 'opacity 0.4s' }}>
+        <text x={250} y={300} fontSize="10" fontWeight="700" fill="#059669" textAnchor="start">Development paths</text>
+        <line x1={248} y1={299} x2={225} y2={294} stroke="#059669" strokeWidth="1" strokeDasharray="3 2" opacity="0.6"/>
+      </g>
+    </svg>
+  );
+}
+
+// ── P2: lopsided profiles — sequentially reveal dim scores ────
+function SceneRadarGrowth({ isActive }) {
+  const YOU = [4, 3, 2, 4];
+  const step = useAnimStep(isActive, 6, 380);
+  // Callout config per dim: angle-aware position outside the score point
+  const callouts = [
+    // Impact (up, score 4)
+    { scoreLabel: '4', tag: 'Above expectations',  color: RDIMS[0].color,
+      tx: 220, ty: 76, anchor: 'middle' },
+    // Reasoning (right, score 3)
+    { scoreLabel: '3', tag: 'Meets expectations',  color: RDIMS[1].color,
+      tx: 334, ty: 214, anchor: 'start' },
+    // Communication (down, score 2)
+    { scoreLabel: '2', tag: 'Development area',    color: RDIMS[2].color,
+      tx: 220, ty: 292, anchor: 'middle' },
+    // Technical (left, score 4)
+    { scoreLabel: '4', tag: 'Above expectations',  color: RDIMS[3].color,
+      tx: 106, ty: 214, anchor: 'end' },
+  ];
+  return (
+    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+      {/* Grid + archetype reference (dashed) */}
+      <RadarGrid dimOpacity={0.22} />
+      <polygon points={rPoly([3,3,3,3])} fill="none" stroke="#6366f140" strokeWidth="1.5" strokeDasharray="5 3" />
+      {/* Current profile — visible from the start */}
+      <polygon points={rPoly(YOU)} fill="#0891b212" stroke="#0891b2" strokeWidth="2"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }} />
+      {RDIMS.map((d, i) => {
+        const p = rPt(i, YOU[i]);
+        return (
+          <circle key={i} cx={p.x} cy={p.y} r="6"
+            fill={d.color} opacity={step>=1?0.85:0}
+            style={{ transition: 'opacity 0.4s' }} />
+        );
+      })}
+      {/* Sequential dim score callouts */}
+      {callouts.map((c, i) => {
+        const p = rPt(i, YOU[i]);
+        const active = step >= i + 2; // steps 2,3,4,5 light up dims 0,1,2,3
+        return (
+          <g key={i} opacity={active?1:0} style={{ transition: 'opacity 0.4s' }}>
+            {/* Highlight ring on active dim point */}
+            <circle cx={p.x} cy={p.y} r="11" fill={c.color} fillOpacity="0.18"
+              stroke={c.color} strokeWidth="1.5" opacity="0.7"/>
+            {/* Score number */}
+            <text x={c.tx} y={c.ty} fontSize="20" fontWeight="900" fill={c.color}
+              textAnchor={c.anchor} dominantBaseline="middle">{c.scoreLabel}</text>
+            {/* Tag line */}
+            <text x={c.tx} y={c.ty + 17} fontSize="10" fontWeight="600" fill="#64748b"
+              textAnchor={c.anchor}>{c.tag}</text>
+          </g>
+        );
+      })}
+      {/* 3 = the goal ring highlight */}
+      <circle cx={RCX} cy={RCY} r={(3/5)*RR} fill="none" stroke="#6366f1"
+        strokeWidth="1" strokeDasharray="4 3"
+        opacity={step>=6?0.5:0} style={{ transition: 'opacity 0.5s' }}/>
+      {/* Bottom message */}
+      <text x={220} y={404} textAnchor="middle" fontSize="13" fontWeight="800" fill="#374151"
+        opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>
+        Everyone has development areas
+      </text>
+      <text x={220} y={420} textAnchor="middle" fontSize="10" fill="#64748b"
+        opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>
+        3 is the goal · 4–5 outperform · 2 is okay · 1 is a signal
+      </text>
     </svg>
   );
 }
@@ -2219,8 +2278,9 @@ function SceneScopeLadder({ isActive }) {
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
       {levels.map((l, i) => {
-        // i=0 (L5): no indent (widest); i=4 (L1): most indent (narrowest)
-        const y=startY+i*stepH, indent=i*16, show=step>=i+1;
+        // i=0 (L5, top): widest; i=4 (L1, bottom): narrowest
+        // Animate bottom-up: L1 first (step 1), L5 last (step 5)
+        const y=startY+i*stepH, indent=i*16, show=step>=(levels.length-i);
         return (
           <g key={i} opacity={show?1:0} style={{ transition: 'opacity 0.4s' }}>
             <rect x={52+indent} y={y} width={336-indent*2} height={58} rx="8"
@@ -2260,16 +2320,21 @@ function SceneRadarPillars({ isActive }) {
   ];
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <RadarGrid dimOpacity={0.3} />
-      <polygon points={rPoly([3,3,3,3])} fill="#6366f10a" stroke="#6366f135" strokeWidth="1.5"
+      {/* Grid rings only — no axis lines (RadarGrid would double them) */}
+      {[1,2,3,4,5].map(l => (
+        <polygon key={l} points={rPoly([l,l,l,l])} fill="none"
+          stroke={l===3?'#cbd5e1':'#e2e8f0'} strokeWidth={l===3?1.4:0.7}/>
+      ))}
+      <polygon points={rPoly([3,3,3,3])} fill="#6366f10a" stroke="#6366f130" strokeWidth="1.5"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}/>
+      {/* Dim axes — revealed one at a time, no duplicate from RadarGrid */}
       {RDIMS.map((d, i) => {
         const e=polar(RCX,RCY,d.angle,RR);
         const c=cfg[i];
         return (
           <g key={i} opacity={step>=i+2?1:0} style={{ transition: 'opacity 0.4s' }}>
-            <line x1={RCX} y1={RCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="4" opacity="0.8"/>
-            <circle cx={e.x} cy={e.y} r="6" fill={d.color}/>
+            <line x1={RCX} y1={RCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="3.5" opacity="0.75"/>
+            <circle cx={e.x} cy={e.y} r="7" fill={d.color}/>
             <text x={e.x+c.ndx} y={e.y+c.ndy} fontSize="12" fontWeight="800" fill={d.color}
               textAnchor={c.nameAnchor} dominantBaseline="middle">{d.short}</text>
             <text x={e.x+c.ddx} y={e.y+c.ddy} fontSize="9" fill="#94a3b8"
@@ -2284,10 +2349,10 @@ function SceneRadarPillars({ isActive }) {
 }
 
 // ── P12: reverse-cone decompose (mirror of P5) ───────────────
-// step 1: center "3" (overall level) → step 2: dims + dim scores
-// step 3: comps + comp scores → step 4: caps + cap scores
+// step 1: center "3" (black, overall level) → step 2: dims + scores
+// step 3: comps + scores (dims fade but stay) → step 4: caps + scores + legend
 function SceneDetailLayers({ isActive }) {
-  const step = useAnimStep(isActive, 4, 900);
+  const step = useAnimStep(isActive, 4, 1200);   // slowed down
   const CX=220, CY=220;
   const DDIM=148, DCOMP=112, DCAP=80;
   const DIMS=[
@@ -2298,12 +2363,9 @@ function SceneDetailLayers({ isActive }) {
   ];
   const COMP_OFFS = [-20, 20];
   const CAP_OFFS  = [-8,  8];
-  // Plausible comp scores per dim [left, right]
   const COMP_SCORES = [[3,3],[3,4],[4,4],[2,3]];
-  // Cap scores per comp per dim
   const CAP_SCORES  = [[[3,3],[3,3]],[[3,4],[4,3]],[[4,4],[4,3]],[[2,3],[3,2]]];
 
-  // Angle-aware text anchor for score labels at axis endpoints
   const scoreAnchor = angle => {
     const a = ((angle%360)+360)%360;
     if (a===270) return { anchor:'middle', dy:-18, dx:0  };
@@ -2313,31 +2375,37 @@ function SceneDetailLayers({ isActive }) {
   };
 
   const topLabel = step===0?'': step===1?'1 Overall Level': step===2?'4 Dimensions': step===3?'Competency Groups':'Capabilities';
-  const subLabel = step===0?'': step===1?'One number for HR and calibration': step===2?'Each dim scored separately': step===3?'Each dim has 2–3 competency groups':'Each competency breaks into observable capabilities';
+  const subLabel = step===0?'': step===1?'One number for HR and calibration': step===2?'Each dimension scored separately': step===3?'Each dimension has 2–3 competency groups':'Each competency has observable capabilities';
+
+  // Legend items: line thickness maps to rubric hierarchy
+  const legendItems = [
+    { sw: 6.5, label: 'Dimension',        color: '#374151' },
+    { sw: 2.5, label: 'Competency Group', color: '#374151' },
+    { sw: 1.2, label: 'Capability',       color: '#374151' },
+  ];
 
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      {/* Step 1: single overall "3" in center */}
-      <text x={CX} y={CY+8} textAnchor="middle" fontSize="56" fontWeight="900" fill="#6366f1"
-        opacity={step===1?0.85:0} style={{ transition: 'opacity 0.6s' }}>3</text>
-      <text x={CX} y={CY+36} textAnchor="middle" fontSize="11" fill="#94a3b8"
+      {/* Step 1: single overall "3" in center — BLACK not dim color */}
+      <text x={CX} y={CY+8} textAnchor="middle" fontSize="60" fontWeight="900" fill="#1e293b"
+        opacity={step>=1 ? (step===1 ? 0.9 : 0.15) : 0} style={{ transition: 'opacity 0.7s' }}>3</text>
+      <text x={CX} y={CY+38} textAnchor="middle" fontSize="11" fill="#94a3b8"
         opacity={step===1?0.9:0} style={{ transition: 'opacity 0.5s' }}>overall level</text>
 
-      {/* Steps 2+: dim axes — all appear at once */}
+      {/* Steps 2+: dim axes */}
       {DIMS.map((d, di) => {
         const e=polar(CX,CY,d.angle,DDIM);
         const sc=scoreAnchor(d.angle);
+        const dimScoreOpacity = step>=2 ? (step===2 ? 1 : 0.22) : 0;
         return (
           <g key={di} opacity={step>=2?1:0} style={{ transition: 'opacity 0.7s' }}>
             <line x1={CX} y1={CY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="6.5" opacity="0.86"/>
-            {/* Dim score at axis endpoint */}
             <text x={e.x+sc.dx} y={e.y+sc.dy} fontSize="22" fontWeight="900" fill={d.color}
               textAnchor={sc.anchor} dominantBaseline="middle"
-              opacity={step===2?1:0} style={{ transition: 'opacity 0.5s' }}>{d.score}</text>
-            {/* Dim name below score — fades out at step 3+ */}
+              opacity={dimScoreOpacity} style={{ transition: 'opacity 0.7s' }}>{d.score}</text>
             <text x={e.x+sc.dx} y={e.y+sc.dy+(sc.dy<0?-16:sc.dy>0?16:16)} fontSize="9" fontWeight="700" fill={d.color}
               textAnchor={sc.anchor} dominantBaseline="middle"
-              opacity={step===2?0.7:0} style={{ transition: 'opacity 0.5s' }}>{d.name}</text>
+              opacity={dimScoreOpacity} style={{ transition: 'opacity 0.7s' }}>{d.name}</text>
           </g>
         );
       })}
@@ -2346,34 +2414,48 @@ function SceneDetailLayers({ isActive }) {
       {DIMS.map((d, di) => COMP_OFFS.map((off, oi) => {
         const e=polar(CX,CY,d.angle+off,DCOMP);
         const sc=scoreAnchor(d.angle+off);
+        const compScoreOpacity = step>=3 ? (step===3 ? 0.9 : 0.22) : 0;
         return (
           <g key={`cg${di}${oi}`}>
             <AnimLine x1={CX} y1={CY} x2={e.x} y2={e.y}
-              grow={step>=3} ms={420} stroke={d.color} strokeWidth="2.5" opacity="0.55"/>
+              grow={step>=3} ms={500} stroke={d.color} strokeWidth="2.5" opacity="0.55"/>
             <text x={e.x+sc.dx*0.7} y={e.y+sc.dy*0.7} fontSize="16" fontWeight="800" fill={d.color}
               textAnchor={sc.anchor} dominantBaseline="middle"
-              opacity={step===3?0.9:0} style={{ transition: 'opacity 0.5s' }}>{COMP_SCORES[di][oi]}</text>
+              opacity={compScoreOpacity} style={{ transition: 'opacity 0.7s' }}>{COMP_SCORES[di][oi]}</text>
           </g>
         );
       }))}
 
-      {/* Steps 4: cap lines */}
+      {/* Step 4: cap lines */}
       {DIMS.map((d, di) => COMP_OFFS.map((off, oi) => CAP_OFFS.map((coff, ci) => {
         const e=polar(CX,CY,d.angle+off+coff,DCAP);
         const sc=scoreAnchor(d.angle+off+coff);
         return (
           <g key={`kg${di}${oi}${ci}`}>
             <AnimLine x1={CX} y1={CY} x2={e.x} y2={e.y}
-              grow={step>=4} ms={320} stroke={d.color} strokeWidth="1.2" opacity="0.4"/>
+              grow={step>=4} ms={380} stroke={d.color} strokeWidth="1.2" opacity="0.4"/>
             <text x={e.x+sc.dx*0.5} y={e.y+sc.dy*0.5} fontSize="11" fontWeight="700" fill={d.color}
               textAnchor={sc.anchor} dominantBaseline="middle"
-              opacity={step>=4?0.85:0} style={{ transition: 'opacity 0.5s' }}>{CAP_SCORES[di][oi][ci]}</text>
+              opacity={step>=4?0.82:0} style={{ transition: 'opacity 0.6s' }}>{CAP_SCORES[di][oi][ci]}</text>
           </g>
         );
       })))}
 
       <circle cx={CX} cy={CY} r="5" fill="#374151"
         opacity={step>=2?0.6:0} style={{ transition: 'opacity 0.5s' }}/>
+
+      {/* Legend — appears at step 4 */}
+      <g opacity={step>=4?1:0} style={{ transition: 'opacity 0.6s' }}>
+        <rect x={314} y={370} width={112} height={56} rx="6"
+          fill="white" fillOpacity="0.9" stroke="#e2e8f0" strokeWidth="1"/>
+        {legendItems.map((l, li) => (
+          <g key={li} transform={`translate(320, ${382 + li*16})`}>
+            <line x1={0} y1={0} x2={22} y2={0} stroke="#374151" strokeWidth={l.sw} opacity="0.75"/>
+            <text x={28} y={0} fontSize="9" fill="#374151" dominantBaseline="middle">{l.label}</text>
+          </g>
+        ))}
+      </g>
+
       <text x={220} y={44} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>{topLabel}</text>
       <text x={220} y={406} textAnchor="middle" fontSize="11" fill="#64748b"
@@ -2465,9 +2547,8 @@ function PhilosophyScrolly({ sections }) {
     'pull-self-assess': {
       accent: '#059669',
       lines: [
-        { text: '"I did X in context Z"', big: true, italic: true },
-        { text: 'beats any number alone.', big: true },
-        { text: 'Self-assessment lands when it\'s specific. Anchor every rating to a concrete example.', small: true, muted: true },
+        { text: '"I did X in context Z" beats any number alone.', big: true, italic: true },
+        { text: 'Anchor every rating to a concrete example. Specificity is what makes self-assessment land.', rule: true },
       ],
     },
     'pull-checklist': {
