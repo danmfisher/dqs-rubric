@@ -84,7 +84,20 @@ The four top-level Dimensions are:
 
 ---
 
-## 6. Promotion vs. Rating
+## 6. Extensibility
+
+The rubric is designed to be shared across job functions (Engineering, Product, Design, Data, etc.) with minimal reinvention. The shared Dimensions and Competencies travel across functions; the **Domain-Specific Competency** within Technical Competencies is the primary customization point for each track.
+
+The first-pass content in this rubric reflects the Software Engineering (IC) track. Subsequent passes will adapt content for Engineering Management and Data/ML/AI, with additional tracks added over time.
+
+When adapting for a new job function:
+- Shared Dimensions and Competencies should be preserved
+- Capability descriptions should be reviewed for language that inadvertently assumes an engineering context
+- Domain-Specific content is written fresh for each track
+
+---
+
+## 7. Promotion vs. Rating
 
 These are **separate conversations** and must stay that way.
 
@@ -100,7 +113,7 @@ Formally, promotion conversations are initiated by managers. Culturally, individ
 
 ---
 
-## 7. Behavioral, Observable Language
+## 8. Behavioral, Observable Language
 
 Every description in this rubric is written in **behavioral, observable language** — describing what someone does, not who they are.
 
@@ -117,7 +130,7 @@ This principle serves three purposes:
 
 ---
 
-## 8. Fairness and Bias Prevention
+## 9. Fairness and Bias Prevention
 
 The rubric is designed to be a fair, unbiased, and non-discriminatory instrument. Specific design choices that serve this goal:
 
@@ -128,19 +141,6 @@ The rubric is designed to be a fair, unbiased, and non-discriminatory instrument
 - **Transparent rating structure** means individuals can understand and contest the basis of their ratings.
 
 Managers are expected to approach ratings with awareness of their own biases, and calibration is the organizational mechanism for catching and correcting for them.
-
----
-
-## 9. Extensibility
-
-The rubric is designed to be shared across job functions (Engineering, Product, Design, Data, etc.) with minimal reinvention. The shared Dimensions and Competencies travel across functions; the **Domain-Specific Competency** within Technical Competencies is the primary customization point for each track.
-
-The first-pass content in this rubric reflects the Software Engineering (IC) track. Subsequent passes will adapt content for Engineering Management and Data/ML/AI, with additional tracks added over time.
-
-When adapting for a new job function:
-- Shared Dimensions and Competencies should be preserved
-- Capability descriptions should be reviewed for language that inadvertently assumes an engineering context
-- Domain-Specific content is written fresh for each track
 
 ---
 
