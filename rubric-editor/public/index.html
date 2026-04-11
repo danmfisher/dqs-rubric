@@ -1800,7 +1800,9 @@ function RadarGrid({ showRings = true, showLabels = true, dimOpacity = 0.35 }) {
 
 // ── P1/P2: axes → rings → archetype → current profile → dev arcs ─
 // activePrinciple: "You" polygon + dev arcs only shown when >= 2
+// P1CY: radar center is shifted down 30px because viewBox is 460 tall (not 440)
 function SceneRadarBuild({ isActive, activePrinciple }) {
+  const P1CY = RCY + 30; // radar center Y — shifted down to accommodate title above
   const YOU = [4, 3, 2, 4];
   const ARCH_COLOR = '#374151';
   const YOU_COLOR  = '#7c3aed';
@@ -1812,42 +1814,42 @@ function SceneRadarBuild({ isActive, activePrinciple }) {
       {/* ── GEOMETRY LAYER (renders first / underneath) ── */}
       {/* Level rings */}
       {[1,2,3,4,5].map(l => (
-        <circle key={l} cx={RCX} cy={RCY+30} r={(l/5)*RR}
+        <circle key={l} cx={RCX} cy={P1CY} r={(l/5)*RR}
           fill="none" stroke="#e2e8f0" strokeWidth={l===3?1.5:0.8}
           opacity={step>=5?1:0} style={{ transition: 'opacity 0.5s' }} />
       ))}
       {/* Axis lines */}
       {RDIMS.map((d, i) => {
-        const e = polar(RCX, RCY+30, d.angle, RR);
+        const e = polar(RCX, P1CY, d.angle, RR);
         return (
-          <AnimLine key={i} x1={RCX} y1={RCY+30} x2={e.x} y2={e.y} grow={step>i} ms={300}
+          <AnimLine key={i} x1={RCX} y1={P1CY} x2={e.x} y2={e.y} grow={step>i} ms={300}
             stroke={d.color} strokeWidth="2" opacity="0.5" />
         );
       })}
       {/* Archetype polygon */}
-      <polygon points={RDIMS.map((d,i)=>{ const p=polar(RCX,RCY+30,d.angle,(3/5)*RR); return `${p.x},${p.y}`; }).join(' ')}
+      <polygon points={RDIMS.map((d,i)=>{ const p=polar(RCX,P1CY,d.angle,(3/5)*RR); return `${p.x},${p.y}`; }).join(' ')}
         fill={ARCH_COLOR+'10'} stroke={ARCH_COLOR} strokeWidth="2"
         opacity={step>=7?1:0} style={{ transition: 'opacity 0.6s' }} />
       {step>=7 && RDIMS.map((d, i) => {
-        const p = polar(RCX, RCY+30, d.angle, (3/5)*RR);
+        const p = polar(RCX, P1CY, d.angle, (3/5)*RR);
         return <circle key={i} cx={p.x} cy={p.y} r="4" fill={d.color} opacity="0.85" />;
       })}
       {/* Current profile polygon — only shown at P2+ */}
       {showYou && (
         <>
-          <polygon points={RDIMS.map((d,i)=>{ const p=polar(RCX,RCY+30,d.angle,(YOU[i]/5)*RR); return `${p.x},${p.y}`; }).join(' ')}
+          <polygon points={RDIMS.map((d,i)=>{ const p=polar(RCX,P1CY,d.angle,(YOU[i]/5)*RR); return `${p.x},${p.y}`; }).join(' ')}
             fill={YOU_COLOR+'18'} stroke={YOU_COLOR} strokeWidth="2.5"
             opacity={step>=11?1:0} style={{ transition: 'opacity 0.5s' }} />
           {step>=11 && RDIMS.map((d, i) => {
-            const p = polar(RCX, RCY+30, d.angle, (YOU[i]/5)*RR);
+            const p = polar(RCX, P1CY, d.angle, (YOU[i]/5)*RR);
             return <circle key={i} cx={p.x} cy={p.y} r="5" fill={d.color} opacity="0.85" />;
           })}
         </>
       )}
       {/* Development arcs — comm 2→3 (orange, distinct from COMM green) */}
       {showYou && step>=13 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
-        const sp = polar(RCX, RCY+30, RDIMS[2].angle, (YOU[2]/5)*RR);
-        const ep = polar(RCX, RCY+30, RDIMS[2].angle, (3/5)*RR);
+        const sp = polar(RCX, P1CY, RDIMS[2].angle, (YOU[2]/5)*RR);
+        const ep = polar(RCX, P1CY, RDIMS[2].angle, (3/5)*RR);
         const mx = (sp.x + ep.x) / 2;
         const my = (sp.y + ep.y) / 2;
         return (
@@ -1861,13 +1863,13 @@ function SceneRadarBuild({ isActive, activePrinciple }) {
       {/* ── LABEL LAYER (renders last / always on top) ── */}
       {/* Level ring numbers */}
       {step>=6 && [1,2,3,4,5].map(l => {
-        const lp = polar(RCX, RCY+30, -90, (l/5)*RR);
+        const lp = polar(RCX, P1CY, -90, (l/5)*RR);
         return <text key={l} x={lp.x-12} y={lp.y} fontSize="9" fill="#94a3b8"
           textAnchor="end" dominantBaseline="middle">{l}</text>;
       })}
       {/* Dim labels */}
       {RDIMS.map((d, i) => {
-        const lp = polar(RCX, RCY+30, d.angle, RR + 22);
+        const lp = polar(RCX, P1CY, d.angle, RR + 22);
         return (
           <text key={i} x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
             textAnchor="middle" dominantBaseline="middle"
@@ -1973,62 +1975,9 @@ function SceneRadarGrowth({ isActive }) {
   );
 }
 
-// ── P3: same rating, different level ─────────────────────────
-function SceneRadarRelative({ isActive }) {
-  const step = useAnimStep(isActive, 5, 370);
-  const cx1=120, cy1=240, cx2=320, cy2=240, rv=88;
-  const miniGrid = (cx, cy, color) => (
-    <>
-      {[1,2,3,4,5].map(l => (
-        <circle key={l} cx={cx} cy={cy} r={(l/5)*rv} fill="none"
-          stroke={l===3?'#cbd5e1':'#e2e8f0'} strokeWidth={l===3?1.2:0.7} />
-      ))}
-      {RDIMS.map((d,i) => {
-        const e=polar(cx,cy,d.angle,rv);
-        return <line key={i} x1={cx} y1={cy} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="1" opacity="0.3"/>;
-      })}
-      <polygon
-        points={RDIMS.map((d,i)=>{ const p=polar(cx,cy,d.angle,(3/5)*rv); return `${p.x},${p.y}`; }).join(' ')}
-        fill={color+'22'} stroke={color} strokeWidth="2"/>
-      {RDIMS.map((d,i)=>{ const p=polar(cx,cy,d.angle,(3/5)*rv); return <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={color} opacity="0.85"/>; })}
-    </>
-  );
-  return (
-    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <text x={220} y={50} textAnchor="middle" fontSize="13" fontWeight="700" fill="#374151">
-        Rating 3/5 — at two different levels
-      </text>
-      <g opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}>
-        {miniGrid(cx1,cy1,'#0891b2')}
-        <text x={cx1} y={cy1-rv-18} textAnchor="middle" fontSize="14" fontWeight="800" fill="#0891b2">L2</text>
-        <text x={cx1} y={cy1+rv+20} textAnchor="middle" fontSize="11" fill="#64748b">Meets expectations</text>
-        <text x={cx1} y={cy1+rv+36} textAnchor="middle" fontSize="10" fill="#94a3b8">for this level</text>
-      </g>
-      <g opacity={step>=2?1:0} style={{ transition: 'opacity 0.5s' }}>
-        {miniGrid(cx2,cy2,'#6366f1')}
-        <text x={cx2} y={cy2-rv-18} textAnchor="middle" fontSize="14" fontWeight="800" fill="#6366f1">L4</text>
-        <text x={cx2} y={cy2+rv+20} textAnchor="middle" fontSize="11" fill="#64748b">Meets expectations</text>
-        <text x={cx2} y={cy2+rv+36} textAnchor="middle" fontSize="10" fill="#94a3b8">for this level</text>
-      </g>
-      {step>=3 && (
-        <>
-          <line x1={cx1+rv+8} y1={cy1} x2={cx2-rv-8} y2={cy2} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="4 4"/>
-          <text x={220} y={cy1-5} textAnchor="middle" fontSize="10" fill="#94a3b8">same polygon shape</text>
-        </>
-      )}
-      <rect x={44} y={372} width={352} height={48} rx="8" fill="#f8fafc" stroke="#e2e8f0"
-        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}/>
-      <text x={220} y={392} textAnchor="middle" fontSize="12" fontWeight="700" fill="#374151"
-        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}>A 3 at L4 ≠ A 3 at L2 — ratings are relative to level</text>
-      <text x={220} y={410} textAnchor="middle" fontSize="10" fill="#64748b"
-        opacity={step>=5?1:0} style={{ transition: 'opacity 0.4s' }}>A 5 here is roughly a 2 at the next level up</text>
-    </svg>
-  );
-}
-
 // ── P4: center-of-mass violator ───────────────────────────────
 function SceneRadarCenterOfMass({ isActive }) {
-  const step = useAnimStep(isActive, 7, 320);
+  const step = useAnimStep(isActive, 6, 320);
   const good=[4,4,4,4], viol=[4,4,1,4];
   const comPt = scores => ({
     x: scores.reduce((s,sc,i) => s+rPt(i,sc).x, 0)/4,
@@ -2243,7 +2192,7 @@ function SceneDimensionCone({ isActive, transfer }) {
 
 // ── P6: promotion Venn ────────────────────────────────────────
 function SceneVenn({ isActive }) {
-  const step = useAnimStep(isActive, 5, 350);
+  const step = useAnimStep(isActive, 4, 350);
   // Blue + Yellow = Green — color theory tracks
   const C1 = '#3b82f6'; // blue  (Rubric Readiness)
   const C2 = '#eab308'; // yellow (Business Need)
@@ -2362,7 +2311,7 @@ function SceneScopeLadder({ isActive }) {
 
 // ── P11: four dimensions, none optional ──────────────────────
 function SceneRadarPillars({ isActive }) {
-  const step = useAnimStep(isActive, 6, 300);
+  const step = useAnimStep(isActive, 5, 300);
   // Short desc for each dim — used as sub-label near axis endpoint
   const subdesc = [
     'Delivery · Ownership · Value',
@@ -2415,15 +2364,12 @@ function SceneRadarPillars({ isActive }) {
 // step 1: center "3" (black, overall level) → step 2: dims + scores
 // step 3: comps + scores (dims fade but stay) → step 4: caps + scores + legend
 function SceneDetailLayers({ isActive }) {
-  const step = useAnimStep(isActive, 4, 1200);   // slowed down
-  const CX=220, CY=220;
-  const DDIM=148, DCOMP=112, DCAP=80;
-  const DIMS=[
-    { angle:-90,  color:'#6366f1', name:'Impact',    score:3 },
-    { angle:0,    color:'#0891b2', name:'Reasoning', score:3 },
-    { angle:90,   color:'#059669', name:'Comm',      score:4 },
-    { angle:180,  color:'#d97706', name:'Technical', score:2 },
-  ];
+  const step = useAnimStep(isActive, 4, 1200);   // slow — each step is a full layer reveal
+  // Reuse global radar constants (RCX=220, RCY=220, RR=148) and RDIMS colors/angles
+  const CX=RCX, CY=RCY;
+  const DDIM=RR, DCOMP=112, DCAP=80;
+  const SCENE_SCORES = [3, 3, 4, 2]; // per-dim scores for this scene's illustration
+  const DIMS = RDIMS.map((d, i) => ({ angle: d.angle, color: d.color, name: d.short, score: SCENE_SCORES[i] }));
   const COMP_OFFS = [-20, 20];
   const CAP_OFFS  = [-8,  8];
   const COMP_SCORES = [[3,3],[3,4],[4,4],[2,3]];
@@ -2683,7 +2629,6 @@ function PhilosophyScrolly({ sections }) {
     switch(sceneId) {
       case 'radar-build':    return <SceneRadarBuild    isActive={active} activePrinciple={activeNum}/>;
       case 'radar-growth':   return <SceneRadarGrowth   isActive={active}/>;
-      case 'radar-relative': return <SceneRadarRelative isActive={active}/>;
       case 'radar-com':      return <SceneRadarCenterOfMass isActive={active}/>;
       case 'cone':           return <SceneDimensionCone isActive={active} transfer={false}/>;
       case 'cone-transfer':  return <SceneDimensionCone isActive={active} transfer={true}/>;
