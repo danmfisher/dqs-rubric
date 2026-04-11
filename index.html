@@ -1819,9 +1819,9 @@ function SceneRadarBuild({ isActive }) {
         return <circle key={i} cx={p.x} cy={p.y} r="4" fill={d.color} opacity="0.85" />;
       })}
       <circle cx={RCX} cy={RCY} r="4" fill="#6366f1" opacity="0.5" />
-      <text x={RCX} y={58} textAnchor="middle" fontSize="14" fontWeight="800" fill="#6366f1"
+      <text x={RCX} y={404} textAnchor="middle" fontSize="14" fontWeight="800" fill="#6366f1"
         opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Archetype Profile · L3</text>
-      <text x={RCX} y={76} textAnchor="middle" fontSize="11" fill="#64748b"
+      <text x={RCX} y={422} textAnchor="middle" fontSize="11" fill="#64748b"
         opacity={step>=10?1:0} style={{ transition: 'opacity 0.4s' }}>Where do you want to go?</text>
     </svg>
   );
@@ -1852,24 +1852,28 @@ function SceneRadarGrowth({ isActive }) {
           </g>
         );
       })}
-      {step>=8 && [[-22,8],[-10,18],[0,12],[10,20],[22,6]].map(([dx,dy], i) => {
-        const sx = YOU.reduce((s,sc,di) => s+rPt(di,sc).x, 0)/4;
-        const sy = YOU.reduce((s,sc,di) => s+rPt(di,sc).y, 0)/4;
+      {step>=8 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
+        const sp = rPt(2, YOU[2]);           // Communication underperforming (score 2)
+        const ep = rPt(2, 3);               // Communication archetype level (score 3)
+        const mx = (sp.x + ep.x) / 2;
+        const my = (sp.y + ep.y) / 2;
         return (
           <path key={i} fill="none"
-            d={`M${sx},${sy} Q${(sx+RCX)/2+dx},${(sy+RCY)/2+dy} ${RCX},${RCY}`}
-            stroke="#6366f1" strokeWidth={i===2?2:1}
-            opacity={i===2?0.5:0.13} strokeDasharray={i===2?'6 4':'4 6'} />
+            d={`M${sp.x},${sp.y} Q${mx+dx},${my+dy} ${ep.x},${ep.y}`}
+            stroke="#059669" strokeWidth={i===2?2.5:1}
+            opacity={i===2?0.65:0.2} strokeDasharray={i===2?'none':'4 5'} />
         );
       })}
-      <text x={RCX} y={58} textAnchor="middle" fontSize="14" fontWeight="800" fill="#0891b2"
+      <text x={RCX} y={402} textAnchor="middle" fontSize="14" fontWeight="800" fill="#0891b2"
         opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>Your Current Profile</text>
-      <text x={RCX} y={76} textAnchor="middle" fontSize="11" fill="#64748b"
-        opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Multiple paths toward the archetype</text>
+      <text x={RCX} y={420} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>Grow Communication 2→3 to reach archetype</text>
       {step>=9 && (
         <>
-          <circle cx={RCX} cy={RCY} r="6" fill="#6366f1" opacity="0.7" />
-          <text x={RCX+12} y={RCY+4} fontSize="10" fill="#6366f1" fontWeight="600">Archetype</text>
+          <circle cx={rPt(2,3).x} cy={rPt(2,3).y} r="8" fill="none"
+            stroke="#6366f1" strokeWidth="2" strokeDasharray="4 2" opacity="0.85" />
+          <text x={rPt(2,3).x + 14} y={rPt(2,3).y - 4} fontSize="10" fill="#6366f1" fontWeight="700">Archetype</text>
+          <text x={rPt(2,3).x + 14} y={rPt(2,3).y + 10} fontSize="10" fill="#6366f1" opacity="0.75">Comm: 3</text>
         </>
       )}
     </svg>
@@ -1968,9 +1972,9 @@ function SceneRadarCenterOfMass({ isActive }) {
           </>
         );
       })()}
-      <text x={220} y={56} textAnchor="middle" fontSize="13" fontWeight="800" fill="#ef4444"
+      <text x={220} y={402} textAnchor="middle" fontSize="13" fontWeight="800" fill="#ef4444"
         opacity={step>=5?1:0} style={{ transition: 'opacity 0.4s' }}>A 1 overrides the center of mass</text>
-      <text x={220} y={74} textAnchor="middle" fontSize="10" fill="#64748b"
+      <text x={220} y={420} textAnchor="middle" fontSize="10" fill="#64748b"
         opacity={step>=6?1:0} style={{ transition: 'opacity 0.4s' }}>Offsetting 4s don't compensate for a critical gap</text>
     </svg>
   );
@@ -1979,10 +1983,14 @@ function SceneRadarCenterOfMass({ isActive }) {
 // ── P5/P9: dimension cone — builds one, then reveals all four ─
 function SceneDimensionCone({ isActive, transfer }) {
   const TOTAL = 22;
-  const step = useAnimStep(isActive, TOTAL, 170);
-  const CCX=220, CCY=368, RDIM=190, RCOMP=152, RCAP=112;
-  const DA=-90;
-  const COMP_ANG=[-90-20, -90, -90+20];
+  const rawStep = useAnimStep(isActive, TOTAL, 240);
+  // P9 (transfer): skip straight to quad — no rebuild animation
+  const step = transfer ? TOTAL : rawStep;
+
+  // Single-cone grows from center (220,220) using Reasoning & Framing (angle=0, →right)
+  const CCX=220, CCY=220, RDIM=165, RCOMP=128, RCAP=95;
+  const DA=0;   // Reasoning & Framing points right
+  const COMP_ANG=[-20, 0, 20];
   const CAP_ANG=COMP_ANG.map(ca=>[ca-7, ca, ca+7]);
   const compNames=['Problem Structuring','Solution Crafting','Realizing Success'];
   const capNames=[['Define','Tradeoffs','Frame'],['Evaluate','Design','Validate'],['Anticipate','Adapt','Drive']];
@@ -1998,12 +2006,21 @@ function SceneDimensionCone({ isActive, transfer }) {
   const QCX=220, QCY=220, QDIM=148, QCOMP=115;
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      {/* ── Single-cone phase ── */}
+      <defs>
+        <style>{`
+          @keyframes techPulse {
+            0%,100% { opacity: 0.86; filter: drop-shadow(0 0 3px #d97706); }
+            50%      { opacity: 1;    filter: drop-shadow(0 0 12px #d97706) drop-shadow(0 0 24px #f59e0b); }
+          }
+          .tech-axis-glow { animation: techPulse 2s ease-in-out infinite; }
+        `}</style>
+      </defs>
+      {/* ── Single-cone phase (P5 only) ── */}
       <g opacity={showSingle?1:0} style={{ transition: 'opacity 0.7s' }}>
         {[0,1,2].map(ci => CAP_ANG[ci].map((ca,ki) => {
           const e=polar(CCX,CCY,ca,RCAP);
           return <AnimLine key={`c${ci}k${ki}`} x1={CCX} y1={CCY} x2={e.x} y2={e.y}
-            grow={step>=capStep[ci][ki]} ms={180} stroke="#0891b2" strokeWidth="1.2" opacity="0.5"/>;
+            grow={step>=capStep[ci][ki]} ms={200} stroke="#0891b2" strokeWidth="1.2" opacity="0.5"/>;
         }))}
         {[0,1,2].map(ci => CAP_ANG[ci].map((ca,ki) => {
           const lp=polar(CCX,CCY,ca,RCAP+15);
@@ -2015,10 +2032,10 @@ function SceneDimensionCone({ isActive, transfer }) {
         {[0,1,2].map(ci => {
           const e=polar(CCX,CCY,COMP_ANG[ci],RCOMP);
           return <AnimLine key={`co${ci}`} x1={CCX} y1={CCY} x2={e.x} y2={e.y}
-            grow={step>=compStep[ci]} ms={200} stroke="#0891b2" strokeWidth="3.5" opacity="0.72"/>;
+            grow={step>=compStep[ci]} ms={220} stroke="#0891b2" strokeWidth="3.5" opacity="0.72"/>;
         })}
         {[0,1,2].map(ci => {
-          const lp=polar(CCX,CCY,COMP_ANG[ci],RCOMP+20);
+          const lp=polar(CCX,CCY,COMP_ANG[ci],RCOMP+22);
           const show=step>=compLabelStep[ci]&&step<dimLabelStep;
           return <text key={`cob${ci}`} x={lp.x} y={lp.y} fontSize="10" fontWeight="600" fill="#0891b2"
             textAnchor="middle" dominantBaseline="middle"
@@ -2027,15 +2044,13 @@ function SceneDimensionCone({ isActive, transfer }) {
         {(() => {
           const e=polar(CCX,CCY,DA,RDIM);
           return <AnimLine x1={CCX} y1={CCY} x2={e.x} y2={e.y}
-            grow={step>=dimStep} ms={320} stroke="#0891b2" strokeWidth="7" opacity="0.9"/>;
+            grow={step>=dimStep} ms={420} stroke="#0891b2" strokeWidth="7" opacity="0.9"/>;
         })()}
-        {(() => {
-          const lp=polar(CCX,CCY,DA,RDIM+26);
-          return <text x={lp.x} y={lp.y} fontSize="13" fontWeight="800" fill="#0891b2" textAnchor="middle"
-            opacity={step>=dimLabelStep?1:0} style={{ transition: 'opacity 0.4s' }}>Reasoning & Framing</text>;
-        })()}
+        {/* Label at top of SVG — never clips */}
+        <text x={220} y={30} textAnchor="middle" fontSize="13" fontWeight="800" fill="#0891b2"
+          opacity={step>=dimLabelStep?1:0} style={{ transition: 'opacity 0.4s' }}>Reasoning & Framing</text>
         <circle cx={CCX} cy={CCY} r="5" fill="#0891b2" opacity="0.65"/>
-        <text x={220} y={32} textAnchor="middle" fontSize="11" fill="#94a3b8"
+        <text x={220} y={418} textAnchor="middle" fontSize="11" fill="#94a3b8"
           opacity={step>=1&&step<dimStep?1:0} style={{ transition: 'opacity 0.3s' }}>
           Capabilities → Competencies → Dimension
         </text>
@@ -2051,28 +2066,32 @@ function SceneDimensionCone({ isActive, transfer }) {
                 return <line key={j} x1={QCX} y1={QCY} x2={ce.x} y2={ce.y}
                   stroke={d.color} strokeWidth="2.5" opacity="0.42"/>;
               })}
-              <line x1={QCX} y1={QCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="6.5" opacity="0.86"/>
+              <line x1={QCX} y1={QCY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="6.5"
+                className={!d.shared?'tech-axis-glow':''} opacity="0.86"/>
               {(() => {
                 const lp=polar(QCX,QCY,d.angle,QDIM+26);
                 return <text x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
                   textAnchor="middle" dominantBaseline="middle">{d.name}</text>;
               })()}
               {transfer && (() => {
-                const lp=polar(QCX,QCY,d.angle,QDIM+44);
-                return <text x={lp.x} y={lp.y} fontSize="9" fontWeight="600"
-                  fill={d.shared?'#059669':'#d97706'} textAnchor="middle" dominantBaseline="middle">
-                  {d.shared?'✓ shared':'⚙ track-specific'}
+                // Mid-axis label (55% of dim radius) — avoids conflict with dim name at QDIM+26
+                const lp=polar(QCX,QCY,d.angle,QDIM*0.55);
+                return <text x={lp.x} y={lp.y} fontSize="9" fontWeight="700"
+                  fill="white" stroke={d.color} strokeWidth="3"
+                  style={{ paintOrder: 'stroke' }}
+                  textAnchor="middle" dominantBaseline="middle">
+                  {d.shared?'shared':'track-specific'}
                 </text>;
               })()}
             </g>
           );
         })}
         <circle cx={QCX} cy={QCY} r="5" fill="#374151" opacity="0.6"/>
-        <text x={QCX} y={52} textAnchor="middle" fontSize="13" fontWeight="800" fill="#374151">
+        <text x={QCX} y={412} textAnchor="middle" fontSize="13" fontWeight="800" fill="#374151">
           {transfer?'Shared vs Track-Specific Dimensions':'Four Dimensions of the Rubric'}
         </text>
         {transfer && (
-          <text x={QCX} y={70} textAnchor="middle" fontSize="10" fill="#64748b">
+          <text x={QCX} y={428} textAnchor="middle" fontSize="10" fill="#64748b">
             Three shared · one track-specific customization point
           </text>
         )}
@@ -2163,32 +2182,32 @@ function ScenePullQuote({ isActive, accent, lines }) {
 // ── P10: scope ladder ─────────────────────────────────────────
 function SceneScopeLadder({ isActive }) {
   const step = useAnimStep(isActive, 6, 310);
+  // L5 at top (up = growth), L1 at bottom — widest bar at top (biggest scope)
   const levels = [
-    { lv:'L1', scope:'Task',               desc:'Executes well-defined work',           color:'#94a3b8' },
-    { lv:'L2', scope:'Own Work',            desc:'Owns a feature end-to-end',            color:'#64748b' },
-    { lv:'L3', scope:'Team Process',        desc:'Shapes how the team operates',          color:'#0891b2' },
-    { lv:'L4', scope:'Cross-team',          desc:'Drives alignment across teams',         color:'#6366f1' },
     { lv:'L5', scope:'Engineering Culture', desc:'Defines how engineering gets done',     color:'#7c3aed' },
+    { lv:'L4', scope:'Cross-team',          desc:'Drives alignment across teams',         color:'#6366f1' },
+    { lv:'L3', scope:'Team Process',        desc:'Shapes how the team operates',          color:'#0891b2' },
+    { lv:'L2', scope:'Own Work',            desc:'Owns a feature end-to-end',            color:'#64748b' },
+    { lv:'L1', scope:'Task',               desc:'Executes well-defined work',           color:'#94a3b8' },
   ];
-  const startY=88, stepH=58;
+  const startY=52, stepH=68;
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <text x={220} y={54} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151">
-        Level = Scope, Not Tenure
-      </text>
       {levels.map((l, i) => {
-        const y=startY+i*stepH, indent=i*14, show=step>=(levels.length-i);
+        // i=0 (L5): no indent (widest); i=4 (L1): most indent (narrowest)
+        const y=startY+i*stepH, indent=i*16, show=step>=i+1;
         return (
           <g key={i} opacity={show?1:0} style={{ transition: 'opacity 0.4s' }}>
-            <rect x={60+indent} y={y} width={320-indent*2} height={46} rx="7"
+            <rect x={52+indent} y={y} width={336-indent*2} height={58} rx="8"
               fill={l.color} fillOpacity="0.1" stroke={l.color} strokeWidth="1.8"/>
-            <text x={72+indent} y={y+16} fontSize="12" fontWeight="800" fill={l.color}>{l.lv}</text>
-            <text x={72+indent} y={y+33} fontSize="12" fontWeight="600" fill="#374151">{l.scope}</text>
-            <text x={368-indent} y={y+24} fontSize="10" fill="#64748b"
-              textAnchor="end" dominantBaseline="middle">{l.desc}</text>
+            <text x={66+indent} y={y+17} fontSize="13" fontWeight="800" fill={l.color}>{l.lv}</text>
+            <text x={66+indent} y={y+33} fontSize="12" fontWeight="600" fill="#374151">{l.scope}</text>
+            <text x={66+indent} y={y+50} fontSize="10" fill="#64748b">{l.desc}</text>
           </g>
         );
       })}
+      <text x={220} y={424} textAnchor="middle" fontSize="13" fontWeight="700" fill="#374151"
+        opacity={step>=5?1:0} style={{ transition: 'opacity 0.4s' }}>Level = Scope, Not Tenure</text>
     </svg>
   );
 }
@@ -2223,39 +2242,66 @@ function SceneRadarPillars({ isActive }) {
           </g>
         );
       })}
-      <text x={220} y={56} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+      <text x={220} y={414} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Four dimensions — all load-bearing</text>
     </svg>
   );
 }
 
-// ── P12: three-tier detail layer cake ────────────────────────
+// ── P12: reverse-cone decompose (mirror of P5) ───────────────
+// Starts coarse (4 dim axes) → expands into comps → into caps
 function SceneDetailLayers({ isActive }) {
-  const step = useAnimStep(isActive, 4, 370);
-  const layers = [
-    { label:'1 Overall Level',      sub:'For HR & promotions',           color:'#6366f1', y:86,  h:58 },
-    { label:'4 Dimension Scores',   sub:'For calibration conversations',  color:'#0891b2', y:162, h:80 },
-    { label:'N Competency Ratings', sub:'For the actual conversation',    color:'#059669', y:260, h:104 },
+  const step = useAnimStep(isActive, 3, 750);
+  const CX=220, CY=220;
+  const DDIM=148, DCOMP=112, DCAP=80;
+  const DIMS=[
+    { angle:-90,  color:'#6366f1', name:'Impact'    },
+    { angle:0,    color:'#0891b2', name:'Reasoning'  },
+    { angle:90,   color:'#059669', name:'Comm'       },
+    { angle:180,  color:'#d97706', name:'Technical'  },
   ];
+  const COMP_OFFS = [-20, 20];
+  const CAP_OFFS  = [-8,  8];
+  const topLabel = step===0 ? '' : step===1 ? '4 Dimensions' : step===2 ? '↓ Competencies' : '↓ Capabilities';
+  const subLabel = step===0 ? '' : step===1 ? 'The rubric starts here — four axes of performance'
+    : step===2 ? 'Each dimension contains 2–3 competency groups'
+    : 'Each competency has multiple observable capabilities';
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <text x={220} y={54} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
-        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Three tiers of detail</text>
-      {layers.map((l, i) => {
-        const pad=i*22;
+      {/* Dim axes — all appear at once in step 1 */}
+      {DIMS.map((d, di) => {
+        const e=polar(CX,CY,d.angle,DDIM);
+        const lp=polar(CX,CY,d.angle,DDIM+26);
         return (
-          <g key={i} opacity={step>=i+1?1:0} style={{ transition: 'opacity 0.5s' }}>
-            <rect x={56+pad} y={l.y} width={328-pad*2} height={l.h} rx="8"
-              fill={l.color} fillOpacity="0.1" stroke={l.color} strokeWidth="2"/>
-            <text x={220} y={l.y+26} textAnchor="middle" fontSize="14" fontWeight="800" fill={l.color}>{l.label}</text>
-            <text x={220} y={l.y+45} textAnchor="middle" fontSize="11" fill="#64748b">{l.sub}</text>
+          <g key={di} opacity={step>=1?1:0} style={{ transition: 'opacity 0.6s' }}>
+            <line x1={CX} y1={CY} x2={e.x} y2={e.y} stroke={d.color} strokeWidth="6.5" opacity="0.86"/>
+            <text x={lp.x} y={lp.y} fontSize="10" fontWeight="700" fill={d.color}
+              textAnchor="middle" dominantBaseline="middle">{d.name}</text>
           </g>
         );
       })}
-      <text x={220} y={392} textAnchor="middle" fontSize="11" fill="#64748b"
-        opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}>
-        Go only as deep as the conversation needs
-      </text>
+      {/* Comp lines — grow at step 2 */}
+      {DIMS.map((d, di) => COMP_OFFS.map((off, oi) => {
+        const e=polar(CX,CY,d.angle+off,DCOMP);
+        return (
+          <AnimLine key={`c${di}${oi}`} x1={CX} y1={CY} x2={e.x} y2={e.y}
+            grow={step>=2} ms={380} stroke={d.color} strokeWidth="2.5" opacity="0.52"/>
+        );
+      }))}
+      {/* Cap lines — grow at step 3 */}
+      {DIMS.map((d, di) => COMP_OFFS.map((off, oi) => CAP_OFFS.map((coff, ci) => {
+        const e=polar(CX,CY,d.angle+off+coff,DCAP);
+        return (
+          <AnimLine key={`k${di}${oi}${ci}`} x1={CX} y1={CY} x2={e.x} y2={e.y}
+            grow={step>=3} ms={300} stroke={d.color} strokeWidth="1.2" opacity="0.4"/>
+        );
+      })))}
+      <circle cx={CX} cy={CY} r="5" fill="#374151"
+        opacity={step>=1?0.6:0} style={{ transition: 'opacity 0.5s' }}/>
+      <text x={220} y={30} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>{topLabel}</text>
+      <text x={220} y={418} textAnchor="middle" fontSize="11" fill="#64748b"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>{subLabel}</text>
     </svg>
   );
 }
@@ -2319,10 +2365,10 @@ function PhilosophyScrolly({ sections }) {
     'pull-behaviors': {
       accent: '#0891b2',
       lines: [
-        { text: 'Describe what you experience people DO,', big: true },
-        { text: "not what you've decided they ARE.", big: true },
+        { text: 'Behaviors are citable. Traits invite bias. Write what you\'ve observed.', big: true },
         { contrast: true, before: '"She\'s strategic"', after: '"She redesigned our incident process before anyone asked"' },
-        { text: 'Behaviors are citable. Traits invite bias. Write what you\'ve observed.', small: true, muted: true },
+        { text: 'Describe what you experience people DO,', small: true, muted: true },
+        { text: "not what you've decided they ARE.", small: true, muted: true },
       ],
     },
     'pull-fairness': {
