@@ -1785,42 +1785,30 @@ function RadarGrid({ showRings = true, showLabels = true, dimOpacity = 0.35 }) {
   );
 }
 
-// ── P1: axes → rings → archetype → current profile → dev arcs ─
-function SceneRadarBuild({ isActive }) {
+// ── P1/P2: axes → rings → archetype → current profile → dev arcs ─
+// activePrinciple: "You" polygon + dev arcs only shown when >= 2
+function SceneRadarBuild({ isActive, activePrinciple }) {
   const YOU = [4, 3, 2, 4];
   const ARCH_COLOR = '#374151';
   const YOU_COLOR  = '#7c3aed';
+  const ARC_COLOR  = '#f97316'; // orange — distinct from all 4 dim colors
   const step = useAnimStep(isActive, 14, 400);
+  const showYou = activePrinciple != null && activePrinciple >= 2;
   return (
     <svg viewBox="0 0 440 460" width="100%" height="100%" style={{ maxHeight: 500 }}>
-      {/* Title */}
-      <text x={220} y={32} textAnchor="middle" fontSize="18" fontWeight="800" fill="#0f172a"
-        opacity={step>=12?1:0} style={{ transition: 'opacity 0.4s' }}>
-        Where do you want to go — and where are you now?
-      </text>
+      {/* ── GEOMETRY LAYER (renders first / underneath) ── */}
       {/* Level rings */}
       {[1,2,3,4,5].map(l => (
         <circle key={l} cx={RCX} cy={RCY+30} r={(l/5)*RR}
           fill="none" stroke="#e2e8f0" strokeWidth={l===3?1.5:0.8}
           opacity={step>=5?1:0} style={{ transition: 'opacity 0.5s' }} />
       ))}
-      {step>=6 && [1,2,3,4,5].map(l => {
-        const lp = polar(RCX, RCY+30, -90, (l/5)*RR);
-        return <text key={l} x={lp.x-12} y={lp.y} fontSize="9" fill="#94a3b8"
-          textAnchor="end" dominantBaseline="middle">{l}</text>;
-      })}
-      {/* Axis lines + dim labels */}
+      {/* Axis lines */}
       {RDIMS.map((d, i) => {
         const e = polar(RCX, RCY+30, d.angle, RR);
-        const lp = polar(RCX, RCY+30, d.angle, RR + 22);
         return (
-          <g key={i}>
-            <AnimLine x1={RCX} y1={RCY+30} x2={e.x} y2={e.y} grow={step>i} ms={300}
-              stroke={d.color} strokeWidth="2" opacity="0.5" />
-            <text x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
-              textAnchor="middle" dominantBaseline="middle"
-              opacity={step>i?1:0} style={{ transition: 'opacity 0.3s' }}>{d.short}</text>
-          </g>
+          <AnimLine key={i} x1={RCX} y1={RCY+30} x2={e.x} y2={e.y} grow={step>i} ms={300}
+            stroke={d.color} strokeWidth="2" opacity="0.5" />
         );
       })}
       {/* Archetype polygon */}
@@ -1831,28 +1819,20 @@ function SceneRadarBuild({ isActive }) {
         const p = polar(RCX, RCY+30, d.angle, (3/5)*RR);
         return <circle key={i} cx={p.x} cy={p.y} r="4" fill={d.color} opacity="0.85" />;
       })}
-      {/* Archetype annotation */}
-      <g opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>
-        <text x={232} y={145} fontSize="12" fontWeight="800" fill={ARCH_COLOR} textAnchor="start">Archetype Profile</text>
-        <text x={232} y={160} fontSize="10" fill="#64748b" textAnchor="start">What's expected in this role</text>
-        <line x1={228} y1={158} x2={221} y2={158} stroke={ARCH_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
-      </g>
-      {/* Current profile polygon */}
-      <polygon points={RDIMS.map((d,i)=>{ const p=polar(RCX,RCY+30,d.angle,(YOU[i]/5)*RR); return `${p.x},${p.y}`; }).join(' ')}
-        fill={YOU_COLOR+'18'} stroke={YOU_COLOR} strokeWidth="2.5"
-        opacity={step>=11?1:0} style={{ transition: 'opacity 0.5s' }} />
-      {step>=11 && RDIMS.map((d, i) => {
-        const p = polar(RCX, RCY+30, d.angle, (YOU[i]/5)*RR);
-        return <circle key={i} cx={p.x} cy={p.y} r="5" fill={d.color} opacity="0.85" />;
-      })}
-      {/* "You" annotation — left-justified block */}
-      <g opacity={step>=11?1:0} style={{ transition: 'opacity 0.4s' }}>
-        <text x={108} y={272} fontSize="13" fontWeight="800" fill={YOU_COLOR} textAnchor="start">You</text>
-        <text x={108} y={285} fontSize="9" fill="#64748b" textAnchor="start">Projected in Rubric Space</text>
-        <line x1={160} y1={277} x2={176} y2={270} stroke={YOU_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
-      </g>
-      {/* Development arcs — comm 2→3 */}
-      {step>=13 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
+      {/* Current profile polygon — only shown at P2+ */}
+      {showYou && (
+        <>
+          <polygon points={RDIMS.map((d,i)=>{ const p=polar(RCX,RCY+30,d.angle,(YOU[i]/5)*RR); return `${p.x},${p.y}`; }).join(' ')}
+            fill={YOU_COLOR+'18'} stroke={YOU_COLOR} strokeWidth="2.5"
+            opacity={step>=11?1:0} style={{ transition: 'opacity 0.5s' }} />
+          {step>=11 && RDIMS.map((d, i) => {
+            const p = polar(RCX, RCY+30, d.angle, (YOU[i]/5)*RR);
+            return <circle key={i} cx={p.x} cy={p.y} r="5" fill={d.color} opacity="0.85" />;
+          })}
+        </>
+      )}
+      {/* Development arcs — comm 2→3 (orange, distinct from COMM green) */}
+      {showYou && step>=13 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
         const sp = polar(RCX, RCY+30, RDIMS[2].angle, (YOU[2]/5)*RR);
         const ep = polar(RCX, RCY+30, RDIMS[2].angle, (3/5)*RR);
         const mx = (sp.x + ep.x) / 2;
@@ -1860,15 +1840,53 @@ function SceneRadarBuild({ isActive }) {
         return (
           <path key={i} fill="none"
             d={`M${sp.x},${sp.y} Q${mx+dx},${my+dy} ${ep.x},${ep.y}`}
-            stroke="#059669" strokeWidth={i===2?3:1.2}
+            stroke={ARC_COLOR} strokeWidth={i===2?3:1.2}
             opacity={i===2?0.85:0.3} strokeDasharray={i===2?'none':'4 5'} />
         );
       })}
-      {/* Dev paths annotation */}
-      <g opacity={step>=14?1:0} style={{ transition: 'opacity 0.4s' }}>
-        <text x={252} y={325} fontSize="10" fontWeight="700" fill="#059669" textAnchor="start">Development paths</text>
-        <line x1={250} y1={324} x2={227} y2={319} stroke="#059669" strokeWidth="1" strokeDasharray="3 2" opacity="0.6"/>
+
+      {/* ── LABEL LAYER (renders last / always on top) ── */}
+      {/* Level ring numbers */}
+      {step>=6 && [1,2,3,4,5].map(l => {
+        const lp = polar(RCX, RCY+30, -90, (l/5)*RR);
+        return <text key={l} x={lp.x-12} y={lp.y} fontSize="9" fill="#94a3b8"
+          textAnchor="end" dominantBaseline="middle">{l}</text>;
+      })}
+      {/* Dim labels */}
+      {RDIMS.map((d, i) => {
+        const lp = polar(RCX, RCY+30, d.angle, RR + 22);
+        return (
+          <text key={i} x={lp.x} y={lp.y} fontSize="11" fontWeight="700" fill={d.color}
+            textAnchor="middle" dominantBaseline="middle"
+            opacity={step>i?1:0} style={{ transition: 'opacity 0.3s' }}>{d.short}</text>
+        );
+      })}
+      {/* Archetype annotation */}
+      <g opacity={step>=9?1:0} style={{ transition: 'opacity 0.4s' }}>
+        <line x1={228} y1={158} x2={221} y2={158} stroke={ARCH_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
+        <text x={232} y={145} fontSize="12" fontWeight="800" fill={ARCH_COLOR} textAnchor="start">Archetype Profile</text>
+        <text x={232} y={160} fontSize="10" fill="#64748b" textAnchor="start">What's expected in this role</text>
       </g>
+      {/* "You" annotation */}
+      {showYou && (
+        <g opacity={step>=11?1:0} style={{ transition: 'opacity 0.4s' }}>
+          <line x1={160} y1={277} x2={176} y2={270} stroke={YOU_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
+          <text x={108} y={272} fontSize="13" fontWeight="800" fill={YOU_COLOR} textAnchor="start">You</text>
+          <text x={108} y={285} fontSize="9" fill="#64748b" textAnchor="start">Projected in Rubric Space</text>
+        </g>
+      )}
+      {/* Dev paths annotation */}
+      {showYou && (
+        <g opacity={step>=14?1:0} style={{ transition: 'opacity 0.4s' }}>
+          <line x1={250} y1={324} x2={227} y2={319} stroke={ARC_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.6"/>
+          <text x={252} y={325} fontSize="10" fontWeight="700" fill={ARC_COLOR} textAnchor="start">Development paths</text>
+        </g>
+      )}
+      {/* Title — last so it renders on top */}
+      <text x={220} y={32} textAnchor="middle" fontSize="18" fontWeight="800" fill="#0f172a"
+        opacity={step>=12?1:0} style={{ transition: 'opacity 0.4s' }}>
+        Where do you want to go — and where are you now?
+      </text>
     </svg>
   );
 }
@@ -2213,28 +2231,30 @@ function SceneDimensionCone({ isActive, transfer }) {
 // ── P6: promotion Venn ────────────────────────────────────────
 function SceneVenn({ isActive }) {
   const step = useAnimStep(isActive, 5, 350);
+  // Blue + Yellow = Green — color theory tracks
+  const C1 = '#3b82f6'; // blue  (Rubric Readiness)
+  const C2 = '#eab308'; // yellow (Business Need)
+  const CI = '#10b981'; // green  (intersection = Promotion zone)
   const r=110, gap=62, cx1=220-gap/2, cx2=220+gap/2, cy=205;
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <circle cx={cx1} cy={cy} r={r} fill="#6366f115" stroke="#6366f1" strokeWidth="2"
+      <circle cx={cx1} cy={cy} r={r} fill={C1+'18'} stroke={C1} strokeWidth="2"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}/>
-      <circle cx={cx2} cy={cy} r={r} fill="#05966910" stroke="#059669" strokeWidth="2"
+      <circle cx={cx2} cy={cy} r={r} fill={C2+'18'} stroke={C2} strokeWidth="2"
         opacity={step>=2?1:0} style={{ transition: 'opacity 0.5s' }}/>
       <clipPath id="vc"><circle cx={cx1} cy={cy} r={r}/></clipPath>
-      <circle cx={cx2} cy={cy} r={r} fill="#7c3aed" fillOpacity="0.22" clipPath="url(#vc)"
+      <circle cx={cx2} cy={cy} r={r} fill={CI} fillOpacity="0.28" clipPath="url(#vc)"
         opacity={step>=3?1:0} style={{ transition: 'opacity 0.5s' }}/>
-      <text x={cx1-r/2-4} y={cy} textAnchor="middle" fontSize="12" fontWeight="700" fill="#6366f1"
+      <text x={cx1-r/2-4} y={cy} textAnchor="middle" fontSize="12" fontWeight="700" fill={C1}
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Rubric</text>
-      <text x={cx1-r/2-4} y={cy+17} textAnchor="middle" fontSize="12" fontWeight="700" fill="#6366f1"
+      <text x={cx1-r/2-4} y={cy+17} textAnchor="middle" fontSize="12" fontWeight="700" fill={C1}
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Readiness</text>
-      <text x={cx2+r/2+4} y={cy} textAnchor="middle" fontSize="12" fontWeight="700" fill="#059669"
+      <text x={cx2+r/2+4} y={cy} textAnchor="middle" fontSize="12" fontWeight="700" fill={C2}
         opacity={step>=2?1:0} style={{ transition: 'opacity 0.4s' }}>Business</text>
-      <text x={cx2+r/2+4} y={cy+17} textAnchor="middle" fontSize="12" fontWeight="700" fill="#059669"
+      <text x={cx2+r/2+4} y={cy+17} textAnchor="middle" fontSize="12" fontWeight="700" fill={C2}
         opacity={step>=2?1:0} style={{ transition: 'opacity 0.4s' }}>Need</text>
-      <text x={220} y={cy-8} textAnchor="middle" fontSize="12" fontWeight="800" fill="#7c3aed"
-        opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion</text>
-      <text x={220} y={cy+10} textAnchor="middle" fontSize="10" fill="#7c3aed"
-        opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>zone</text>
+      <text x={220} y={cy+6} textAnchor="middle" fontSize="12" fontWeight="800" fill={CI}
+        opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion zone</text>
       <text x={220} y={404} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion requires both</text>
       <text x={220} y={420} textAnchor="middle" fontSize="11" fill="#64748b"
@@ -2603,33 +2623,44 @@ function PhilosophyScrolly({ sections }) {
     },
   };
 
-  const [activeNum, setActiveNum] = React.useState(1);
+  const [activeNum, setActiveNum] = React.useState(null);
   const refs = React.useRef({});
+  const obsRef = React.useRef(null);
   const secByNum = {};
   sections.forEach(s => { secByNum[s.number] = s; });
   const ordered = DISPLAY_ORDER.map(n => secByNum[n]).filter(Boolean);
 
   React.useEffect(() => {
     const mainEl = document.querySelector('.main');
-    const obs = new IntersectionObserver(
-      entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) setActiveNum(parseInt(e.target.dataset.num));
-        });
-      },
-      { root: mainEl || null, rootMargin: '-42% 0px -42% 0px', threshold: 0 }
-    );
-    Object.values(refs.current).forEach(el => { if (el) obs.observe(el); });
-    return () => obs.disconnect();
+    const startObs = () => {
+      if (obsRef.current) return;
+      const obs = new IntersectionObserver(
+        entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) setActiveNum(parseInt(e.target.dataset.num));
+          });
+        },
+        { root: mainEl || null, rootMargin: '-42% 0px -42% 0px', threshold: 0 }
+      );
+      Object.values(refs.current).forEach(el => { if (el) obs.observe(el); });
+      obsRef.current = obs;
+    };
+    // Only activate scenes after user starts scrolling — prevents page-load fire
+    const scrollEl = mainEl || window;
+    scrollEl.addEventListener('scroll', startObs, { passive: true, once: true });
+    return () => {
+      scrollEl.removeEventListener('scroll', startObs);
+      if (obsRef.current) obsRef.current.disconnect();
+    };
   }, []);
 
-  const activeScene = SCENE_MAP[activeNum] || 'radar-build';
+  const activeScene = activeNum != null ? (SCENE_MAP[activeNum] || null) : null;
   const allSceneIds = [...new Set(Object.values(SCENE_MAP))];
 
   const renderScene = sceneId => {
     const active = sceneId === activeScene;
     switch(sceneId) {
-      case 'radar-build':    return <SceneRadarBuild    isActive={active}/>;
+      case 'radar-build':    return <SceneRadarBuild    isActive={active} activePrinciple={activeNum}/>;
       case 'radar-growth':   return <SceneRadarGrowth   isActive={active}/>;
       case 'radar-relative': return <SceneRadarRelative isActive={active}/>;
       case 'radar-com':      return <SceneRadarCenterOfMass isActive={active}/>;
