@@ -1845,11 +1845,11 @@ function SceneRadarBuild({ isActive }) {
         const p = polar(RCX, RCY+30, d.angle, (YOU[i]/5)*RR);
         return <circle key={i} cx={p.x} cy={p.y} r="5" fill={d.color} opacity="0.85" />;
       })}
-      {/* "You" annotation */}
+      {/* "You" annotation — left-justified block */}
       <g opacity={step>=11?1:0} style={{ transition: 'opacity 0.4s' }}>
-        <text x={202} y={272} fontSize="13" fontWeight="800" fill={YOU_COLOR} textAnchor="end">You</text>
-        <text x={202} y={287} fontSize="9" fill="#64748b" textAnchor="end">Projected in Rubric Space</text>
-        <line x1={204} y1={278} x2={213} y2={272} stroke={YOU_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
+        <text x={108} y={272} fontSize="13" fontWeight="800" fill={YOU_COLOR} textAnchor="start">You</text>
+        <text x={108} y={285} fontSize="9" fill="#64748b" textAnchor="start">Projected in Rubric Space</text>
+        <line x1={160} y1={277} x2={176} y2={270} stroke={YOU_COLOR} strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
       </g>
       {/* Development arcs — comm 2→3 */}
       {step>=13 && [[-38,0],[-19,-12],[0,-6],[19,-12],[38,0]].map(([dx,dy], i) => {
@@ -2175,17 +2175,17 @@ function SceneDimensionCone({ isActive, transfer }) {
           );
         })}
         <circle cx={QCX} cy={QCY} r="5" fill="#374151" opacity="0.6"/>
-        {/* Thickness legend (bottom-right) — mirrors P12 style */}
+        {/* Thickness legend (top-left) */}
         {!transfer && (
           <g>
-            <rect x={314} y={390} width={116} height={52} rx="6" fill="white" fillOpacity="0.88"
+            <rect x={10} y={62} width={116} height={52} rx="6" fill="white" fillOpacity="0.88"
               stroke="#e2e8f0" strokeWidth="1"/>
             {[
               { sw: 6.5, label: 'Dimension', op: 0.86 },
               { sw: 2.5, label: 'Competency', op: 0.52 },
               { sw: 1.2, label: 'Capability', op: 0.3  },
             ].map((l,li) => (
-              <g key={li} transform={`translate(320, ${401 + li*15})`}>
+              <g key={li} transform={`translate(16, ${73 + li*15})`}>
                 <line x1={0} y1={0} x2={22} y2={0} stroke="#374151" strokeWidth={l.sw} opacity={l.op}/>
                 <text x={28} y={0} fontSize="9" fill="#374151" dominantBaseline="middle">{l.label}</text>
               </g>
@@ -2213,11 +2213,9 @@ function SceneDimensionCone({ isActive, transfer }) {
 // ── P6: promotion Venn ────────────────────────────────────────
 function SceneVenn({ isActive }) {
   const step = useAnimStep(isActive, 5, 350);
-  const r=110, gap=62, cx1=220-gap/2, cx2=220+gap/2, cy=215;
+  const r=110, gap=62, cx1=220-gap/2, cx2=220+gap/2, cy=205;
   return (
     <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
-      <text x={220} y={54} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
-        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion requires both</text>
       <circle cx={cx1} cy={cy} r={r} fill="#6366f115" stroke="#6366f1" strokeWidth="2"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.5s' }}/>
       <circle cx={cx2} cy={cy} r={r} fill="#05966910" stroke="#059669" strokeWidth="2"
@@ -2237,7 +2235,9 @@ function SceneVenn({ isActive }) {
         opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion</text>
       <text x={220} y={cy+10} textAnchor="middle" fontSize="10" fill="#7c3aed"
         opacity={step>=3?1:0} style={{ transition: 'opacity 0.4s' }}>zone</text>
-      <text x={220} y={cy+r+46} textAnchor="middle" fontSize="11" fill="#64748b"
+      <text x={220} y={404} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+        opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>Promotion requires both</text>
+      <text x={220} y={420} textAnchor="middle" fontSize="11" fill="#64748b"
         opacity={step>=4?1:0} style={{ transition: 'opacity 0.4s' }}>
         Neither alone is sufficient — both gates must open
       </text>
@@ -2415,7 +2415,7 @@ function SceneDetailLayers({ isActive }) {
   ];
 
   return (
-    <svg viewBox="0 0 440 440" width="100%" height="100%" style={{ maxHeight: 480 }}>
+    <svg viewBox="0 0 440 460" width="100%" height="100%" style={{ maxHeight: 500 }}>
       {/* Step 1: single overall "3" in center — BLACK not dim color */}
       <text x={CX} y={CY+8} textAnchor="middle" fontSize="60" fontWeight="900" fill="#1e293b"
         opacity={step>=1 ? (step===1 ? 0.9 : 0.15) : 0} style={{ transition: 'opacity 0.7s' }}>3</text>
@@ -2486,9 +2486,9 @@ function SceneDetailLayers({ isActive }) {
         ))}
       </g>
 
-      <text x={220} y={44} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
+      <text x={220} y={416} textAnchor="middle" fontSize="14" fontWeight="800" fill="#374151"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>{topLabel}</text>
-      <text x={220} y={406} textAnchor="middle" fontSize="11" fill="#64748b"
+      <text x={220} y={434} textAnchor="middle" fontSize="11" fill="#64748b"
         opacity={step>=1?1:0} style={{ transition: 'opacity 0.4s' }}>{subLabel}</text>
     </svg>
   );
@@ -2553,7 +2553,7 @@ function PhilosophyScrolly({ sections }) {
     'pull-behaviors': {
       accent: '#0891b2',
       lines: [
-        { text: 'Behaviors are citable. Character judgements invite bias. Write what you\'ve observed.', big: true },
+        { text: 'Behaviors are citable. Character judgements invite bias.', big: true },
         { contrast: true, before: '"She\'s strategic"', after: '"She redesigned our incident process before anyone asked"' },
         { text: "Describe what you experience people DO, not what you've decided they ARE.", small: true, muted: true },
       ],
